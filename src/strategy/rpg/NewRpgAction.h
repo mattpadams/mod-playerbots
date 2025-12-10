@@ -13,6 +13,11 @@
 #include "QuestDef.h"
 #include "TravelMgr.h"
 
+// Forward declaration for Living Azeroth ABC integration
+#ifdef LIVING_AZEROTH_ENABLED
+namespace LivingAzeroth { struct BotDecision; }
+#endif
+
 class TellRpgStatusAction : public Action
 {
 public:
@@ -44,6 +49,11 @@ public:
         // transitionMat[RPG_IDLE][RPG_DO_QUEST] = 35;
     }
     bool Execute(Event event) override;
+
+#ifdef LIVING_AZEROTH_ENABLED
+    // Apply a decision from the Living Azeroth Autonomous Bot Controller
+    bool ApplyABCDecision(const LivingAzeroth::BotDecision& decision);
+#endif
 
 protected:
     // static NewRpgStatusTransitionProb transitionMat;
