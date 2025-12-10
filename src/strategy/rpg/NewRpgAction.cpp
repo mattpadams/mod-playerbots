@@ -31,6 +31,12 @@
 #include "TravelMgr.h"
 #include "World.h"
 
+// Living Azeroth ABC integration
+#ifdef LIVING_AZEROTH_ENABLED
+#include "LivingAzeroth.h"
+#include "autonomy/AutonomousBotController.h"
+#endif
+
 bool TellRpgStatusAction::Execute(Event event)
 {
     Player* owner = event.getOwner();
@@ -64,6 +70,34 @@ bool StartRpgDoQuestAction::Execute(Event event)
 bool NewRpgStatusUpdateAction::Execute(Event event)
 {
     NewRpgInfo& info = botAI->rpgInfo;
+
+#ifdef LIVING_AZEROTH_ENABLED
+    // Check if ABC (Autonomous Bot Controller) is managing this bot
+    if (LivingAzeroth::sLivingAzeroth->IsEnabled())
+    {
+        auto* abc = LivingAzeroth::GetABC();
+        if (abc && abc->IsManagingBot(bot->GetGUID()))
+        {
+            auto decision = abc->GetCachedDecision(bot->GetGUID());
+            if (decision && decision->IsValid() && !decision->IsExpired())
+            {
+                // Apply LLM-driven decision
+                if (ApplyABCDecision(*decision))
+                {
+                    return true;
+                }
+                // If decision application failed, fall through to default behavior
+            }
+            else if (info.status == RPG_IDLE)
+            {
+                // Request new decision asynchronously while using default behavior
+                abc->RequestDecision(bot->GetGUID(),
+                    static_cast<LivingAzeroth::RpgDecision>(info.status));
+            }
+        }
+    }
+#endif
+
     switch (info.status)
     {
         case RPG_IDLE:
@@ -149,6 +183,108 @@ bool NewRpgStatusUpdateAction::Execute(Event event)
     }
     return false;
 }
+
+#ifdef LIVING_AZEROTH_ENABLED
+bool NewRpgStatusUpdateAction::ApplyABCDecision(const LivingAzeroth::BotDecision& decision)
+{
+    NewRpgInfo& info = botAI->rpgInfo;
+
+    // Map LivingAzeroth::RpgDecision to playerbots RPG_STATUS
+    switch (decision.decision)
+    {
+        case LivingAzeroth::RpgDecision::GO_GRIND:
+        {
+            // Use decision target if provided, otherwise let playerbots find a grind spot
+            if (decision.targetX != 0.0f || decision.targetY != 0.0f)
+            {
+                WorldPosition pos(decision.targetMapId, decision.targetX, decision.targetY, decision.targetZ);
+                info.ChangeToGoGrind(pos);
+            }
+            else
+            {
+                // Fall back to default grind location selection
+                WorldPosition grindPos = SelectRandomGrindPos();
+                if (grindPos)
+                {
+                    info.ChangeToGoGrind(grindPos);
+                }
+                else
+                {
+                    return false; // Can't find grind spot
+                }
+            }
+            return true;
+        }
+        case LivingAzeroth::RpgDecision::GO_CAMP:
+        {
+            if (decision.targetX != 0.0f || decision.targetY != 0.0f)
+            {
+                WorldPosition pos(decision.targetMapId, decision.targetX, decision.targetY, decision.targetZ);
+                info.ChangeToGoCamp(pos);
+            }
+            else
+            {
+                WorldPosition campPos = SelectCampPos();
+                if (campPos)
+                {
+                    info.ChangeToGoCamp(campPos);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        case LivingAzeroth::RpgDecision::WANDER_RANDOM:
+        {
+            info.ChangeToWanderRandom();
+            return true;
+        }
+        case LivingAzeroth::RpgDecision::WANDER_NPC:
+        {
+            info.ChangeToWanderNpc();
+            return true;
+        }
+        case LivingAzeroth::RpgDecision::DO_QUEST:
+        {
+            if (decision.questId != 0)
+            {
+                const Quest* quest = sObjectMgr->GetQuestTemplate(decision.questId);
+                if (quest)
+                {
+                    info.ChangeToDoQuest(decision.questId, quest);
+                    return true;
+                }
+            }
+            // No specific quest - let bot choose from available quests
+            if (bot->GetQuestStatus(0) != QUEST_STATUS_NONE)
+            {
+                info.ChangeToDoQuest(0, nullptr);
+                return true;
+            }
+            return false;
+        }
+        case LivingAzeroth::RpgDecision::TRAVEL_FLIGHT:
+        {
+            // For now, let playerbots handle flight path selection
+            // TODO: Use decision.flightNodeId if provided
+            return false; // Fall back to default behavior
+        }
+        case LivingAzeroth::RpgDecision::REST:
+        {
+            info.ChangeToRest();
+            return true;
+        }
+        case LivingAzeroth::RpgDecision::IDLE:
+        default:
+        {
+            // IDLE means we should pick something - fall back to default behavior
+            return false;
+        }
+    }
+}
+#endif
 
 bool NewRpgGoGrindAction::Execute(Event event)
 {
