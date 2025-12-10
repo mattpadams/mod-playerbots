@@ -53,6 +53,11 @@
 #include "UpdateTime.h"
 #include "World.h"
 
+#ifdef LIVING_AZEROTH_ENABLED
+#include "LivingAzeroth.h"
+#include "autonomy/AutonomousBotController.h"
+#endif
+
 struct GuidClassRaceInfo
 {
     ObjectGuid::LowType guid;
@@ -3019,6 +3024,17 @@ void RandomPlayerbotMgr::OnBotLoginInternal(Player* const bot)
     {
         bot->RemovePlayerFlag(PLAYER_FLAGS_NO_XP_GAIN);
     }
+
+#ifdef LIVING_AZEROTH_ENABLED
+    // Register bot with Living Azeroth's Autonomous Bot Controller
+    if (LivingAzeroth::sLivingAzeroth && LivingAzeroth::sLivingAzeroth->IsEnabled())
+    {
+        if (auto* abc = LivingAzeroth::GetABC())
+        {
+            abc->RegisterBot(bot->GetGUID());
+        }
+    }
+#endif
 }
 
 void RandomPlayerbotMgr::OnPlayerLogin(Player* player)
@@ -3490,6 +3506,17 @@ void RandomPlayerbotMgr::RandomTeleportForRpg(Player* bot)
 void RandomPlayerbotMgr::Remove(Player* bot)
 {
     ObjectGuid owner = bot->GetGUID();
+
+#ifdef LIVING_AZEROTH_ENABLED
+    // Unregister bot from Living Azeroth's Autonomous Bot Controller
+    if (LivingAzeroth::sLivingAzeroth && LivingAzeroth::sLivingAzeroth->IsEnabled())
+    {
+        if (auto* abc = LivingAzeroth::GetABC())
+        {
+            abc->UnregisterBot(owner);
+        }
+    }
+#endif
 
     PlayerbotsDatabasePreparedStatement* stmt =
         PlayerbotsDatabase.GetPreparedStatement(PLAYERBOTS_DEL_RANDOM_BOTS_BY_OWNER);
