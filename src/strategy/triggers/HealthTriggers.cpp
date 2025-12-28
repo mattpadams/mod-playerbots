@@ -7,12 +7,26 @@
 
 #include "Playerbots.h"
 
+// ECS Integration for cached health values
+#include "ecs/ECS.h"
+
 bool HealthInRangeTrigger::IsActive()
 {
     return ValueInRangeTrigger::IsActive() && !AI_VALUE2(bool, "dead", GetTargetName());
 }
 
-float HealthInRangeTrigger::GetValue() { return AI_VALUE2(uint8, "health", GetTargetName()); }
+float HealthInRangeTrigger::GetValue()
+{
+    // Use ECS cached health for self-target (most common case)
+    std::string targetName = GetTargetName();
+    if (targetName == "self target")
+    {
+        return ECS_HEALTH_PCT(botAI);
+    }
+
+    // Fall back to AI_VALUE for other targets
+    return AI_VALUE2(uint8, "health", targetName);
+}
 
 bool PartyMemberDeadTrigger::IsActive() { return GetTarget(); }
 

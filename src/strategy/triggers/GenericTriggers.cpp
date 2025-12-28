@@ -23,6 +23,9 @@
 #include "PlayerbotAI.h"
 #include "Player.h"
 
+// ECS Integration for cached trigger values
+#include "ecs/ECS.h"
+
 bool LowManaTrigger::IsActive()
 {
     return AI_VALUE2(bool, "has mana", "self target") &&
@@ -126,9 +129,12 @@ bool OutNumberedTrigger::IsActive()
     int32 botLevel = bot->GetLevel();
     uint32 friendPower = 200;
     uint32 foePower = 0;
-    for (auto& attacker : botAI->GetAiObjectContext()->GetValue<GuidVector>("attackers")->Get())
+
+    // Use ECS cached attackers for better performance
+    auto attackers = ecs::TriggerHelpers::GetAttackers(botAI);
+    for (uint64_t attackerGuid : attackers)
     {
-        Creature* creature = botAI->GetCreature(attacker);
+        Creature* creature = botAI->GetCreature(ObjectGuid(attackerGuid));
         if (!creature)
             continue;
 
@@ -189,7 +195,8 @@ Value<Unit*>* DebuffOnMeleeAttackerTrigger::GetTargetValue()
 
 bool NoAttackersTrigger::IsActive()
 {
-    return !AI_VALUE(Unit*, "current target") && AI_VALUE(uint8, "my attacker count") > 0;
+    // Use ECS cached attacker count for better performance
+    return !AI_VALUE(Unit*, "current target") && ECS_IS_BEING_ATTACKED(botAI);
 }
 
 bool InvalidTargetTrigger::IsActive() { return AI_VALUE2(bool, "invalid target", "current target"); }
@@ -198,7 +205,8 @@ bool NoTargetTrigger::IsActive() { return !AI_VALUE(Unit*, "current target"); }
 
 bool MyAttackerCountTrigger::IsActive()
 {
-    return AI_VALUE2(bool, "combat", "self target") && AI_VALUE(uint8, "my attacker count") >= amount;
+    // Use ECS cached values for better performance
+    return ECS_IS_IN_COMBAT(botAI) && ECS_MY_ATTACKER_COUNT(botAI) >= static_cast<uint32_t>(amount);
 }
 
 bool MediumThreatTrigger::IsActive()
@@ -231,19 +239,17 @@ bool AoeTrigger::IsActive()
     {
         return false;
     }
-    GuidVector attackers = context->GetValue<GuidVector>("attackers")->Get();
-    int attackers_count = 0;
-    for (ObjectGuid const guid : attackers)
-    {
-        Unit* unit = botAI->GetUnit(guid);
-        if (!unit || !unit->IsAlive())
-            continue;
-        if (unit->GetDistance(current_target->GetPosition()) <= range)
-        {
-            attackers_count++;
-        }
-    }
-    return attackers_count >= amount;
+
+    // Use ECS cached attackers for better performance
+    uint32_t attackers_count = ecs::TriggerHelpers::CountAttackersInRange(
+        botAI,
+        current_target->GetPositionX(),
+        current_target->GetPositionY(),
+        current_target->GetPositionZ(),
+        range
+    );
+
+    return attackers_count >= static_cast<uint32_t>(amount);
 }
 
 bool NoFoodTrigger::IsActive()
@@ -461,7 +467,11 @@ bool DeflectSpellTrigger::IsActive()
     return false;
 }
 
-bool AttackerCountTrigger::IsActive() { return AI_VALUE(uint8, "attacker count") >= amount; }
+bool AttackerCountTrigger::IsActive()
+{
+    // Use ECS cached attacker count for better performance
+    return ECS_ATTACKER_COUNT(botAI) >= static_cast<uint32_t>(amount);
+}
 
 bool HasAuraTrigger::IsActive() { return botAI->HasAura(getName(), GetTarget(), false, false, -1, true); }
 
@@ -501,7 +511,8 @@ bool HasNoAuraTrigger::IsActive() { return !botAI->HasAura(getName(), GetTarget(
 
 bool TankAssistTrigger::IsActive()
 {
-    if (!AI_VALUE(uint8, "attacker count"))
+    // Use ECS cached attacker count for better performance
+    if (!ECS_HAS_ATTACKERS(botAI))
         return false;
 
     Unit* currentTarget = AI_VALUE(Unit*, "current target");
@@ -549,8 +560,8 @@ bool NoMovementTrigger::IsActive() { return !AI_VALUE2(bool, "moving", "self tar
 
 bool NoPossibleTargetsTrigger::IsActive()
 {
-    GuidVector targets = AI_VALUE(GuidVector, "possible targets");
-    return !targets.size();
+    // Use ECS cached possible targets for better performance
+    return !ECS_HAS_POSSIBLE_TARGETS(botAI);
 }
 
 bool PossibleAddsTrigger::IsActive() { return AI_VALUE(bool, "possible adds") && !AI_VALUE(ObjectGuid, "pull target"); }
