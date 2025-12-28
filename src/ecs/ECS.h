@@ -58,6 +58,8 @@
 #include "ValueCache.h"
 #include "TriggerHelpers.h"
 #include "Benchmark.h"
+#include "BatchProcessor.h"
+#include "HotColdData.h"
 
 // Convenience namespace alias
 namespace ECS = ecs;

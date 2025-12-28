@@ -6,6 +6,8 @@
 
 #include "BotRegistry.h"
 #include "ValueCache.h"
+#include "BatchProcessor.h"
+#include "HotColdData.h"
 #include "Player.h"
 #include "PlayerbotAI.h"
 #include "Spell.h"
@@ -40,9 +42,16 @@ void BotRegistry::Initialize(size_t expectedBotCount)
     m_registry.RegisterComponent<Timers>();
     m_registry.RegisterComponent<ValueCache>();
 
+    // Hot/Cold data components for cache efficiency
+    m_registry.RegisterComponent<HotData>();
+    m_registry.RegisterComponent<ColdData>();
+
     // Pre-allocate storage
     m_registry.Reserve(expectedBotCount);
     m_guidToEntity.reserve(expectedBotCount);
+
+    // Initialize batch processor with auto-detected thread count
+    sBatchProcessor.Initialize(0);
 
     m_initialized = true;
     LOG_INFO("playerbots", "ECS BotRegistry: Initialization complete");
@@ -55,6 +64,7 @@ void BotRegistry::Shutdown()
 
     LOG_INFO("playerbots", "ECS BotRegistry: Shutting down ({} bots registered)", m_guidToEntity.size());
 
+    sBatchProcessor.Shutdown();
     m_guidToEntity.clear();
     m_registry.Clear();
     m_initialized = false;
@@ -113,6 +123,14 @@ EntityId BotRegistry::RegisterBot(PlayerbotAI* botAI, Player* player)
 
     // Add value cache component
     m_registry.AddComponent<ValueCache>(entity);
+
+    // Add hot/cold data components for cache efficiency
+    HotData& hot = m_registry.AddComponent<HotData>(entity);
+    ColdData& cold = m_registry.AddComponent<ColdData>(entity);
+
+    // Initialize hot/cold data from player
+    HotDataSync::SyncFromPlayer(player, hot);
+    HotDataSync::SyncColdFromPlayer(player, cold);
 
     // Register in lookup map
     m_guidToEntity[guid] = entity;
@@ -223,7 +241,19 @@ void BotRegistry::SyncEntityFromWoW(EntityId entity)
         {
             SyncSystem::SyncStats(player, *stats);
         }
+        // Also sync cold data on full sync
+        if (ColdData* cold = m_registry.GetComponent<ColdData>(entity))
+        {
+            HotDataSync::SyncColdFromPlayer(player, *cold);
+        }
         link->needsPositionSync = false;
+    }
+
+    // Always sync hot data (cache-line optimized)
+    if (HotData* hot = m_registry.GetComponent<HotData>(entity))
+    {
+        HotDataSync::SyncFromPlayer(player, *hot);
+        hot->lastUpdateTime = now;
     }
 
     link->lastSyncTime = now;
