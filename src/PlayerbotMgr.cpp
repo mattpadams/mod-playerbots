@@ -39,6 +39,9 @@
 #include "WorldSessionMgr.h"
 #include "DatabaseEnv.h"
 
+// ECS Integration
+#include "ecs/ECS.h"
+
 class BotInitGuard
 {
 public:
@@ -338,6 +341,9 @@ void PlayerbotHolder::LogoutPlayerBot(ObjectGuid guid)
         if (!botAI)
             return;
 
+        // Unregister bot from ECS before logout
+        sBotRegistry.UnregisterBot(bot->GetGUID().GetRawValue());
+
         // Queue group cleanup operation for world thread
         auto cleanupOp = std::make_unique<BotLogoutGroupCleanupOperation>(guid);
         sPlayerbotWorldProcessor->QueueOperation(std::move(cleanupOp));
@@ -499,6 +505,9 @@ void PlayerbotHolder::OnBotLogin(Player* const bot)
         LOG_DEBUG("mod-playerbots", "PlayerbotAI is null for bot with GUID: {}", bot->GetGUID().GetRawValue());
         return;
     }
+
+    // Register bot with ECS for batch processing
+    sBotRegistry.RegisterBot(botAI, bot);
 
     Player* master = botAI->GetMaster();
     if (master)
@@ -1751,6 +1760,9 @@ void PlayerbotsMgr::AddPlayerbotData(Player* player, bool isBotAI)
         }
         PlayerbotAI* botAI = new PlayerbotAI(player);
         ASSERT(_playerbotsAIMap.emplace(player->GetGUID(), botAI).second);
+
+        // Register bot with ECS
+        sBotRegistry.RegisterBot(botAI, player);
     }
 }
 

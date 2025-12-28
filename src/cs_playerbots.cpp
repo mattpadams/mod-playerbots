@@ -21,6 +21,9 @@
 #include "RandomPlayerbotMgr.h"
 #include "ScriptMgr.h"
 
+// ECS Integration
+#include "ecs/ECS.h"
+
 using namespace Acore::ChatCommands;
 
 class playerbots_commandscript : public CommandScript
@@ -46,6 +49,7 @@ public:
             {"gtask", HandleGuildTaskCommand, SEC_GAMEMASTER, Console::Yes},
             {"pmon", HandlePerfMonCommand, SEC_GAMEMASTER, Console::Yes},
             {"rndbot", HandleRandomPlayerbotCommand, SEC_GAMEMASTER, Console::Yes},
+            {"ecs", HandleEcsCommand, SEC_GAMEMASTER, Console::Yes},
             {"debug", playerbotsDebugCommandTable},
             {"account", playerbotsAccountCommandTable},
         };
@@ -109,6 +113,67 @@ public:
     static bool HandleDebugBGCommand(ChatHandler* handler, char const* args)
     {
         return BGTactics::HandleConsoleCommand(handler, args);
+    }
+
+    static bool HandleEcsCommand(ChatHandler* handler, char const* args)
+    {
+        if (!args || !*args || !strcmp(args, "status"))
+        {
+            // Show ECS status
+            const auto& metrics = sBotRegistry.GetMetrics();
+            handler->PSendSysMessage("=== ECS Status ===");
+            handler->PSendSysMessage("Registered bots: %u", metrics.totalBots);
+            handler->PSendSysMessage("Bots in combat: %u", metrics.botsInCombat);
+            handler->PSendSysMessage("Bots moving: %u", metrics.botsMoving);
+            handler->PSendSysMessage("Avg sync time: %.2f ms", metrics.avgSyncTimeMs);
+            handler->PSendSysMessage("Avg update time: %.2f ms", metrics.avgUpdateTimeMs);
+
+            // Show system metrics
+            auto systemMetrics = sBatchUpdateManager.GetAllMetrics();
+            handler->PSendSysMessage("=== System Metrics ===");
+            for (const auto* m : systemMetrics)
+            {
+                if (m && m->name)
+                {
+                    handler->PSendSysMessage("%s: %u entities, %.2f ms avg",
+                        m->name, m->entitiesProcessed, m->avgUpdateMs);
+                }
+            }
+
+            // Show cache stats
+            handler->PSendSysMessage("=== Cache Stats ===");
+            handler->PSendSysMessage("Target cache hit rate: %.1f%%", sTargetCacheManager.GetHitRate());
+
+            return true;
+        }
+
+        if (!strcmp(args, "benchmark"))
+        {
+            handler->PSendSysMessage("Running ECS benchmarks (10000 entities, 100 iterations)...");
+
+            auto results = ecs::Benchmark::RunAll(10000, 100);
+            ecs::Benchmark::LogResults(results);
+
+            handler->PSendSysMessage("=== Benchmark Results ===");
+            for (const auto& r : results)
+            {
+                handler->PSendSysMessage("%s: %.2f ms total, %.2f us/entity",
+                    r.name.c_str(), r.totalMs, r.avgPerEntityUs);
+            }
+
+            handler->PSendSysMessage("Memory per entity: %zu bytes", ecs::Benchmark::EstimateMemoryPerEntity());
+            return true;
+        }
+
+        if (!strcmp(args, "reset"))
+        {
+            sTargetCacheManager.ResetStats();
+            handler->PSendSysMessage("ECS cache stats reset.");
+            return true;
+        }
+
+        handler->PSendSysMessage("Usage: .playerbots ecs [status|benchmark|reset]");
+        return true;
     }
 
     static bool HandleSetSecurityKeyCommand(ChatHandler* handler, char const* args)

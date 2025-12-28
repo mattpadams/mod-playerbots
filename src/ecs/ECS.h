@@ -57,6 +57,7 @@
 #include "Systems.h"
 #include "ValueCache.h"
 #include "TriggerHelpers.h"
+#include "Benchmark.h"
 
 // Convenience namespace alias
 namespace ECS = ecs;
