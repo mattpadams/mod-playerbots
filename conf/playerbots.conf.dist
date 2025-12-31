@@ -2194,3 +2194,111 @@ AiPlayerbot.GankSquadRespawnDelay = 180
 #                Thousand Needles(400), Feralas(357), Desolace(405),
 #                Tanaris(440), Hinterlands(47), EPL(139), WPL(28)
 AiPlayerbot.GankSquadZones = "267,33,331,45,400,357,405,440,47,139,28"
+
+###############################################################################
+# QUEST PRIORITIZATION SYSTEM
+#
+# Weights for quest selection algorithm. Bots will prefer quests with higher
+# combined scores. Class quests are given maximum priority by default.
+###############################################################################
+
+# Enable quest prioritization system
+# Default: 1 (enabled)
+AiPlayerbot.QuestPrioritization.Enable = 1
+
+# XP efficiency weight (XP per estimated completion time)
+# Default: 0.15
+AiPlayerbot.QuestPriority.XPEfficiency = 0.15
+
+# Zone flow weight (staying in optimal leveling zones)
+# Default: 0.15
+AiPlayerbot.QuestPriority.ZoneFlow = 0.15
+
+# Proximity weight (quests near current location)
+# Default: 0.10
+AiPlayerbot.QuestPriority.Proximity = 0.10
+
+# Reward value weight (gear/gold rewards)
+# Default: 0.10
+AiPlayerbot.QuestPriority.RewardValue = 0.10
+
+# Class quest weight - SET HIGH to always prioritize class quests
+# Default: 0.40 (class quests get massive priority boost)
+AiPlayerbot.QuestPriority.ClassQuest = 0.40
+
+# Chain quest progress weight (continuing started chains)
+# Default: 0.10
+AiPlayerbot.QuestPriority.ChainProgress = 0.10
+
+# Threshold for grouping for dungeon quests (0.0-1.0)
+# Default: 0.8
+AiPlayerbot.QuestPriority.DungeonGroupThreshold = 0.8
+
+###############################################################################
+# ROLE MANAGEMENT SYSTEM
+#
+# Controls how bots handle role assignment (Tank/Healer/DPS) and talent specs.
+###############################################################################
+
+# Enable dynamic role switching based on group composition
+# When disabled, bots keep their initially assigned role permanently
+# Default: 0 (disabled - bots keep assigned roles)
+AiPlayerbot.DynamicRoleSwitching.Enable = 0
+
+# Enable group role analysis (checking what roles are needed)
+# Default: 1 (enabled)
+AiPlayerbot.GroupRoleAnalysis.Enable = 1
+
+# Minimum level for role switching consideration
+# Default: 10
+AiPlayerbot.RoleSwitch.MinLevel = 10
+
+# Cooldown between respecs in minutes
+# Default: 60
+AiPlayerbot.Respec.CooldownMinutes = 60
+
+# Automatically regear when role changes
+# Default: 1 (enabled)
+AiPlayerbot.AutoGearForRole = 1
+
+###############################################################################
+# FFA PVP DEFENSE SYSTEM
+#
+# Controls bot behavior on FFA PvP servers (GameType = 16).
+# Bots will defend themselves against hostile players based on aggression level.
+###############################################################################
+
+# Enable FFA PvP defense system
+# Default: 0 (disabled)
+AiPlayerbot.FfaPvpEnabled = 0
+
+# Aggression level:
+#   0 = Defensive (only attack if attacked first)
+#   1 = Territorial (attack enemies within territorial range)
+#   2 = Aggressive (hunt enemies within aggressive range)
+# Default: 0
+AiPlayerbot.FfaPvpAggressionLevel = 0
+
+# Treat guild members as friendly (never attack)
+# Default: 1 (enabled)
+AiPlayerbot.FfaPvpGuildFriendly = 1
+
+# Treat group members as friendly (never attack)
+# Default: 1 (enabled)
+AiPlayerbot.FfaPvpGroupFriendly = 1
+
+# Territorial mode range (yards)
+# Default: 40
+AiPlayerbot.FfaPvpTerritorialRange = 40
+
+# Aggressive mode range (yards)
+# Default: 100
+AiPlayerbot.FfaPvpAggressiveRange = 100
+
+# How long to remember attackers for defensive mode (seconds)
+# Default: 60
+AiPlayerbot.FfaPvpAttackerMemoryTime = 60
+
+# Safe zones where FFA PvP is disabled (comma-separated zone IDs)
+# Default: empty (no safe zones)
+AiPlayerbot.FfaPvpSafeZones = ""

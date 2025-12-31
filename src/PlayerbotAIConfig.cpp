@@ -628,16 +628,16 @@ bool PlayerbotAIConfig::Initialize()
 
     // Quest Priority System
     questPrioritizationEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.QuestPrioritization.Enable", true);
-    questPriorityXPEfficiency = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.XPEfficiency", 0.25f);
-    questPriorityZoneFlow = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ZoneFlow", 0.20f);
-    questPriorityProximity = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.Proximity", 0.15f);
-    questPriorityRewardValue = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.RewardValue", 0.20f);
-    questPriorityClassQuest = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ClassQuest", 0.10f);
+    questPriorityXPEfficiency = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.XPEfficiency", 0.15f);
+    questPriorityZoneFlow = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ZoneFlow", 0.15f);
+    questPriorityProximity = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.Proximity", 0.10f);
+    questPriorityRewardValue = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.RewardValue", 0.10f);
+    questPriorityClassQuest = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ClassQuest", 0.40f);  // High priority for class quests
     questPriorityChainProgress = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ChainProgress", 0.10f);
     questPriorityDungeonGroupThreshold = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.DungeonGroupThreshold", 0.8f);
 
     // Role Management System
-    dynamicRoleSwitchingEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.DynamicRoleSwitching.Enable", true);
+    dynamicRoleSwitchingEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.DynamicRoleSwitching.Enable", false);  // Bots keep assigned roles
     groupRoleAnalysisEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.GroupRoleAnalysis.Enable", true);
     roleSwitchMinLevel = sConfigMgr->GetOption<uint32>("AiPlayerbot.RoleSwitch.MinLevel", 10);
     respecCooldownMinutes = sConfigMgr->GetOption<uint32>("AiPlayerbot.Respec.CooldownMinutes", 60);
