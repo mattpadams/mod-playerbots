@@ -21,10 +21,7 @@ GuidVector NearestGameObjects::Calculate()
 
     GuidVector result;
     for (GameObject* go : targets)
-    {
-        // if (ignoreLos || bot->IsWithinLOSInMap(go))
         result.push_back(go->GetGUID());
-    }
 
     return result;
 }

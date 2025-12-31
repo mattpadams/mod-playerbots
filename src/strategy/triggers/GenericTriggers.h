@@ -883,6 +883,14 @@ public:
     bool IsActive() override;
 };
 
+class GiveHealthstoneTrigger : public GiveItemTrigger
+{
+public:
+    GiveHealthstoneTrigger(PlayerbotAI* botAI) : GiveItemTrigger(botAI, "give healthstone", "healthstone") {}
+
+    bool IsActive() override;
+};
+
 class IsMountedTrigger : public Trigger
 {
 public:

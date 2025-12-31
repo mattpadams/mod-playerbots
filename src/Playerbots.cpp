@@ -33,6 +33,9 @@
 #include "cmath"
 #include "BattleGroundTactics.h"
 
+// ECS Integration
+#include "ecs/ECS.h"
+
 class PlayerbotsDatabaseScript : public DatabaseScript
 {
 public:
@@ -302,6 +305,12 @@ public:
 
     void OnDestructPlayer(Player* player) override
     {
+        // Unregister from ECS before deleting
+        if (player)
+        {
+            sBotRegistry.UnregisterBot(player->GetGUID().GetRawValue());
+        }
+
         if (PlayerbotAI* botAI = GET_PLAYERBOT_AI(player))
         {
             delete botAI;
@@ -366,6 +375,27 @@ public:
 
         sPlayerbotSpellCache->Initialize();
 
+        // Initialize ECS Bot Registry
+        uint32_t expectedBots = sPlayerbotAIConfig->maxRandomBots;
+        if (expectedBots == 0)
+            expectedBots = 1000;  // Default minimum
+        sBotRegistry.Initialize(expectedBots);
+
+        // Initialize IPC Bridge for external bot-engine process
+        ecs::ipc::BridgeConfig bridgeConfig;
+        bridgeConfig.enabled = sConfigMgr->GetOption<bool>("Playerbots.IPC.Enabled", false);
+        bridgeConfig.shmName = sConfigMgr->GetOption<std::string>("Playerbots.IPC.ShmName", "swarm_bots");
+        bridgeConfig.exportIntervalMs = sConfigMgr->GetOption<uint32>("Playerbots.IPC.ExportIntervalMs", 50);
+        bridgeConfig.actionPollIntervalMs = sConfigMgr->GetOption<uint32>("Playerbots.IPC.ActionPollIntervalMs", 10);
+
+        if (bridgeConfig.enabled)
+        {
+            if (!sWorldServerBridge.Initialize(bridgeConfig))
+            {
+                LOG_ERROR("server.loading", "Failed to initialize IPC bridge - continuing without external bot-engine support");
+            }
+        }
+
         LOG_INFO("server.loading", "Playerbots World Thread Processor initialized");
     }
 
@@ -373,6 +403,12 @@ public:
     {
         sPlayerbotWorldProcessor->Update(diff);
         sRandomPlayerbotMgr->UpdateAI(diff);  // World thread only
+
+        // ECS batch updates (runs at configured intervals internally)
+        sBatchUpdateManager.Update(diff);
+
+        // IPC bridge update (exports state, imports actions)
+        sWorldServerBridge.Update(diff);
     }
 };
 

@@ -82,6 +82,15 @@ public:
     bool isUseful() override;
 };
 
+class AttackFFAEnemyAction : public AttackAction
+{
+public:
+    AttackFFAEnemyAction(PlayerbotAI* botAI) : AttackAction(botAI, "attack ffa enemy") {}
+
+    std::string const GetTargetName() override { return "ffa enemy player"; }
+    bool isUseful() override;
+};
+
 class DropTargetAction : public Action
 {
 public:

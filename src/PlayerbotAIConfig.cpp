@@ -626,6 +626,33 @@ bool PlayerbotAIConfig::Initialize()
     autoDoQuests = sConfigMgr->GetOption<bool>("AiPlayerbot.AutoDoQuests", true);
     enableNewRpgStrategy = sConfigMgr->GetOption<bool>("AiPlayerbot.EnableNewRpgStrategy", true);
 
+    // Quest Priority System
+    questPrioritizationEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.QuestPrioritization.Enable", true);
+    questPriorityXPEfficiency = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.XPEfficiency", 0.25f);
+    questPriorityZoneFlow = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ZoneFlow", 0.20f);
+    questPriorityProximity = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.Proximity", 0.15f);
+    questPriorityRewardValue = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.RewardValue", 0.20f);
+    questPriorityClassQuest = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ClassQuest", 0.10f);
+    questPriorityChainProgress = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.ChainProgress", 0.10f);
+    questPriorityDungeonGroupThreshold = sConfigMgr->GetOption<float>("AiPlayerbot.QuestPriority.DungeonGroupThreshold", 0.8f);
+
+    // Role Management System
+    dynamicRoleSwitchingEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.DynamicRoleSwitching.Enable", true);
+    groupRoleAnalysisEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.GroupRoleAnalysis.Enable", true);
+    roleSwitchMinLevel = sConfigMgr->GetOption<uint32>("AiPlayerbot.RoleSwitch.MinLevel", 10);
+    respecCooldownMinutes = sConfigMgr->GetOption<uint32>("AiPlayerbot.Respec.CooldownMinutes", 60);
+    autoGearForRole = sConfigMgr->GetOption<bool>("AiPlayerbot.AutoGearForRole", true);
+
+    // FFA PvP Defense System
+    ffaPvpEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.FfaPvpEnabled", false);
+    ffaPvpAggressionLevel = sConfigMgr->GetOption<uint8>("AiPlayerbot.FfaPvpAggressionLevel", 0);
+    ffaPvpGuildFriendly = sConfigMgr->GetOption<bool>("AiPlayerbot.FfaPvpGuildFriendly", true);
+    ffaPvpGroupFriendly = sConfigMgr->GetOption<bool>("AiPlayerbot.FfaPvpGroupFriendly", true);
+    ffaPvpTerritorialRange = sConfigMgr->GetOption<float>("AiPlayerbot.FfaPvpTerritorialRange", 40.0f);
+    ffaPvpAggressiveRange = sConfigMgr->GetOption<float>("AiPlayerbot.FfaPvpAggressiveRange", 100.0f);
+    ffaPvpAttackerMemoryTime = sConfigMgr->GetOption<uint32>("AiPlayerbot.FfaPvpAttackerMemoryTime", 60);
+    ffaPvpSafeZones = sConfigMgr->GetOption<std::string>("AiPlayerbot.FfaPvpSafeZones", "");
+
     RpgStatusProbWeight[RPG_WANDER_RANDOM] = sConfigMgr->GetOption<int32>("AiPlayerbot.RpgStatusProbWeight.WanderRandom", 15);
     RpgStatusProbWeight[RPG_WANDER_NPC] = sConfigMgr->GetOption<int32>("AiPlayerbot.RpgStatusProbWeight.WanderNpc", 20);
     RpgStatusProbWeight[RPG_GO_GRIND] = sConfigMgr->GetOption<int32>("AiPlayerbot.RpgStatusProbWeight.GoGrind", 15);
@@ -677,6 +704,22 @@ bool PlayerbotAIConfig::Initialize()
     excludedHunterPetFamilies.clear();
     LoadList<std::vector<uint32>>(sConfigMgr->GetOption<std::string>("AiPlayerbot.ExcludedHunterPetFamilies", ""), excludedHunterPetFamilies);
 
+    // Gank Squad System
+    gankSquadEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.GankSquadEnabled", false);
+    gankSquadMinLevel = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadMinLevel", 20);
+    gankSquadMaxLevel = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadMaxLevel", 80);
+    gankSquadMinSize = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadMinSize", 2);
+    gankSquadMaxSize = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadMaxSize", 10);
+    gankSquadPatrolInterval = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadPatrolInterval", 30000);
+    gankSquadHuntRange = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadHuntRange", 150);
+    gankSquadSpawnChance = sConfigMgr->GetOption<float>("AiPlayerbot.GankSquadSpawnChance", 0.15f);
+    gankSquadThreatDecayRate = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadThreatDecayRate", 5);
+    gankSquadRespawnDelay = sConfigMgr->GetOption<uint32>("AiPlayerbot.GankSquadRespawnDelay", 180);
+    gankSquadZones.clear();
+    LoadList<std::vector<uint32>>(
+        sConfigMgr->GetOption<std::string>("AiPlayerbot.GankSquadZones", "267,33,331,45,400,357,405,440,47,139,28"),
+        gankSquadZones);
+
     LOG_INFO("server.loading", "---------------------------------------");
     LOG_INFO("server.loading", "       mod-playerbots initialized      ");
     LOG_INFO("server.loading", "---------------------------------------");
@@ -713,6 +756,11 @@ bool PlayerbotAIConfig::IsRestrictedHealerDPSMap(uint32 mapId) const
 {
     return restrictHealerDPS &&
             std::find(restrictedHealerDPSMaps.begin(), restrictedHealerDPSMaps.end(), mapId) != restrictedHealerDPSMaps.end();
+}
+
+bool PlayerbotAIConfig::IsGankSquadZone(uint32 zoneId) const
+{
+    return std::find(gankSquadZones.begin(), gankSquadZones.end(), zoneId) != gankSquadZones.end();
 }
 
 std::string const PlayerbotAIConfig::GetTimestampStr()

@@ -203,7 +203,7 @@ bool NewRpgStatusUpdateAction::ApplyABCDecision(const LivingAzeroth::BotDecision
             else
             {
                 // Fall back to default grind location selection
-                WorldPosition grindPos = SelectRandomGrindPos();
+                WorldPosition grindPos = SelectRandomGrindPos(bot);
                 if (grindPos)
                 {
                     info.ChangeToGoGrind(grindPos);
@@ -224,7 +224,7 @@ bool NewRpgStatusUpdateAction::ApplyABCDecision(const LivingAzeroth::BotDecision
             }
             else
             {
-                WorldPosition campPos = SelectCampPos();
+                WorldPosition campPos = SelectRandomCampPos(bot);
                 if (campPos)
                 {
                     info.ChangeToGoCamp(campPos);

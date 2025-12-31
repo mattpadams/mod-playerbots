@@ -14,13 +14,15 @@
 #include "ObjectMgr.h"
 #include "PlayerbotAI.h"
 #include "PlayerbotFactory.h"
+#include "RoleStatWeights.h"
 #include "SharedDefines.h"
 #include "SpellAuraDefines.h"
 #include "SpellMgr.h"
 #include "StatsCollector.h"
 #include "Unit.h"
 
-StatsWeightCalculator::StatsWeightCalculator(Player* player) : player_(player)
+// Standard constructor - uses spec-based weights
+StatsWeightCalculator::StatsWeightCalculator(Player* player) : player_(player), useRoleOverride_(false), gearRole_(GearRole::ROLE_MELEE_DPS)
 {
     if (PlayerbotAI::IsHeal(player))
         type_ = CollectorType::SPELL_HEAL;
@@ -32,6 +34,41 @@ StatsWeightCalculator::StatsWeightCalculator(Player* player) : player_(player)
         type_ = CollectorType::MELEE_DMG;
     else
         type_ = CollectorType::RANGED;
+
+    InitializeCommon(player);
+}
+
+// Role override constructor - uses role-based weights instead of spec
+StatsWeightCalculator::StatsWeightCalculator(Player* player, GearRole roleOverride) : player_(player), useRoleOverride_(true), gearRole_(roleOverride)
+{
+    // Set CollectorType based on role instead of current spec
+    switch (roleOverride)
+    {
+        case GearRole::ROLE_TANK:
+            type_ = CollectorType::MELEE_TANK;
+            break;
+        case GearRole::ROLE_HEALER:
+            type_ = CollectorType::SPELL_HEAL;
+            break;
+        case GearRole::ROLE_MELEE_DPS:
+            type_ = CollectorType::MELEE_DMG;
+            break;
+        case GearRole::ROLE_RANGED_DPS:
+            type_ = CollectorType::RANGED;
+            break;
+        case GearRole::ROLE_CASTER_DPS:
+            type_ = CollectorType::SPELL_DMG;
+            break;
+        default:
+            type_ = CollectorType::MELEE_DMG;
+            break;
+    }
+
+    InitializeCommon(player);
+}
+
+void StatsWeightCalculator::InitializeCommon(Player* player)
+{
     cls = player->getClass();
     lvl = player->GetLevel();
     tab = AiFactory::GetPlayerSpecTab(player);
@@ -179,9 +216,51 @@ void StatsWeightCalculator::CalculateRandomProperty(int32 randomPropertyId, uint
 
 void StatsWeightCalculator::GenerateWeights(Player* player)
 {
-    GenerateBasicWeights(player);
-    GenerateAdditionalWeights(player);
+    if (useRoleOverride_)
+    {
+        // Use role-based weights from RoleStatWeights
+        GenerateWeightsByRole(player);
+    }
+    else
+    {
+        // Use spec-based weights (original behavior)
+        GenerateBasicWeights(player);
+        GenerateAdditionalWeights(player);
+    }
     ApplyWeightFinetune(player);
+}
+
+void StatsWeightCalculator::GenerateWeightsByRole(Player* player)
+{
+    // Get the base profile for the role
+    const RoleStatWeightProfile& profile = sRoleStatWeights->GetProfile(gearRole_);
+
+    // Copy base weights
+    for (uint32 i = 0; i < STATS_TYPE_MAX; i++)
+    {
+        // Apply level scaling to the weights
+        stats_weights_[i] = sRoleStatWeights->GetLevelScaledWeight(profile.weights[i], lvl, static_cast<StatsType>(i));
+    }
+
+    // Apply class-specific adjustments
+    sRoleStatWeights->ApplyClassAdjustments(cls, gearRole_, stats_weights_);
+
+    // Add minimal baseline weights for certain stats
+    stats_weights_[STATS_TYPE_BONUS] += 1.0f;
+
+    // Weapon DPS baseline based on role
+    switch (gearRole_)
+    {
+        case GearRole::ROLE_TANK:
+        case GearRole::ROLE_MELEE_DPS:
+            stats_weights_[STATS_TYPE_MELEE_DPS] = std::max(stats_weights_[STATS_TYPE_MELEE_DPS], 2.0f);
+            break;
+        case GearRole::ROLE_RANGED_DPS:
+            stats_weights_[STATS_TYPE_RANGED_DPS] = std::max(stats_weights_[STATS_TYPE_RANGED_DPS], 2.5f);
+            break;
+        default:
+            break;
+    }
 }
 
 void StatsWeightCalculator::GenerateBasicWeights(Player* player)

@@ -636,7 +636,7 @@ void AiFactory::AddDefaultNonCombatStrategies(Player* player, PlayerbotAI* const
 
     if (!player->InBattleground())
     {
-        nonCombatEngine->addStrategiesNoInit("nc", "food", "chat", "follow", "default", "quest", "loot",
+        nonCombatEngine->addStrategiesNoInit("nc", "food", "chat", "follow", "default", "accept all quests", "quest seek", "loot",
                                             "gather", "duel", "pvp", "buff", "mount", "emote", nullptr);
     }
 
@@ -801,4 +801,108 @@ Engine* AiFactory::createDeadEngine(Player* player, PlayerbotAI* const facade, A
     AddDefaultDeadStrategies(player, facade, deadEngine);
     deadEngine->Init();
     return deadEngine;
+}
+
+GearRole AiFactory::GetCurrentGearRole(Player* player)
+{
+    if (!player)
+        return GearRole::ROLE_MELEE_DPS;
+
+    // Determine role based on current spec using existing PlayerbotAI checks
+    if (PlayerbotAI::IsTank(player))
+        return GearRole::ROLE_TANK;
+    if (PlayerbotAI::IsHeal(player))
+        return GearRole::ROLE_HEALER;
+    if (PlayerbotAI::IsCaster(player))
+        return GearRole::ROLE_CASTER_DPS;
+    if (PlayerbotAI::IsRanged(player))
+        return GearRole::ROLE_RANGED_DPS;
+
+    return GearRole::ROLE_MELEE_DPS;
+}
+
+GearRole AiFactory::GetDesiredGearRole(Player* player, Group* group)
+{
+    if (!player)
+        return GearRole::ROLE_MELEE_DPS;
+
+    uint8 playerClass = player->getClass();
+
+    // If not in a group, use default DPS role for the class
+    if (!group)
+    {
+        group = player->GetGroup();
+    }
+
+    if (!group)
+    {
+        return sRoleStatWeights->GetDefaultDpsRole(playerClass);
+    }
+
+    // Analyze group composition
+    uint32 tankCount = 0;
+    uint32 healerCount = 0;
+    uint32 totalMembers = 0;
+
+    for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+    {
+        Player* member = ref->GetSource();
+        if (!member || !member->IsInWorld())
+            continue;
+
+        // Don't count ourselves
+        if (member == player)
+            continue;
+
+        totalMembers++;
+
+        if (PlayerbotAI::IsTank(member))
+            tankCount++;
+        else if (PlayerbotAI::IsHeal(member))
+            healerCount++;
+    }
+
+    // If group needs a tank and we can tank, recommend tank
+    if (tankCount == 0 && sRoleStatWeights->CanClassTank(playerClass))
+        return GearRole::ROLE_TANK;
+
+    // If group needs a healer and we can heal, recommend healer
+    if (healerCount == 0 && sRoleStatWeights->CanClassHeal(playerClass))
+        return GearRole::ROLE_HEALER;
+
+    // Default to class's preferred DPS role
+    return sRoleStatWeights->GetDefaultDpsRole(playerClass);
+}
+
+BotRoles AiFactory::GearRoleToBotRole(GearRole gearRole)
+{
+    switch (gearRole)
+    {
+        case GearRole::ROLE_TANK:
+            return BOT_ROLE_TANK;
+        case GearRole::ROLE_HEALER:
+            return BOT_ROLE_HEALER;
+        case GearRole::ROLE_MELEE_DPS:
+        case GearRole::ROLE_RANGED_DPS:
+        case GearRole::ROLE_CASTER_DPS:
+        default:
+            return BOT_ROLE_DPS;
+    }
+}
+
+GearRole AiFactory::BotRoleToGearRole(BotRoles botRole, Player* player)
+{
+    switch (botRole)
+    {
+        case BOT_ROLE_TANK:
+            return GearRole::ROLE_TANK;
+        case BOT_ROLE_HEALER:
+            return GearRole::ROLE_HEALER;
+        case BOT_ROLE_DPS:
+        default:
+            // Determine the appropriate DPS role based on class
+            if (player)
+                return sRoleStatWeights->GetDefaultDpsRole(player->getClass());
+            return GearRole::ROLE_MELEE_DPS;
+    }
 }

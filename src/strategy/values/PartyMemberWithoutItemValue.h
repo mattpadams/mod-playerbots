@@ -51,4 +51,16 @@ protected:
     FindPlayerPredicate* CreatePredicate() override;
 };
 
+class PartyMemberWithoutHealthstoneValue : public PartyMemberWithoutItemValue
+{
+public:
+    PartyMemberWithoutHealthstoneValue(PlayerbotAI* botAI, std::string const name = "party member without healthstone")
+        : PartyMemberWithoutItemValue(botAI, name)
+    {
+    }
+
+protected:
+    FindPlayerPredicate* CreatePredicate() override;
+};
+
 #endif

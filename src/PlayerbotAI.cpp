@@ -5,6 +5,9 @@
 
 #include "PlayerbotAI.h"
 
+// Force this string into the binary for verification - use volatile to prevent optimization
+[[maybe_unused]] static volatile const char* BUILD_MARKER = "UNIQUE_BUILD_MARKER_XYZ123_DEC19";
+
 #include <cmath>
 #include <mutex>
 #include <sstream>
@@ -235,6 +238,13 @@ PlayerbotAI::~PlayerbotAI()
 
 void PlayerbotAI::UpdateAI(uint32 elapsed, bool minimal)
 {
+    // Debug counter - only logs when debug level is enabled
+    // static uint32 updateCounter = 0;
+    // if (++updateCounter % 50 == 0)
+    // {
+    //     LOG_DEBUG("playerbots", "[PBAI-DEBUG] UpdateAI counter={} bot={}", updateCounter, bot ? bot->GetName() : "null");
+    // }
+
     // Handle the AI check delay
     if (nextAICheckDelay > elapsed)
         nextAICheckDelay -= elapsed;
@@ -514,6 +524,14 @@ void PlayerbotAI::UpdateAIInternal([[maybe_unused]] uint32 elapsed, bool minimal
 
 void PlayerbotAI::HandleCommands()
 {
+    // Always log to see if this function is being called
+    static uint32 callCounter = 0;
+    if (++callCounter % 100 == 0 || !chatCommands.empty())  // Log every 100 calls or if there are commands
+    {
+        LOG_INFO("playerbots", "HandleCommands - {} called (count={}), {} commands queued",
+            bot->GetName(), callCounter, chatCommands.size());
+    }
+
     ExternalEventHelper helper(aiObjectContext);
     for (auto it = chatCommands.begin(); it != chatCommands.end();)
     {
@@ -526,7 +544,12 @@ void PlayerbotAI::HandleCommands()
 
         const std::string& command = it->GetCommand();
         Player* owner = it->GetOwner();
-        if (!helper.ParseChatCommand(command, owner) && it->GetType() == CHAT_MSG_WHISPER)
+        LOG_INFO("playerbots", "HandleCommands - {} processing command: '{}'", bot->GetName(), command);
+
+        bool result = helper.ParseChatCommand(command, owner);
+        LOG_INFO("playerbots", "HandleCommands - {} command '{}' result: {}", bot->GetName(), command, result);
+
+        if (!result && it->GetType() == CHAT_MSG_WHISPER)
         {
             // ostringstream out; out << "Unknown command " << command;
             // TellPlayer(out);
@@ -4641,6 +4664,144 @@ bool PlayerbotAI::IsOpposing(Player* player) { return IsOpposing(player->getRace
 bool PlayerbotAI::IsOpposing(uint8 race1, uint8 race2)
 {
     return (IsAlliance(race1) && !IsAlliance(race2)) || (!IsAlliance(race1) && IsAlliance(race2));
+}
+
+// FFA PvP hostility checks
+bool PlayerbotAI::IsFFAHostile(Player* player)
+{
+    if (!player || !bot)
+        return false;
+
+    // FFA mode must be enabled
+    if (!sPlayerbotAIConfig->ffaPvpEnabled)
+        return false;
+
+    // Never attack ourselves
+    if (player == bot)
+        return false;
+
+    // Check if in a safe zone
+    if (IsInSafeZone())
+        return false;
+
+    // Guild members are always friendly if configured
+    if (sPlayerbotAIConfig->ffaPvpGuildFriendly && IsSameGuild(player))
+        return false;
+
+    // Group members are always friendly if configured
+    if (sPlayerbotAIConfig->ffaPvpGroupFriendly && IsSameGroup(player))
+        return false;
+
+    uint8 aggressionLevel = sPlayerbotAIConfig->ffaPvpAggressionLevel;
+
+    // Defensive mode - only hostile if they attacked us recently
+    if (aggressionLevel == 0)
+    {
+        return WasRecentlyAttackedBy(player);
+    }
+
+    // Territorial mode - hostile if within territorial range
+    if (aggressionLevel == 1)
+    {
+        float range = sPlayerbotAIConfig->ffaPvpTerritorialRange;
+        return bot->GetDistance(player) <= range;
+    }
+
+    // Aggressive mode - hostile if within aggressive range
+    if (aggressionLevel >= 2)
+    {
+        float range = sPlayerbotAIConfig->ffaPvpAggressiveRange;
+        return bot->GetDistance(player) <= range;
+    }
+
+    return false;
+}
+
+bool PlayerbotAI::IsSameGuild(Player* player) const
+{
+    if (!player || !bot)
+        return false;
+
+    uint32 botGuildId = bot->GetGuildId();
+    uint32 playerGuildId = player->GetGuildId();
+
+    // Both must be in a guild
+    if (botGuildId == 0 || playerGuildId == 0)
+        return false;
+
+    return botGuildId == playerGuildId;
+}
+
+bool PlayerbotAI::IsSameGroup(Player* player) const
+{
+    if (!player || !bot)
+        return false;
+
+    Group* botGroup = bot->GetGroup();
+    if (!botGroup)
+        return false;
+
+    return botGroup->IsMember(player->GetGUID());
+}
+
+bool PlayerbotAI::WasRecentlyAttackedBy(Player* player) const
+{
+    if (!player)
+        return false;
+
+    auto it = recentAttackers_.find(player->GetGUID());
+    if (it == recentAttackers_.end())
+        return false;
+
+    // Check if the attack was within the memory time
+    time_t now = time(nullptr);
+    time_t memoryTime = sPlayerbotAIConfig->ffaPvpAttackerMemoryTime;
+
+    return (now - it->second) <= memoryTime;
+}
+
+void PlayerbotAI::RecordAttacker(ObjectGuid attackerGuid)
+{
+    recentAttackers_[attackerGuid] = time(nullptr);
+}
+
+void PlayerbotAI::CleanupOldAttackers()
+{
+    time_t now = time(nullptr);
+    time_t memoryTime = sPlayerbotAIConfig->ffaPvpAttackerMemoryTime;
+
+    for (auto it = recentAttackers_.begin(); it != recentAttackers_.end();)
+    {
+        if ((now - it->second) > memoryTime)
+            it = recentAttackers_.erase(it);
+        else
+            ++it;
+    }
+}
+
+bool PlayerbotAI::IsInSafeZone() const
+{
+    if (!bot)
+        return false;
+
+    // Check if current zone is in the safe zones list
+    std::string safeZonesStr = sPlayerbotAIConfig->ffaPvpSafeZones;
+    if (safeZonesStr.empty())
+        return false;
+
+    uint32 currentZone = bot->GetZoneId();
+
+    // Parse the comma-separated safe zones
+    std::stringstream ss(safeZonesStr);
+    std::string item;
+    while (std::getline(ss, item, ','))
+    {
+        uint32 zoneId = atoi(item.c_str());
+        if (zoneId == currentZone)
+            return true;
+    }
+
+    return false;
 }
 
 void PlayerbotAI::RemoveShapeshift()

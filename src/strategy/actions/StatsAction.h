@@ -22,6 +22,9 @@ private:
     void ListXP(std::ostringstream& out);
     void ListRepairCost(std::ostringstream& out);
     void ListGold(std::ostringstream& out);
+    void ListProfessions(std::ostringstream& out);
+    void ListClassQuests();
+    void ListTrainableSpells();
     uint32 EstRepair(uint16 pos);
     double RepairPercent(uint16 pos);
 };

@@ -9,6 +9,7 @@
 #include "InventoryAction.h"
 #include "Player.h"
 #include "PlayerbotAI.h"
+#include "RoleStatWeights.h"
 
 class Item;
 
@@ -67,6 +68,8 @@ public:
     void InitClassSpells();
     void InitSpecialSpells();
     void InitEquipment(bool incremental, bool second_chance = false);
+    // Role-aware gear initialization - scores items based on specified role instead of current spec
+    void InitEquipmentForRole(GearRole role, bool incremental, bool second_chance = false);
     void InitPet();
     void InitAmmo();
     static uint32 CalcMixedGearScore(uint32 gs, uint32 quality);

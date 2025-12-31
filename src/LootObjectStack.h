@@ -43,6 +43,7 @@ public:
 
 private:
     static bool IsNeededForQuest(Player* bot, uint32 itemId);
+    static bool IsNeededForQuestObjective(Player* bot, uint32 goEntry);
 };
 
 class LootTarget

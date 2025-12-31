@@ -30,6 +30,18 @@ bool AttackEnemyFlagCarrierAction::isUseful()
            PlayerHasFlag::IsCapturingFlag(bot);
 }
 
+bool AttackFFAEnemyAction::isUseful()
+{
+    if (!sPlayerbotAIConfig->ffaPvpEnabled)
+        return false;
+
+    Unit* target = GetTarget();
+    if (!target || !target->IsAlive())
+        return false;
+
+    return true;
+}
+
 bool AttackAnythingAction::isUseful()
 {
     if (!bot || !botAI)  // Prevents invalid accesses

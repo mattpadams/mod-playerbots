@@ -21,6 +21,10 @@ public:
 
 protected:
     bool ProcessQuest(Quest const* quest, Object* questGiver) override;
+
+private:
+    bool ShouldAcceptQuest(Quest const* quest);
+    bool IsClassQuest(Quest const* quest);
 };
 
 class AcceptQuestAction : public AcceptAllQuestsAction

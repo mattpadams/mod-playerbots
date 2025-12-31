@@ -22,6 +22,7 @@
 #include "Playerbots.h"
 #include "Position.h"
 #include "QuestDef.h"
+#include "QuestPriorityValues.h"
 #include "Random.h"
 #include "RandomPlayerbotMgr.h"
 #include "SharedDefines.h"
@@ -1115,6 +1116,27 @@ bool NewRpgBaseAction::RandomChangeStatus(std::vector<NewRpgStatus> candidateSta
         }
         case RPG_DO_QUEST:
         {
+            // Use prioritized quest selection if enabled
+            if (sPlayerbotAIConfig->questPrioritizationEnabled)
+            {
+                uint32 bestQuestId = AI_VALUE(uint32, "best quest");
+                if (bestQuestId != 0)
+                {
+                    // Verify we can actually do this quest
+                    std::vector<POIInfo> poiInfo;
+                    if (GetQuestPOIPosAndObjectiveIdx(bestQuestId, poiInfo, true))
+                    {
+                        const Quest* quest = sObjectMgr->GetQuestTemplate(bestQuestId);
+                        if (quest)
+                        {
+                            botAI->rpgInfo.ChangeToDoQuest(bestQuestId, quest);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            // Fallback to original random selection
             std::vector<uint32> availableQuests;
             for (uint8 slot = 0; slot < MAX_QUEST_LOG_SIZE; ++slot)
             {

@@ -7,9 +7,67 @@
 
 #include "Event.h"
 #include "Playerbots.h"
+#include "SharedDefines.h"
+
+bool AcceptAllQuestsAction::IsClassQuest(Quest const* quest)
+{
+    // Check if quest has class requirements
+    if (quest->GetRequiredClasses() != 0)
+    {
+        // Verify bot's class matches the requirement
+        return (quest->GetRequiredClasses() & bot->getClassMask()) != 0;
+    }
+
+    // Check ZoneOrSort for class-specific quest categories
+    int32 zoneOrSort = quest->GetZoneOrSort();
+    if (zoneOrSort < 0)
+    {
+        uint32 questSort = -zoneOrSort;
+        uint8 botClass = bot->getClass();
+
+        switch (questSort)
+        {
+            case QUEST_SORT_WARLOCK:     return botClass == CLASS_WARLOCK;
+            case QUEST_SORT_WARRIOR:     return botClass == CLASS_WARRIOR;
+            case QUEST_SORT_SHAMAN:      return botClass == CLASS_SHAMAN;
+            case QUEST_SORT_PALADIN:     return botClass == CLASS_PALADIN;
+            case QUEST_SORT_MAGE:        return botClass == CLASS_MAGE;
+            case QUEST_SORT_ROGUE:       return botClass == CLASS_ROGUE;
+            case QUEST_SORT_HUNTER:      return botClass == CLASS_HUNTER;
+            case QUEST_SORT_PRIEST:      return botClass == CLASS_PRIEST;
+            case QUEST_SORT_DRUID:       return botClass == CLASS_DRUID;
+            case QUEST_SORT_DEATH_KNIGHT: return botClass == CLASS_DEATH_KNIGHT;
+            default: break;
+        }
+    }
+
+    return false;
+}
+
+bool AcceptAllQuestsAction::ShouldAcceptQuest(Quest const* quest)
+{
+    // Accept quests that give XP
+    if (quest->GetXPId() > 0)
+        return true;
+
+    // Accept class quests (for this bot's class)
+    if (IsClassQuest(quest))
+        return true;
+
+    // Accept quests that reward a spell (typically class quests)
+    if (quest->GetRewSpellCast() > 0 || quest->GetRewSpell() > 0)
+        return true;
+
+    // Reject quests that don't meet any criteria
+    return false;
+}
 
 bool AcceptAllQuestsAction::ProcessQuest(Quest const* quest, Object* questGiver)
 {
+    // Filter quests - only accept XP-giving, class, or spell-rewarding quests
+    if (!ShouldAcceptQuest(quest))
+        return false;
+
     if (!AcceptQuest(quest, questGiver->GetGUID())) return false;
 
     auto text_quest = ChatHelper::FormatQuest(quest);

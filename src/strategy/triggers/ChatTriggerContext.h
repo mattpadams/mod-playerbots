@@ -20,7 +20,10 @@ public:
         creators["unlock items"] = &ChatTriggerContext::unlock_items;
         creators["unlock traded item"] = &ChatTriggerContext::unlock_traded_item;
         creators["quests"] = &ChatTriggerContext::quests;
+        creators["progress"] = &ChatTriggerContext::progress;
+        creators["objectives"] = &ChatTriggerContext::objectives;
         creators["stats"] = &ChatTriggerContext::stats;
+        creators["gold"] = &ChatTriggerContext::gold;
         creators["leave"] = &ChatTriggerContext::leave;
         creators["rep"] = &ChatTriggerContext::reputation;
         creators["reputation"] = &ChatTriggerContext::reputation;
@@ -222,7 +225,10 @@ private:
     static Trigger* drop(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "drop"); }
     static Trigger* share(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "share"); }
     static Trigger* quests(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "quests"); }
+    static Trigger* progress(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "progress"); }
+    static Trigger* objectives(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "objectives"); }
     static Trigger* stats(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "stats"); }
+    static Trigger* gold(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "gold"); }
     static Trigger* leave(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "leave"); }
     static Trigger* reputation(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "reputation"); }
     static Trigger* log(PlayerbotAI* botAI) { return new ChatCommandTrigger(botAI, "log"); }

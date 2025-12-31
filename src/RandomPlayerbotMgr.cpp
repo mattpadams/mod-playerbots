@@ -48,6 +48,7 @@
 #include "ServerFacade.h"
 #include "SharedDefines.h"
 #include "TravelMgr.h"
+#include "GankSquadMgr.h"
 #include "Unit.h"
 #include "UpdateTime.h"
 #include "World.h"
@@ -534,6 +535,10 @@ void RandomPlayerbotMgr::UpdateAIInternal(uint32 elapsed, bool /*minimal*/)
 
     if (pmo)
         pmo->finish();
+
+    // Update gank squad system
+    if (sPlayerbotAIConfig->gankSquadEnabled)
+        sGankSquadMgr->Update(elapsed);
 
     if (sPlayerbotAIConfig->hasLog("player_location.csv"))
     {

@@ -572,6 +572,16 @@ public:
     ChatHelper* GetChatHelper() { return &chatHelper; }
     bool IsOpposing(Player* player);
     static bool IsOpposing(uint8 race1, uint8 race2);
+
+    // FFA PvP hostility checks
+    bool IsFFAHostile(Player* player);
+    bool IsSameGuild(Player* player) const;
+    bool IsSameGroup(Player* player) const;
+    bool WasRecentlyAttackedBy(Player* player) const;
+    void RecordAttacker(ObjectGuid attackerGuid);
+    void CleanupOldAttackers();
+    bool IsInSafeZone() const;
+
     PlayerbotSecurity* GetSecurity() { return &security; }
 
     Position GetJumpDestination() { return jumpDestination; }
@@ -643,6 +653,9 @@ protected:
     BotCheatMask cheatMask = BotCheatMask::none;
     Position jumpDestination = Position();
     uint32 nextTransportCheck = 0;
+
+    // FFA PvP attacker tracking
+    std::map<ObjectGuid, time_t> recentAttackers_;
 };
 
 #endif

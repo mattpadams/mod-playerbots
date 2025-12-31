@@ -65,6 +65,9 @@
 #include "XpGainAction.h"
 #include "NewRpgAction.h"
 #include "CancelChannelAction.h"
+#include "SeekQuestObjectiveAction.h"
+#include "LootQuestContainerAction.h"
+#include "GankSquadActions.h"
 
 class PlayerbotAI;
 
@@ -158,6 +161,7 @@ public:
         creators["try emergency"] = &ActionContext::try_emergency;
         creators["give food"] = &ActionContext::give_food;
         creators["give water"] = &ActionContext::give_water;
+        creators["give healthstone"] = &ActionContext::give_healthstone;
         creators["mount"] = &ActionContext::mount;
         creators["war stomp"] = &ActionContext::war_stomp;
         creators["blood fury"] = &ActionContext::blood_fury;
@@ -256,11 +260,22 @@ public:
         creators["new rpg wander npc"] = &ActionContext::new_rpg_wander_npc;
         creators["new rpg do quest"] = &ActionContext::new_rpg_do_quest;
         creators["new rpg travel flight"] = &ActionContext::new_rpg_travel_flight;
+
+        // Quest seeking
+        creators["seek quest objective"] = &ActionContext::seek_quest_objective;
+        creators["loot quest container"] = &ActionContext::loot_quest_container;
+
+        // Gank squad
+        creators["attack gank target"] = &ActionContext::attack_gank_target;
+        creators["hunt gank target"] = &ActionContext::hunt_gank_target;
+        creators["patrol gank zone"] = &ActionContext::patrol_gank_zone;
+        creators["regroup squad"] = &ActionContext::regroup_squad;
     }
 
 private:
     static Action* give_water(PlayerbotAI* botAI) { return new GiveWaterAction(botAI); }
     static Action* give_food(PlayerbotAI* botAI) { return new GiveFoodAction(botAI); }
+    static Action* give_healthstone(PlayerbotAI* botAI) { return new GiveHealthstoneAction(botAI); }
     static Action* ra(PlayerbotAI* botAI) { return new RemoveAuraAction(botAI); }
     static Action* mark_rti(PlayerbotAI* botAI) { return new MarkRtiAction(botAI); }
     static Action* set_return_position(PlayerbotAI* botAI) { return new SetReturnPositionAction(botAI); }
@@ -444,6 +459,16 @@ private:
     static Action* new_rpg_wander_npc(PlayerbotAI* ai) { return new NewRpgWanderNpcAction(ai); }
     static Action* new_rpg_do_quest(PlayerbotAI* ai) { return new NewRpgDoQuestAction(ai); }
     static Action* new_rpg_travel_flight(PlayerbotAI* ai) { return new NewRpgTravelFlightAction(ai); }
+
+    // Quest seeking
+    static Action* seek_quest_objective(PlayerbotAI* botAI) { return new SeekQuestObjectiveAction(botAI); }
+    static Action* loot_quest_container(PlayerbotAI* botAI) { return new LootQuestContainerAction(botAI); }
+
+    // Gank squad
+    static Action* attack_gank_target(PlayerbotAI* botAI) { return new AttackGankTargetAction(botAI); }
+    static Action* hunt_gank_target(PlayerbotAI* botAI) { return new HuntGankTargetAction(botAI); }
+    static Action* patrol_gank_zone(PlayerbotAI* botAI) { return new PatrolGankZoneAction(botAI); }
+    static Action* regroup_squad(PlayerbotAI* botAI) { return new RegroupSquadAction(botAI); }
 };
 
 #endif

@@ -7,6 +7,7 @@
 
 #include "BudgetValues.h"
 #include "ItemUsageValue.h"
+#include "ItemVisitors.h"
 #include "Playerbots.h"
 
 bool CanMoveAroundValue::Calculate()
@@ -40,8 +41,36 @@ bool ShouldSellValue::Calculate() { return AI_VALUE(uint8, "bag space") > 80; }
 
 bool CanSellValue::Calculate()
 {
-    return (AI_VALUE2(uint32, "item count", "usage " + std::to_string(ITEM_USAGE_VENDOR)) +
-            AI_VALUE2(uint32, "item count", "usage " + std::to_string(ITEM_USAGE_AH))) > 1;
+    // Check for vendor/AH items
+    uint32 sellableCount = AI_VALUE2(uint32, "item count", "usage " + std::to_string(ITEM_USAGE_VENDOR)) +
+                           AI_VALUE2(uint32, "item count", "usage " + std::to_string(ITEM_USAGE_AH));
+
+    // Also count gray items
+    ItemCountByQuality visitor;
+    for (uint8 bag = INVENTORY_SLOT_BAG_START; bag < INVENTORY_SLOT_BAG_END; ++bag)
+    {
+        Bag* pBag = dynamic_cast<Bag*>(bot->GetItemByPos(INVENTORY_SLOT_BAG_0, bag));
+        if (pBag)
+        {
+            for (uint8 slot = 0; slot < pBag->GetBagSize(); ++slot)
+            {
+                Item* item = pBag->GetItemByPos(slot);
+                if (item)
+                    visitor.Visit(item);
+            }
+        }
+    }
+    // Check main backpack
+    for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
+    {
+        Item* item = bot->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+        if (item)
+            visitor.Visit(item);
+    }
+
+    uint32 grayCount = visitor.count[ITEM_QUALITY_POOR];
+
+    return (sellableCount + grayCount) > 0;
 }
 
 bool CanFightEqualValue::Calculate() { return AI_VALUE(uint8, "durability") > 20; }

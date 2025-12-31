@@ -86,6 +86,7 @@ void GenericWarlockNonCombatStrategy::InitTriggers(std::vector<TriggerNode*>& tr
     triggers.push_back(new TriggerNode("soul link", NextAction::array(0, new NextAction("soul link", 28.0f), nullptr)));
     triggers.push_back(new TriggerNode("demon armor", NextAction::array(0, new NextAction("fel armor", 27.0f), nullptr)));
     triggers.push_back(new TriggerNode("no healthstone", NextAction::array(0, new NextAction("create healthstone", 26.0f), nullptr)));
+    triggers.push_back(new TriggerNode("give healthstone", NextAction::array(0, new NextAction("give healthstone", 25.5f), nullptr)));
     triggers.push_back(new TriggerNode("no soulstone", NextAction::array(0, new NextAction("create soulstone", 25.0f), nullptr)));
     triggers.push_back(new TriggerNode("life tap", NextAction::array(0, new NextAction("life tap", 23.0f), nullptr)));
 }

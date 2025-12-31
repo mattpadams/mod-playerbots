@@ -9,9 +9,11 @@
 #include <map>
 
 #include "Common.h"
+#include "RoleStatWeights.h"
 
 class AiObjectContext;
 class Engine;
+class Group;
 class Player;
 class PlayerbotAI;
 
@@ -32,6 +34,12 @@ public:
     static std::map<uint8, uint32> GetPlayerSpecTabs(Player* player);
     static BotRoles GetPlayerRoles(Player* player);
     static std::string GetPlayerSpecName(Player* player);
+
+    // GearRole helpers for role-based gear selection
+    static GearRole GetCurrentGearRole(Player* player);
+    static GearRole GetDesiredGearRole(Player* player, Group* group = nullptr);
+    static BotRoles GearRoleToBotRole(GearRole gearRole);
+    static GearRole BotRoleToGearRole(BotRoles botRole, Player* player);
 };
 
 #endif

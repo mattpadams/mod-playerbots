@@ -49,6 +49,10 @@ public:
 
     bool Visit(Item* item) override
     {
+        // Also sell gray items automatically when at a vendor
+        if (item->GetTemplate()->Quality == ITEM_QUALITY_POOR)
+            return SellItemsVisitor::Visit(item);
+
         ItemUsage usage = context->GetValue<ItemUsage>("item usage", item->GetEntry())->Get();
         if (usage != ITEM_USAGE_VENDOR && usage != ITEM_USAGE_AH)
             return true;

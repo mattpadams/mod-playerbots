@@ -2145,3 +2145,52 @@ AiPlayerbot.SummonAtInnkeepersEnabled = 1
 # Buffs will be applied on PP, Sindragosa and Lich King
 
 AiPlayerbot.EnableICCBuffs = 1
+
+###############################################################################
+# GANK SQUAD SYSTEM
+#
+# Creates enemy faction bot squads that patrol contested zones, hunt players,
+# and escalate in size based on player threat level. Requires PvP server mode
+# (GameType = 1 in worldserver.conf).
+###############################################################################
+
+# Enable gank squad system
+# Default: 0 (disabled)
+AiPlayerbot.GankSquadEnabled = 0
+
+# Level range for gank squad bots
+# Default: 20-80
+AiPlayerbot.GankSquadMinLevel = 20
+AiPlayerbot.GankSquadMaxLevel = 80
+
+# Squad size range (scales with player threat level)
+# Low threat = min size, high threat = max size
+# Default: 2-10
+AiPlayerbot.GankSquadMinSize = 2
+AiPlayerbot.GankSquadMaxSize = 10
+
+# Patrol waypoint interval in milliseconds
+# Default: 30000 (30 seconds)
+AiPlayerbot.GankSquadPatrolInterval = 30000
+
+# Maximum range to chase and hunt targets (yards)
+# Default: 150
+AiPlayerbot.GankSquadHuntRange = 150
+
+# Chance per update cycle to spawn a new squad (0.0 - 1.0)
+# Default: 0.15 (15%)
+AiPlayerbot.GankSquadSpawnChance = 0.15
+
+# Threat decay rate (points per minute when player is not in zone)
+# Default: 5
+AiPlayerbot.GankSquadThreatDecayRate = 5
+
+# Respawn delay after squad wipe (seconds)
+# Default: 180 (3 minutes)
+AiPlayerbot.GankSquadRespawnDelay = 180
+
+# Contested zones where gank squads operate (comma-separated zone IDs)
+# Default zones: Hillsbrad(267), STV(33), Ashenvale(331), Arathi(45),
+#                Thousand Needles(400), Feralas(357), Desolace(405),
+#                Tanaris(440), Hinterlands(47), EPL(139), WPL(28)
+AiPlayerbot.GankSquadZones = "267,33,331,45,400,357,405,440,47,139,28"

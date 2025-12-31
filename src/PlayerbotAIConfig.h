@@ -357,6 +357,34 @@ public:
     bool autoDoQuests;
     bool enableNewRpgStrategy;
     std::unordered_map<NewRpgStatus, uint32> RpgStatusProbWeight;
+
+    // Quest Priority System
+    bool questPrioritizationEnabled;
+    float questPriorityXPEfficiency;
+    float questPriorityZoneFlow;
+    float questPriorityProximity;
+    float questPriorityRewardValue;
+    float questPriorityClassQuest;
+    float questPriorityChainProgress;
+    float questPriorityDungeonGroupThreshold;
+
+    // Role Management System
+    bool dynamicRoleSwitchingEnabled;
+    bool groupRoleAnalysisEnabled;
+    uint32 roleSwitchMinLevel;
+    uint32 respecCooldownMinutes;
+    bool autoGearForRole;
+
+    // FFA PvP Defense System
+    bool ffaPvpEnabled;
+    uint8 ffaPvpAggressionLevel;      // 0=Defensive, 1=Territorial, 2=Aggressive
+    bool ffaPvpGuildFriendly;          // Don't attack guild members
+    bool ffaPvpGroupFriendly;          // Don't attack group members
+    float ffaPvpTerritorialRange;      // Range for territorial mode
+    float ffaPvpAggressiveRange;       // Range for aggressive mode
+    uint32 ffaPvpAttackerMemoryTime;   // How long to remember attackers (seconds)
+    std::string ffaPvpSafeZones;       // Comma-separated list of safe zone IDs
+
     bool syncLevelWithPlayers;
     bool autoLearnQuestSpells;
     bool autoTeleportForLevel;
@@ -446,6 +474,20 @@ public:
     bool IsRestrictedHealerDPSMap(uint32 mapId) const;
 
     std::vector<uint32> excludedHunterPetFamilies;
+
+    // Gank Squad System
+    bool gankSquadEnabled;
+    uint32 gankSquadMinLevel;
+    uint32 gankSquadMaxLevel;
+    uint32 gankSquadMinSize;
+    uint32 gankSquadMaxSize;
+    uint32 gankSquadPatrolInterval;
+    uint32 gankSquadHuntRange;
+    float gankSquadSpawnChance;
+    uint32 gankSquadThreatDecayRate;
+    uint32 gankSquadRespawnDelay;
+    std::vector<uint32> gankSquadZones;
+    bool IsGankSquadZone(uint32 zoneId) const;
 };
 
 #define sPlayerbotAIConfig PlayerbotAIConfig::instance()

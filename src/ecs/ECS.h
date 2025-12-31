@@ -60,6 +60,8 @@
 #include "Benchmark.h"
 #include "BatchProcessor.h"
 #include "HotColdData.h"
+#include "SquadAI.h"
+#include "ipc/IPC.h"
 
 // Convenience namespace alias
 namespace ECS = ecs;

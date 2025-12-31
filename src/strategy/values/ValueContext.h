@@ -71,6 +71,9 @@
 #include "PossibleTargetsValue.h"
 #include "PvpValues.h"
 #include "QuestValues.h"
+#include "QuestPriorityValues.h"
+#include "QuestObjectiveValues.h"
+#include "ContainerQuestObjectiveValue.h"
 #include "RTSCValues.h"
 #include "RandomBotUpdateValue.h"
 #include "RangeValues.h"
@@ -88,6 +91,7 @@
 #include "ThreatValues.h"
 #include "TradeValues.h"
 #include "Value.h"
+#include "GankSquadValues.h"
 
 class PlayerbotAI;
 
@@ -239,6 +243,7 @@ public:
         creators["party member without item"] = &ValueContext::party_member_without_item;
         creators["party member without food"] = &ValueContext::party_member_without_food;
         creators["party member without water"] = &ValueContext::party_member_without_water;
+        creators["party member without healthstone"] = &ValueContext::party_member_without_healthstone;
         creators["death count"] = &ValueContext::death_count;
 
         creators["bg type"] = &ValueContext::bg_type;
@@ -258,6 +263,25 @@ public:
         creators["can accept quest npc"] = &ValueContext::can_accept_quest_npc;
         creators["can accept quest low level npc"] = &ValueContext::can_accept_quest_low_level_npc;
         creators["can turn in quest npc"] = &ValueContext::can_turn_in_quest_npc;
+
+        // Quest priority values
+        creators["prioritized quests"] = &ValueContext::prioritized_quests;
+        creators["best quest"] = &ValueContext::best_quest;
+        creators["best available quest"] = &ValueContext::best_available_quest;
+        creators["quest has role upgrade"] = &ValueContext::quest_has_role_upgrade;
+        creators["zone quest progress"] = &ValueContext::zone_quest_progress;
+        creators["zone quest count"] = &ValueContext::zone_quest_count;
+        creators["should change zone"] = &ValueContext::should_change_zone;
+
+        // Quest objective seeking
+        creators["quest objective targets"] = &ValueContext::quest_objective_targets;
+        creators["nearest quest objective"] = &ValueContext::nearest_quest_objective;
+        creators["has quest objective nearby"] = &ValueContext::has_quest_objective_nearby;
+
+        // Container quest objectives
+        creators["container quest objectives"] = &ValueContext::container_quest_objectives;
+        creators["container loot blocked"] = &ValueContext::container_loot_blocked;
+        creators["enemies near quest container"] = &ValueContext::enemies_near_quest_container;
 
         creators["money needed for"] = &ValueContext::money_needed_for;
         creators["total money needed for"] = &ValueContext::total_money_needed_for;
@@ -312,6 +336,12 @@ public:
         creators["last flee angle"] = &ValueContext::last_flee_angle;
         creators["last flee timestamp"] = &ValueContext::last_flee_timestamp;
         creators["recently flee info"] = &ValueContext::recently_flee_info;
+
+        // Gank squad
+        creators["gank squad target"] = &ValueContext::gank_squad_target;
+        creators["gank squad state"] = &ValueContext::gank_squad_state;
+        creators["gank squad leader"] = &ValueContext::gank_squad_leader;
+        creators["in gank squad"] = &ValueContext::in_gank_squad;
     }
 
 private:
@@ -322,6 +352,10 @@ private:
     static UntypedValue* party_member_without_food(PlayerbotAI* botAI)
     {
         return new PartyMemberWithoutFoodValue(botAI);
+    }
+    static UntypedValue* party_member_without_healthstone(PlayerbotAI* botAI)
+    {
+        return new PartyMemberWithoutHealthstoneValue(botAI);
     }
     static UntypedValue* party_member_without_item(PlayerbotAI* botAI)
     {
@@ -501,6 +535,15 @@ private:
     }
     static UntypedValue* can_turn_in_quest_npc(PlayerbotAI* botAI) { return new CanTurnInQuestValue(botAI); }
 
+    // Quest priority values
+    static UntypedValue* prioritized_quests(PlayerbotAI* botAI) { return new PrioritizedQuestsValue(botAI); }
+    static UntypedValue* best_quest(PlayerbotAI* botAI) { return new BestQuestValue(botAI); }
+    static UntypedValue* best_available_quest(PlayerbotAI* botAI) { return new BestAvailableQuestValue(botAI); }
+    static UntypedValue* quest_has_role_upgrade(PlayerbotAI* botAI) { return new QuestHasRoleUpgradeValue(botAI); }
+    static UntypedValue* zone_quest_progress(PlayerbotAI* botAI) { return new ZoneQuestProgressValue(botAI); }
+    static UntypedValue* zone_quest_count(PlayerbotAI* botAI) { return new ZoneQuestCountValue(botAI); }
+    static UntypedValue* should_change_zone(PlayerbotAI* botAI) { return new ShouldChangeZoneValue(botAI); }
+
     static UntypedValue* money_needed_for(PlayerbotAI* botAI) { return new MoneyNeededForValue(botAI); }
     static UntypedValue* total_money_needed_for(PlayerbotAI* botAI) { return new TotalMoneyNeededForValue(botAI); }
     static UntypedValue* free_money_for(PlayerbotAI* botAI) { return new FreeMoneyForValue(botAI); }
@@ -555,6 +598,17 @@ private:
     static UntypedValue* last_flee_angle(PlayerbotAI* ai) { return new LastFleeAngleValue(ai); }
     static UntypedValue* last_flee_timestamp(PlayerbotAI* ai) { return new LastFleeTimestampValue(ai); }
     static UntypedValue* recently_flee_info(PlayerbotAI* ai) { return new RecentlyFleeInfo(ai); }
+
+    // Quest objective seeking
+    static UntypedValue* quest_objective_targets(PlayerbotAI* ai) { return new QuestObjectiveTargetsValue(ai); }
+    static UntypedValue* nearest_quest_objective(PlayerbotAI* ai) { return new NearestQuestObjectiveValue(ai); }
+    static UntypedValue* has_quest_objective_nearby(PlayerbotAI* ai) { return new HasQuestObjectiveNearbyValue(ai); }
+
+    // Container quest objectives
+    static UntypedValue* container_quest_objectives(PlayerbotAI* ai) { return new ContainerQuestObjectivesValue(ai); }
+    static UntypedValue* container_loot_blocked(PlayerbotAI* ai) { return new ContainerLootBlockedValue(ai); }
+    static UntypedValue* enemies_near_quest_container(PlayerbotAI* ai) { return new EnemiesNearQuestContainerValue(ai); }
+
     // -------------------------------------------------------
     // Flag for cutom glyphs : true when /w bot glyph equip
     // -------------------------------------------------------
@@ -562,6 +616,12 @@ private:
     {
         return new ManualSetValue<bool>(ai, false, "custom_glyphs");
     }
+
+    // Gank squad
+    static UntypedValue* gank_squad_target(PlayerbotAI* botAI) { return new GankSquadTargetValue(botAI); }
+    static UntypedValue* gank_squad_state(PlayerbotAI* botAI) { return new GankSquadStateValue(botAI); }
+    static UntypedValue* gank_squad_leader(PlayerbotAI* botAI) { return new GankSquadLeaderValue(botAI); }
+    static UntypedValue* in_gank_squad(PlayerbotAI* botAI) { return new InGankSquadValue(botAI); }
 };
 
 #endif

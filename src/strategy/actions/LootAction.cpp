@@ -20,12 +20,16 @@
 
 bool LootAction::Execute(Event /*event*/)
 {
-    if (!AI_VALUE(bool, "has available loot"))
+    bool hasAvailableLoot = AI_VALUE(bool, "has available loot");
+
+    if (!hasAvailableLoot)
         return false;
 
     LootObject prevLoot = AI_VALUE(LootObject, "loot target");
+    // Use sightDistance (not lootDistance) to find loot to move toward
+    // lootDistance is for interaction, sightDistance is for detection/movement
     LootObject const& lootObject =
-        AI_VALUE(LootObjectStack*, "available loot")->GetLoot(sPlayerbotAIConfig->lootDistance);
+        AI_VALUE(LootObjectStack*, "available loot")->GetLoot(sPlayerbotAIConfig->sightDistance);
 
     if (!prevLoot.IsEmpty() && prevLoot.guid != lootObject.guid)
     {
@@ -139,13 +143,14 @@ bool OpenLootAction::DoLoot(LootObject& lootObject)
     if (go && (go->GetGoState() != GO_STATE_READY))
         return false;
 
-    // This prevents dungeon chests like Tribunal Chest (Halls of Stone) from being ninja'd by the bots
-    if (go && go->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND))
-        return false;
-
     // This prevents raid chests like Gunship Armory (ICC) from being ninja'd by the bots
     if (go && go->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE))
         return false;
+
+    // Note: We intentionally don't check GO_FLAG_INTERACT_COND here because:
+    // 1. Quest objects often have this flag to show they require the quest
+    // 2. The LootObject::Refresh already validated this object is needed for a quest
+    // 3. If we got here with a valid lootObject guid, it's a legitimate loot target
 
     if (lootObject.skillId == SKILL_MINING)
         return botAI->HasSkill(SKILL_MINING) ? botAI->CastSpell(MINING, bot) : false;

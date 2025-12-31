@@ -56,6 +56,14 @@ void GenericMageNonCombatStrategy::InitTriggers(std::vector<TriggerNode*>& trigg
     triggers.push_back(new TriggerNode("no focus magic", NextAction::array(0, new NextAction("focus magic on party", 19.0f), nullptr)));
     triggers.push_back(new TriggerNode("often", NextAction::array(0, new NextAction("apply oil", 1.0f), nullptr)));
     triggers.push_back(new TriggerNode("no mana gem", NextAction::array(0, new NextAction("conjure mana gem", 20.0f), nullptr)));
+
+    // Conjure food/water when mage doesn't have any
+    triggers.push_back(new TriggerNode("no food", NextAction::array(0, new NextAction("conjure food", 15.0f), nullptr)));
+    triggers.push_back(new TriggerNode("no drink", NextAction::array(0, new NextAction("conjure water", 15.0f), nullptr)));
+
+    // Give food/water to party members who need it
+    triggers.push_back(new TriggerNode("give food", NextAction::array(0, new NextAction("give food", 14.0f), nullptr)));
+    triggers.push_back(new TriggerNode("give water", NextAction::array(0, new NextAction("give water", 14.0f), nullptr)));
 }
 
 void MageBuffManaStrategy::InitTriggers(std::vector<TriggerNode*>& triggers)

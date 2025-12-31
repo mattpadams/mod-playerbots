@@ -75,6 +75,9 @@ struct EntityId
     static constexpr EntityId Invalid() { return EntityId(); }
 };
 
+// Convenience constant for invalid entity
+inline constexpr EntityId InvalidEntityId = EntityId::Invalid();
+
 /*
  * EntityType - Classification of entities in the system
  *

@@ -90,3 +90,15 @@ bool GiveWaterAction::isUseful()
 
     return !isRandomBot || (isRandomBot && !botAI->HasCheat(BotCheatMask::food));
 }
+
+Unit* GiveHealthstoneAction::GetTarget() { return AI_VALUE(Unit*, "party member without healthstone"); }
+
+bool GiveHealthstoneAction::isUseful()
+{
+    if (!GetTarget())
+        return false;
+
+    // Check if we have extra healthstones to give (more than 1)
+    uint32 count = AI_VALUE2(uint32, "item count", "healthstone");
+    return count > 1;
+}

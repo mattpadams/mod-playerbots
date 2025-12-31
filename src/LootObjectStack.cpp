@@ -98,7 +98,8 @@ void LootObject::Refresh(Player* bot, ObjectGuid lootGUID)
 
             hasAnyQuestItems = true;
 
-            if (IsNeededForQuest(bot, itemId))
+            bool needed = IsNeededForQuest(bot, itemId);
+            if (needed)
             {
                 this->guid = lootGUID;
                 return;
@@ -114,8 +115,35 @@ void LootObject::Refresh(Player* bot, ObjectGuid lootGUID)
             }
         }
 
+        // Check if this gameobject is a quest objective itself (GOOBER or CHEST with questId)
+        GameObjectTemplate const* goInfo = go->GetGOInfo();
+        if (goInfo)
+        {
+            uint32 questId = 0;
+
+            // Check goober quest ID
+            if (goInfo->type == GAMEOBJECT_TYPE_GOOBER)
+                questId = goInfo->goober.questId;
+            // Check chest quest ID
+            else if (goInfo->type == GAMEOBJECT_TYPE_CHEST)
+                questId = goInfo->chest.questId;
+
+            if (questId && bot->GetQuestStatus(questId) == QUEST_STATUS_INCOMPLETE)
+            {
+                this->guid = lootGUID;
+                return;
+            }
+
+            // Also check if this GO is needed for any quest objective (RequiredNpcOrGo)
+            if (IsNeededForQuestObjective(bot, go->GetEntry()))
+            {
+                this->guid = lootGUID;
+                return;
+            }
+        }
+
         // Retrieve the correct loot table entry
-        uint32 lootEntry = go->GetGOInfo()->GetLootId();
+        uint32 lootEntry = goInfo ? goInfo->GetLootId() : 0;
         if (lootEntry == 0)
             return;
 
@@ -244,9 +272,48 @@ bool LootObject::IsNeededForQuest(Player* bot, uint32 itemId)
     return false;
 }
 
+bool LootObject::IsNeededForQuestObjective(Player* bot, uint32 goEntry)
+{
+    for (int qs = 0; qs < MAX_QUEST_LOG_SIZE; ++qs)
+    {
+        uint32 questId = bot->GetQuestSlotQuestId(qs);
+        if (questId == 0)
+            continue;
+
+        QuestStatusData& qData = bot->getQuestStatusMap()[questId];
+        if (qData.Status != QUEST_STATUS_INCOMPLETE)
+            continue;
+
+        Quest const* qInfo = sObjectMgr->GetQuestTemplate(questId);
+        if (!qInfo)
+            continue;
+
+        // Check RequiredNpcOrGo (negative values = gameobject entry)
+        for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
+        {
+            int32 reqNpcOrGo = qInfo->RequiredNpcOrGo[i];
+            if (reqNpcOrGo >= 0)  // Positive = NPC, skip
+                continue;
+
+            uint32 reqGoEntry = static_cast<uint32>(-reqNpcOrGo);  // Negative = GameObject entry
+            if (reqGoEntry != goEntry)
+                continue;
+
+            uint32 reqCount = qInfo->RequiredNpcOrGoCount[i];
+            if (qData.CreatureOrGOCount[i] < reqCount)
+                return true;
+        }
+    }
+
+    return false;
+}
+
 WorldObject* LootObject::GetWorldObject(Player* bot)
 {
-    Refresh(bot, guid);
+    // Don't call Refresh here - it clears the guid and may fail to re-set it
+    // The guid was already validated when the LootObject was created
+    if (IsEmpty())
+        return nullptr;
 
     PlayerbotAI* botAI = GET_PLAYERBOT_AI(bot);
     if (!botAI)
@@ -277,19 +344,19 @@ bool LootObject::IsLootPossible(Player* bot)
     if (IsEmpty() || !bot)
         return false;
 
-    WorldObject* worldObj = GetWorldObject(bot);  // Store result to avoid multiple calls
+    WorldObject* worldObj = GetWorldObject(bot);
     if (!worldObj)
         return false;
 
     PlayerbotAI* botAI = GET_PLAYERBOT_AI(bot);
     if (!botAI)
-    {
         return false;
-    }
+
     if (reqItem && !bot->HasItemCount(reqItem, 1))
         return false;
 
-    if (abs(worldObj->GetPositionZ() - bot->GetPositionZ()) > INTERACTION_DISTANCE - 2.0f)
+    float zDiff = abs(worldObj->GetPositionZ() - bot->GetPositionZ());
+    if (zDiff > INTERACTION_DISTANCE - 2.0f)
         return false;
 
     Creature* creature = botAI->GetCreature(guid);
@@ -299,11 +366,20 @@ bool LootObject::IsLootPossible(Player* bot)
             return false;
     }
 
-    // Prevent bot from running to chests that are unlootable (e.g. Gunship Armory before completing the event) or on
-    // respawn time
+    // Prevent bot from running to chests that are unlootable or on respawn time
+    // Note: We skip GO_FLAG_INTERACT_COND check because Refresh() already validated the object
+    // is needed for a quest when it set the guid
     GameObject* go = botAI->GetGameObject(guid);
-    if (go && (go->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE) || !go->isSpawned()))
-        return false;
+    if (go)
+    {
+        // Check if not spawned or not selectable
+        if (!go->isSpawned() || go->HasFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE))
+            return false;
+        // Note: We intentionally don't check GO_FLAG_INTERACT_COND here because:
+        // 1. Quest objects often have this flag to show they require the quest
+        // 2. Refresh() already validated that the bot needs this object for a quest
+        // 3. If the guid is set, Refresh() determined it's a valid loot target
+    }
 
     if (skillId == SKILL_NONE)
         return true;
@@ -385,6 +461,7 @@ LootObject LootObjectStack::GetNearest(float maxDistance)
     float nearestDistance = std::numeric_limits<float>::max();
 
     LootTargetList safeCopy(availableLoot);
+
     for (LootTargetList::iterator i = safeCopy.begin(); i != safeCopy.end(); i++)
     {
         ObjectGuid guid = i->guid;

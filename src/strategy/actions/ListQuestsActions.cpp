@@ -7,26 +7,36 @@
 
 #include "Event.h"
 #include "Playerbots.h"
+#include "ChatHelper.h"
 
 bool ListQuestsAction::Execute(Event event)
 {
-    if (event.getParam() == "completed" || event.getParam() == "co")
+    std::string param = event.getParam();
+    std::string source = event.GetSource();
+
+    // Handle "progress" keyword said alone (via trigger) or as "quests progress"
+    if (param == "progress" || param == "objectives" || param == "obj" ||
+        source == "progress" || source == "objectives")
+    {
+        ListQuestsWithProgress();
+    }
+    else if (param == "completed" || param == "co")
     {
         ListQuests(QUEST_LIST_FILTER_COMPLETED);
     }
-    else if (event.getParam() == "incompleted" || event.getParam() == "in")
+    else if (param == "incompleted" || param == "in")
     {
         ListQuests(QUEST_LIST_FILTER_INCOMPLETED);
     }
-    else if (event.getParam() == "all")
+    else if (param == "all")
     {
         ListQuests(QUEST_LIST_FILTER_ALL);
     }
-    else if (event.getParam() == "travel")
+    else if (param == "travel")
     {
         ListQuests(QUEST_LIST_FILTER_ALL, QUEST_TRAVEL_DETAIL_SUMMARY);
     }
-    else if (event.getParam() == "travel detail")
+    else if (param == "travel detail")
     {
         ListQuests(QUEST_LIST_FILTER_ALL, QUEST_TRAVEL_DETAIL_FULL);
     }
@@ -181,4 +191,86 @@ uint32 ListQuestsAction::ListQuests(bool completed, bool silent, QuestTravelDeta
     }
 
     return count;
+}
+
+void ListQuestsAction::ListQuestsWithProgress()
+{
+    botAI->TellMaster("--- Quest Progress ---");
+
+    uint32 incompleteCount = 0;
+    uint32 completeCount = 0;
+
+    for (uint16 slot = 0; slot < MAX_QUEST_LOG_SIZE; ++slot)
+    {
+        uint32 questId = bot->GetQuestSlotQuestId(slot);
+        if (!questId)
+            continue;
+
+        Quest const* questTemplate = sObjectMgr->GetQuestTemplate(questId);
+        if (!questTemplate)
+            continue;
+
+        bool isComplete = bot->GetQuestStatus(questId) == QUEST_STATUS_COMPLETE;
+
+        if (isComplete)
+        {
+            completeCount++;
+            std::ostringstream out;
+            out << chat->FormatQuest(questTemplate) << " - |c0000FF00COMPLETE|r";
+            botAI->TellMaster(out);
+        }
+        else
+        {
+            incompleteCount++;
+            // Show quest name
+            botAI->TellMaster(chat->FormatQuest(questTemplate));
+
+            // Show objectives with progress
+            QuestStatusData questStatus = bot->getQuestStatusMap()[questId];
+
+            for (uint32 i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
+            {
+                // Item objectives (collect X items)
+                if (questTemplate->RequiredItemId[i])
+                {
+                    uint32 required = questTemplate->RequiredItemCount[i];
+                    uint32 available = questStatus.ItemCount[i];
+                    ItemTemplate const* proto = sObjectMgr->GetItemTemplate(questTemplate->RequiredItemId[i]);
+                    if (proto)
+                    {
+                        botAI->TellMaster(chat->FormatQuestObjective(chat->FormatItem(proto), available, required));
+                    }
+                }
+
+                // NPC/GO objectives (kill X creatures or interact with objects)
+                if (questTemplate->RequiredNpcOrGo[i])
+                {
+                    uint32 required = questTemplate->RequiredNpcOrGoCount[i];
+                    uint32 available = questStatus.CreatureOrGOCount[i];
+
+                    if (questTemplate->RequiredNpcOrGo[i] < 0)
+                    {
+                        // Game Object
+                        if (GameObjectTemplate const* info = sObjectMgr->GetGameObjectTemplate(-questTemplate->RequiredNpcOrGo[i]))
+                        {
+                            botAI->TellMaster(chat->FormatQuestObjective(info->name, available, required));
+                        }
+                    }
+                    else
+                    {
+                        // Creature
+                        if (CreatureTemplate const* info = sObjectMgr->GetCreatureTemplate(questTemplate->RequiredNpcOrGo[i]))
+                        {
+                            botAI->TellMaster(chat->FormatQuestObjective(info->Name, available, required));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    std::ostringstream summary;
+    summary << "--- Total: " << (completeCount + incompleteCount) << " quests ("
+            << incompleteCount << " in progress, " << completeCount << " ready to turn in) ---";
+    botAI->TellMaster(summary);
 }

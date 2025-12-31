@@ -8,6 +8,7 @@
 
 #include "Player.h"
 #include "StatsCollector.h"
+#include "RoleStatWeights.h"
 
 #define ITEM_SUBCLASS_MASK_SINGLE_HAND                                                                        \
     ((1 << ITEM_SUBCLASS_WEAPON_AXE) | (1 << ITEM_SUBCLASS_WEAPON_MACE) | (1 << ITEM_SUBCLASS_WEAPON_SWORD) | \
@@ -26,7 +27,12 @@ enum StatsOverflowThreshold
 class StatsWeightCalculator
 {
 public:
+    // Standard constructor - uses spec-based weights
     StatsWeightCalculator(Player* player);
+
+    // Role override constructor - uses role-based weights instead of spec
+    StatsWeightCalculator(Player* player, GearRole roleOverride);
+
     void Reset();
     float CalculateItem(uint32 itemId, int32 randomPropertyId = 0);
     float CalculateEnchant(uint32 enchantId);
@@ -35,10 +41,16 @@ public:
     void SetItemSetBonus(bool apply) { enable_item_set_bonus_ = apply; }
     void SetQualityBlend(bool apply) { enable_quality_blend_ = apply; }
 
-    private:
+    // Get the current gear role being used for calculations
+    GearRole GetGearRole() const { return gearRole_; }
+    bool IsUsingRoleOverride() const { return useRoleOverride_; }
+
+private:
+    void InitializeCommon(Player* player);
     void GenerateWeights(Player* player);
     void GenerateBasicWeights(Player* player);
     void GenerateAdditionalWeights(Player* player);
+    void GenerateWeightsByRole(Player* player);
 
     void CalculateRandomProperty(int32 randomPropertyId, uint32 itemId);
     void CalculateItemSetMod(Player* player, ItemTemplate const* proto);
@@ -62,6 +74,10 @@ private:
     bool enable_overflow_penalty_;
     bool enable_item_set_bonus_;
     bool enable_quality_blend_;
+
+    // Role override support
+    bool useRoleOverride_;
+    GearRole gearRole_;
 
     float weight_;
     float stats_weights_[STATS_TYPE_MAX];

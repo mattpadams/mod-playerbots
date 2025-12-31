@@ -664,6 +664,12 @@ bool GiveWaterTrigger::IsActive()
     return AI_VALUE(Unit*, "party member without water") && AI_VALUE2(uint32, "item count", item);
 }
 
+bool GiveHealthstoneTrigger::IsActive()
+{
+    // Need more than 1 healthstone to give one away (keep one for self)
+    return AI_VALUE(Unit*, "party member without healthstone") && AI_VALUE2(uint32, "item count", item) > 1;
+}
+
 Value<Unit*>* SnareTargetTrigger::GetTargetValue() { return context->GetValue<Unit*>("snare target", spell); }
 
 bool StayTimeTrigger::IsActive()

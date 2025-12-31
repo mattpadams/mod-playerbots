@@ -92,3 +92,24 @@ public:
 FindPlayerPredicate* PartyMemberWithoutFoodValue::CreatePredicate() { return new PlayerWithoutFoodPredicate(botAI); }
 
 FindPlayerPredicate* PartyMemberWithoutWaterValue::CreatePredicate() { return new PlayerWithoutWaterPredicate(botAI); }
+
+class PlayerWithoutHealthstonePredicate : public PlayerWithoutItemPredicate
+{
+public:
+    PlayerWithoutHealthstonePredicate(PlayerbotAI* botAI) : PlayerWithoutItemPredicate(botAI, "healthstone") {}
+
+    bool Check(Unit* unit) override
+    {
+        if (!PlayerWithoutItemPredicate::Check(unit))
+            return false;
+
+        Player* member = dynamic_cast<Player*>(unit);
+        if (!member)
+            return false;
+
+        // Don't give healthstones to other warlocks - they can make their own
+        return member->getClass() != CLASS_WARLOCK;
+    }
+};
+
+FindPlayerPredicate* PartyMemberWithoutHealthstoneValue::CreatePredicate() { return new PlayerWithoutHealthstonePredicate(botAI); }

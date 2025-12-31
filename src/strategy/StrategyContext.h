@@ -7,6 +7,7 @@
 #define _PLAYERBOT_STRATEGYCONTEXT_H
 
 #include "AttackEnemyPlayersStrategy.h"
+#include "GankSquadStrategy.h"
 #include "BattlegroundStrategy.h"
 #include "CastTimeStrategy.h"
 #include "ChatCommandHandlerStrategy.h"
@@ -36,6 +37,7 @@
 #include "PassiveStrategy.h"
 #include "PullStrategy.h"
 #include "QuestStrategies.h"
+#include "QuestSeekingStrategy.h"
 #include "RTSCStrategy.h"
 #include "RacialsStrategy.h"
 #include "RangedCombatStrategy.h"
@@ -120,6 +122,7 @@ public:
         creators["formation"] = &StrategyContext::combat_formation;
         creators["move from group"] = &StrategyContext::move_from_group;
         creators["worldbuff"] = &StrategyContext::world_buff;
+        creators["ganksquad"] = &StrategyContext::ganksquad;
     }
 
 private:
@@ -188,6 +191,7 @@ private:
     static Strategy* combat_formation(PlayerbotAI* botAI) { return new CombatFormationStrategy(botAI); }
     static Strategy* move_from_group(PlayerbotAI* botAI) { return new MoveFromGroupStrategy(botAI); }
     static Strategy* world_buff(PlayerbotAI* botAI) { return new WorldBuffStrategy(botAI); }
+    static Strategy* ganksquad(PlayerbotAI* botAI) { return new GankSquadStrategy(botAI); }
 };
 
 class MovementStrategyContext : public NamedObjectContext<Strategy>
@@ -233,11 +237,13 @@ public:
     {
         creators["quest"] = &QuestStrategyContext::quest;
         creators["accept all quests"] = &QuestStrategyContext::accept_all_quests;
+        creators["quest seek"] = &QuestStrategyContext::quest_seek;
     }
 
 private:
     static Strategy* quest(PlayerbotAI* botAI) { return new DefaultQuestStrategy(botAI); }
     static Strategy* accept_all_quests(PlayerbotAI* botAI) { return new AcceptAllQuestsStrategy(botAI); }
+    static Strategy* quest_seek(PlayerbotAI* botAI) { return new QuestSeekingStrategy(botAI); }
 };
 
 #endif

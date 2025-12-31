@@ -35,6 +35,7 @@ public:
 private:
     void ListQuests(QuestListFilter filter, QuestTravelDetail travelDetail = QUEST_TRAVEL_DETAIL_NONE);
     uint32 ListQuests(bool completed, bool silent, QuestTravelDetail travelDetail);
+    void ListQuestsWithProgress();
 };
 
 #endif

@@ -44,4 +44,13 @@ public:
     Unit* GetTarget() override;
 };
 
+class GiveHealthstoneAction : public GiveItemAction
+{
+public:
+    GiveHealthstoneAction(PlayerbotAI* botAI) : GiveItemAction(botAI, "give healthstone", "healthstone") {}
+
+    bool isUseful() override;
+    Unit* GetTarget() override;
+};
+
 #endif

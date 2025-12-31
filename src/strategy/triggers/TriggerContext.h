@@ -7,6 +7,7 @@
 #define _PLAYERBOT_TRIGGERCONTEXT_H
 
 #include "CureTriggers.h"
+#include "GankSquadTriggers.h"
 #include "GenericTriggers.h"
 #include "GuildTriggers.h"
 #include "LfgTriggers.h"
@@ -20,6 +21,7 @@
 #include "RtiTriggers.h"
 #include "StuckTriggers.h"
 #include "TravelTriggers.h"
+#include "QuestObjectiveTriggers.h"
 
 class PlayerbotAI;
 
@@ -164,6 +166,7 @@ public:
 
         creators["give food"] = &TriggerContext::give_food;
         creators["give water"] = &TriggerContext::give_water;
+        creators["give healthstone"] = &TriggerContext::give_healthstone;
 
         creators["bg waiting"] = &TriggerContext::bg_waiting;
         creators["bg active"] = &TriggerContext::bg_active;
@@ -227,11 +230,22 @@ public:
         creators["travel flight status"] = &TriggerContext::travel_flight_status;
         creators["can self resurrect"] = &TriggerContext::can_self_resurrect;
         creators["new pet"] = &TriggerContext::new_pet;
+
+        // Quest seeking
+        creators["has incomplete quest objective"] = &TriggerContext::has_incomplete_quest_objective;
+        creators["container quest objective nearby"] = &TriggerContext::container_quest_objective_nearby;
+
+        // Gank Squad
+        creators["gank squad target near"] = &TriggerContext::gank_squad_target_near;
+        creators["gank squad hunting"] = &TriggerContext::gank_squad_hunting;
+        creators["gank squad patrol"] = &TriggerContext::gank_squad_patrol;
+        creators["gank squad spread"] = &TriggerContext::gank_squad_spread;
     }
 
 private:
     static Trigger* give_food(PlayerbotAI* botAI) { return new GiveFoodTrigger(botAI); }
     static Trigger* give_water(PlayerbotAI* botAI) { return new GiveWaterTrigger(botAI); }
+    static Trigger* give_healthstone(PlayerbotAI* botAI) { return new GiveHealthstoneTrigger(botAI); }
     static Trigger* no_rti(PlayerbotAI* botAI) { return new NoRtiTrigger(botAI); }
     static Trigger* _return(PlayerbotAI* botAI) { return new ReturnTrigger(botAI); }
     static Trigger* return_to_stay_position(PlayerbotAI* ai) { return new ReturnToStayPositionTrigger(ai); }
@@ -426,6 +440,16 @@ private:
     static Trigger* travel_flight_status(PlayerbotAI* botAI) { return new NewRpgStatusTrigger(botAI, RPG_TRAVEL_FLIGHT); }
     static Trigger* can_self_resurrect(PlayerbotAI* ai) { return new SelfResurrectTrigger(ai); }
     static Trigger* new_pet(PlayerbotAI* ai) { return new NewPetTrigger(ai); }
+
+    // Quest seeking
+    static Trigger* has_incomplete_quest_objective(PlayerbotAI* ai) { return new HasIncompleteQuestObjectiveTrigger(ai); }
+    static Trigger* container_quest_objective_nearby(PlayerbotAI* ai) { return new ContainerQuestObjectiveNearbyTrigger(ai); }
+
+    // Gank Squad
+    static Trigger* gank_squad_target_near(PlayerbotAI* ai) { return new GankSquadTargetNearTrigger(ai); }
+    static Trigger* gank_squad_hunting(PlayerbotAI* ai) { return new GankSquadHuntingTrigger(ai); }
+    static Trigger* gank_squad_patrol(PlayerbotAI* ai) { return new GankSquadPatrolTrigger(ai); }
+    static Trigger* gank_squad_spread(PlayerbotAI* ai) { return new GankSquadSpreadTrigger(ai); }
 };
 
 #endif
