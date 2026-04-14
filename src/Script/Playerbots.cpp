@@ -20,6 +20,7 @@
 #include "BattlefieldScript.h"
 #include "Channel.h"
 #include "Config.h"
+#include "LlmBridgeHook.h"
 #include "DatabaseEnv.h"
 #include "DatabaseLoader.h"
 #include "GuildTaskMgr.h"
@@ -197,6 +198,14 @@ public:
 
         botAI->HandleCommand(type, msg, player);
 
+        if (LlmBridgeHook::IsEnabled())
+            LlmBridgeHook::PostChatEvent(
+                receiver->GetGUID().GetCounter(),
+                receiver->GetName(),
+                player->GetName(),
+                msg,
+                "whisper");
+
         // hotfix; otherwise the server will crash when whispering logout
         // https://github.com/mod-playerbots/mod-playerbots/pull/1838
         // TODO: find the root cause and solve it. (does not happen in party chat)
@@ -208,6 +217,9 @@ public:
 
     bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 /*lang*/, std::string& msg, Group* group) override
     {
+        std::string const channel = (type == CHAT_MSG_RAID || type == CHAT_MSG_RAID_LEADER)
+            ? "raid" : "party";
+
         for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
         {
             Player* const member = itr->GetSource();
@@ -221,6 +233,14 @@ public:
                 continue;
 
             botAI->HandleCommand(type, msg, player);
+
+            if (LlmBridgeHook::IsEnabled())
+                LlmBridgeHook::PostChatEvent(
+                    member->GetGUID().GetCounter(),
+                    member->GetName(),
+                    player->GetName(),
+                    msg,
+                    channel);
         }
 
         return true;
@@ -246,7 +266,19 @@ public:
             if (bot->GetGuildId() != player->GetGuildId())
                 continue;
 
-            PlayerbotsMgr::instance().GetPlayerbotAI(bot)->HandleCommand(type, msg, player);
+            PlayerbotAI* const botAI = PlayerbotsMgr::instance().GetPlayerbotAI(bot);
+            if (botAI == nullptr)
+                continue;
+
+            botAI->HandleCommand(type, msg, player);
+
+            if (LlmBridgeHook::IsEnabled())
+                LlmBridgeHook::PostChatEvent(
+                    bot->GetGUID().GetCounter(),
+                    bot->GetName(),
+                    player->GetName(),
+                    msg,
+                    "guild");
         }
 
         return true;

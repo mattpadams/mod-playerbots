@@ -322,6 +322,7 @@ public:
     std::vector<worldBuff> worldBuffs;
 
     uint32 commandServerPort;
+    std::string llmBridgeEndpoint;
     bool perfMonEnabled;
     bool summonWhenGroup;
     bool randomBotShowHelmet;

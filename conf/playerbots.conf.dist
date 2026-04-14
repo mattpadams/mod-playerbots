@@ -2277,3 +2277,10 @@ AiPlayerbot.SummonAtInnkeepersEnabled = 1
 # Buffs will be applied on PP, Sindragosa and Lich King
 
 AiPlayerbot.EnableICCBuffs = 1
+
+# LLM Bridge: HTTP endpoint for real-time chat event push to the Python
+# LLM middleware.  When set, the server POSTs a JSON payload for every
+# player-to-bot chat message (whisper, party, raid, guild).
+# Leave empty to disable.
+# Example: http://ac-bot-middleware:8180/events/chat
+AiPlayerbot.LlmBridgeEndpoint = ""

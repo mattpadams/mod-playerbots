@@ -10,6 +10,7 @@
 #include "ObjectGuid.h"
 #include "PlayerbotMgr.h"
 #include "GameTime.h"
+#include "LlmBridgeHook.h"
 #include "PlayerbotCommandServer.h"
 
 struct BattlegroundInfo
@@ -182,6 +183,7 @@ private:
         if (sPlayerbotAIConfig.enabled || sPlayerbotAIConfig.randomBotAutologin)
         {
             PlayerbotCommandServer::instance().Start();
+            LlmBridgeHook::Init();
         }
 
         BattlegroundData.clear();  // Clear here and here only.
