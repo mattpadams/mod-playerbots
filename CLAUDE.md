@@ -119,6 +119,21 @@ Type(Scope/Subscope): Short description (max 50 chars)
 - Use {} to parse variables into output instead of %u etc.
 - CI enforces code style checks and compiles with `-Werror`
 
+## Git Workflow — Submodule Commit Pattern
+
+`modules/mod-playerbots/` is a **separate git repo** (not a submodule entry in `.gitmodules`, but its own `.git`). When making C++ changes there:
+
+1. **Commit inside the inner repo first:** `git -C modules/mod-playerbots add ... && git -C modules/mod-playerbots commit -m "..."`
+2. **Commit the submodule pointer in the outer repo:** `git add modules/mod-playerbots && git commit -m "..."`
+3. **Push the outer repo** to the personal fork: `git push personal Playerbot`
+
+Remotes:
+- **Outer repo** (`azerothcore-wotlk`):
+  - `origin` → `mod-playerbots/azerothcore-wotlk` (upstream)
+  - `personal` → `mattpadams/mod-playerbots` (fork — push here)
+- **Inner repo** (`modules/mod-playerbots`):
+  - `origin` → `mod-playerbots/mod-playerbots` (upstream, do not push)
+
 ## PR Requirements
 
 - AI tool usage must be disclosed in PRs
