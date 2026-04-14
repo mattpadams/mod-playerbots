@@ -1,0 +1,35 @@
+[project]
+name = "ac-llm-bots"
+version = "0.1.0"
+description = "AI-powered bot brain for AzerothCore using Anthropic Claude"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.40.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy[asyncio]>=2.0.0",
+    "aiomysql>=0.2.0",
+    "httpx>=0.28.0",
+    "qdrant-client>=1.9.0",
+    "sentence-transformers>=3.0.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "structlog>=24.0.0",
+    "prometheus-client>=0.21.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

@@ -1,0 +1,46 @@
+services:
+  ac-bot-middleware:
+    container_name: ac-bot-middleware
+    build:
+      context: ./middleware
+      dockerfile: Dockerfile
+    networks:
+      - ac-network
+    ports:
+      - "${LLM_MIDDLEWARE_PORT:-8180}:8180"
+    env_file:
+      - .env
+    volumes:
+      - ac-qdrant-data:/app/data
+      # Mount host Claude Code OAuth credentials (read-only)
+      # Run `claude login` on the host first to generate these
+      - ${CLAUDE_CREDENTIALS_PATH:-~/.claude/.credentials.json}:/app/credentials.json:ro
+      - ${CLAUDE_CREDENTIALS_PATH:-~/.claude/.credentials.json}:/home/botrunner/.claude/.credentials.json:ro
+    depends_on:
+      ac-qdrant:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ac-qdrant:
+    container_name: ac-qdrant
+    image: qdrant/qdrant:v1.12.6
+    networks:
+      - ac-network
+    ports:
+      - "${QDRANT_EXTERNAL_PORT:-6333}:6333"
+    volumes:
+      - ac-qdrant-data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  ac-qdrant-data:
+
+networks:
+  ac-network:
+    external: true
+    name: azerothcore-wotlk_ac-network
