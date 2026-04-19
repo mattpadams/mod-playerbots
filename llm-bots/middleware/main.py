@@ -1,9 +1,9 @@
 """FastAPI application — the LLM bot middleware entry point.
 
-Creates the shared tool server once at startup and passes it to the
-Claude provider.  All bot agents share the same tool definitions.
+Per-bot agent sessions are created by the supervisor as bots are
+elevated; tools live on per-bot in-process MCP servers built inside
+each :class:`BotAgent`.
 """
-
 from __future__ import annotations
 
 import asyncio
@@ -13,7 +13,6 @@ import structlog
 from fastapi import FastAPI
 
 from bot_agents.agent_supervisor import AgentSupervisor
-from bot_agents.tool_server import ToolServer
 from api import admin, events, metrics
 from core.bot_registry import BotRegistry
 from core.command_executor import CommandExecutor
@@ -24,7 +23,6 @@ from core.soap_client import SoapClient
 from memory.memory_manager import MemoryManager
 from memory.qdrant_store import QdrantStore
 from providers import get_provider
-from providers.claude import ClaudeProvider
 from scheduler.cost_controller import CostController
 
 structlog.configure(
@@ -33,7 +31,7 @@ structlog.configure(
         structlog.processors.add_log_level,
         structlog.dev.ConsoleRenderer(),
     ],
-    wrapper_class=structlog.make_filtering_bound_logger(20),  # INFO
+    wrapper_class=structlog.make_filtering_bound_logger(20),
 )
 
 logger = structlog.get_logger()
@@ -57,13 +55,10 @@ async def lifespan(app: FastAPI):
     global game_client, soap_client, executor, registry, event_bus
     global qdrant, memory_manager, cost_controller, supervisor, _supervisor_task
 
-    logger.info(
-        "app.starting",
-        max_agents=settings.max_active_agents,
-        provider=settings.llm_provider,
-    )
+    logger.info("app.starting",
+                max_agents=settings.max_active_agents,
+                provider=settings.llm_provider)
 
-    # Initialize core services
     game_client = GameClient()
     soap_client = SoapClient()
     executor = CommandExecutor(game_client, soap_client)
@@ -71,42 +66,31 @@ async def lifespan(app: FastAPI):
     event_bus = EventBus()
     cost_controller = CostController()
 
-    # Initialize memory
     qdrant = QdrantStore()
     memory_manager = MemoryManager(qdrant)
 
-    # Build the persistent tool server (shared across all bots)
-    tool_server = ToolServer(executor=executor, memory_manager=memory_manager)
-    logger.info("app.tool_server_ready", tool_count=len(tool_server.tools))
-
-    # Initialize LLM provider and register tools
     provider = get_provider()
-    if isinstance(provider, ClaudeProvider):
-        provider.init_tools(tool_server.tools, tool_server.tool_names)
     logger.info("app.provider_ready", provider=settings.llm_provider)
 
-    # Initialize supervisor
     supervisor = AgentSupervisor(
         game_client=game_client,
         registry=registry,
         event_bus=event_bus,
+        executor=executor,
         memory_manager=memory_manager,
         cost_controller=cost_controller,
         provider=provider,
         tick_interval=settings.agent_tick_seconds,
     )
 
-    # Wire up API modules
     admin.init(registry, qdrant, cost_controller, supervisor)
     events.init(event_bus)
 
-    # Start the supervisor loop
     _supervisor_task = asyncio.create_task(supervisor.start())
     logger.info("app.ready")
 
     yield
 
-    # Shutdown
     logger.info("app.shutting_down")
     await supervisor.stop()
     if _supervisor_task:

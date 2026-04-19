@@ -13,10 +13,6 @@ _PROVIDER_DEFAULTS: dict[str, str] = {
     "claude": "claude-sonnet-4-6",
 }
 
-AVAILABLE_MODELS: dict[str, list[str]] = {
-    "claude": ["claude-sonnet-4-6", "claude-opus-4-6", "claude-haiku-4-5"],
-}
-
 
 def get_default_model(provider_name: str | None = None) -> str:
     """Return the model to use, respecting ``LLM_MODEL`` env override."""
@@ -28,7 +24,6 @@ def get_default_model(provider_name: str | None = None) -> str:
 
 
 def get_provider() -> LLMProvider:
-    """Instantiate the configured LLM provider."""
     name = os.environ.get("LLM_PROVIDER", "claude").lower()
 
     if name == "claude":
