@@ -1,0 +1,25 @@
+key: magisters_terrace_heroic
+name: Magisters' Terrace (Heroic)
+difficulty: heroic
+overlay_of: magisters_terrace
+min_level: 70
+max_level: 70
+general_notes: >
+  One of the hardest TBC heroics. Kael'thas phase 2 is the most
+  common wipe point.
+
+bosses:
+  - name: Vexallus
+    phases:
+      - name: Active
+        dps: >
+          Pure Energy orbs one-shot on heroic — immediate focus.
+
+  - name: Kael'thas Sunstrider
+    phases:
+      - name: Phase 2 (Gravity Lapse)
+        dps: >
+          Nether Vapors deal lethal damage on heroic — thread
+          between them carefully. Don't stand still.
+        mechanics:
+          - Tight movement window during Gravity Lapse

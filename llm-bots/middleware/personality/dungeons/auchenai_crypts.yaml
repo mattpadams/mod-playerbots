@@ -1,0 +1,50 @@
+key: auchenai_crypts
+name: Auchenai Crypts
+map_id: 558
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 64
+max_level: 67
+leader_role: tank
+general_notes: >
+  Auchindoun second wing. Undead/spirit dungeon. Two bosses plus
+  a mini-event.
+
+bosses:
+  - name: Shirrak the Dead Watcher
+    order: 1
+    aliases: [Shirrak]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Flying eye. Focus Fire on a random player. Inhibit Magic
+          aura increases cast times — stand at max range.
+        tank: Under him (close reduces cast-time penalty).
+        healer: Stand at max range where possible — aura is weaker there.
+        dps: Spread for Focus Fire. Instant casts preferred.
+        mechanics:
+          - Inhibit Magic — scaling cast-time penalty by distance
+          - Focus Fire — laser on a random player
+          - Carnivorous Bite — melee
+
+  - name: Exarch Maladaar
+    order: 2
+    aliases: [Maladaar]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: >
+          Draenei exarch. Periodically summons Avatar of Martyred,
+          a copy of a random party member.
+        tank: Central. Pick up Avatar when it spawns.
+        healer: Heal through Ribbon of Souls (targets random player).
+        dps: Kill Avatar priority — it's a copy of a party member with their abilities.
+        mechanics:
+          - Avatar of the Martyred — summons a copy of a party member
+          - Ribbon of Souls — AoE damage cone
+          - Soul Scream — silence

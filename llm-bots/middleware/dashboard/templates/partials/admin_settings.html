@@ -1,0 +1,39 @@
+<div class="admin-grid">
+  <div>
+    <h3>Kill Switch</h3>
+    <p class="muted">
+      State:
+      {% if llm.kill_switch %}
+        <strong class="danger">ENABLED (LLM calls disabled)</strong>
+      {% else %}
+        <strong class="ok">Disabled (LLM calls normal)</strong>
+      {% endif %}
+    </p>
+    <button class="danger"
+            hx-post="/api/v2/settings/kill-switch"
+            hx-vals='{"enabled": {{ "false" if llm.kill_switch else "true" }}}'
+            hx-ext="json-enc"
+            hx-target="#admin-settings"
+            hx-swap="none"
+            hx-on::after-request="htmx.trigger('#admin-settings','load')">
+      {% if llm.kill_switch %}Disable Kill Switch{% else %}Enable Kill Switch{% endif %}
+    </button>
+  </div>
+  <div>
+    <h3>Global Model Override</h3>
+    <form hx-post="/api/v2/settings/model-override"
+          hx-ext="json-enc"
+          hx-target="#admin-settings"
+          hx-swap="none"
+          hx-on::after-request="htmx.trigger('#admin-settings','load')">
+      <label>Model (blank = tier routing)
+        <input name="model" value="{{ llm.model_override }}" placeholder="claude-sonnet-4-5-20241022" />
+      </label>
+      <button>Update</button>
+    </form>
+    <p class="muted">
+      Default tier: <code>{{ llm.model_default }}</code> ·
+      Important tier: <code>{{ llm.model_important }}</code>
+    </p>
+  </div>
+</div>

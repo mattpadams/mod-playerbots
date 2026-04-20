@@ -1,0 +1,90 @@
+key: halls_of_stone
+name: Halls of Stone
+map_id: 599
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-hos
+cpp_coverage: full
+min_level: 75
+max_level: 80
+leader_role: tank
+general_notes: >
+  Titan dungeon. Three bosses plus an optional Tribunal of Ages
+  escort event (Brann Bronzebeard — defend him against waves).
+
+bosses:
+  - name: Krystallus
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Stone giant. Shatters the party with a ground slam.
+        tank: Central. Use a cooldown before Shatter.
+        healer: Shatter does knockback + big damage — pre-heal the group.
+        dps: Move out of Boulder Toss. Stay grouped-but-not-clustered for Shatter.
+        mechanics:
+          - Shatter — knockback + AoE damage after Ground Slam
+          - Boulder Toss — ground pool damage
+
+  - name: Maiden of Grief
+    order: 2
+    aliases: [Maiden]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Vrykul caster. Shadow pools and stun.
+        tank: Pull her to a corner. Keep the group on the opposite side of the pools.
+        healer: Storm of Grief silences — be ahead on heals.
+        dps: Move out of the shadow pools immediately. Interrupt Shock of Sorrow.
+        mechanics:
+          - Shock of Sorrow — AoE stun
+          - Parting Sorrow — shadow pool on the ground
+          - Storm of Grief — silence
+
+  - name: Tribunal of the Ages (event)
+    order: 3
+    aliases: [Brann, Brann Event]
+    phases:
+      - name: Defense
+        hp_threshold: null
+        description: >
+          Escort event. Brann channels a console; waves of Iron
+          Dwarves attack. Keep Brann alive — he does not fight back.
+        tank: Pick up every add immediately. Position between Brann and spawn points.
+        healer: Keep Brann healed too — he takes damage.
+        dps: AoE the adds. Kill the casters first.
+        mechanics:
+          - Brann is non-combat — he dies if unprotected
+          - Waves spawn from multiple directions
+          - Not a boss per se but must complete to reach Sjonnir
+
+  - name: Sjonnir the Ironshaper
+    order: 4
+    aliases: [Sjonnir]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: >
+          Giant. Summons Iron Troggs and eventually Malformed Oozes.
+        tank: Pick up Troggs fast — they hit the healer otherwise.
+        healer: Chain Lightning hits hard — stay spread.
+        dps: Troggs die to AoE. Interrupt Chain Lightning.
+        mechanics:
+          - Lightning Shield — melee gets zapped
+          - Static Charge — stacking shock debuff
+          - Chain Lightning between clustered players
+      - name: Ooze Phase
+        hp_threshold: 50
+        description: >
+          At 50% hp he spawns Malformed Oozes instead of Troggs.
+        tank: Oozes root in place — ignore them and stay on boss.
+        healer: Damage ramps — use cooldowns.
+        dps: Ignore oozes, burn Sjonnir. Oozes despawn on kill.
+        mechanics:
+          - Oozes slow movement but are low-damage
+          - Heavier boss damage in Ooze phase

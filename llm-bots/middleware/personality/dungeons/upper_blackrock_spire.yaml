@@ -1,0 +1,148 @@
+key: upper_blackrock_spire
+name: Upper Blackrock Spire
+map_id: 229
+sub_zone: "Hordemar City"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 55
+max_level: 60
+leader_role: tank
+general_notes: >
+  10-man upper spire. Rend Blackhand's court. Five bosses ending
+  at Rend himself on his drake Gyth.
+
+bosses:
+  - name: Pyroguard Emberseer
+    order: 1
+    aliases: [Emberseer]
+    phases:
+      - name: Channeling Phase
+        hp_threshold: null
+        description: >
+          Bound in a room of nine Blackhand Incarcerators. Kill
+          Incarcerators to release Emberseer, then kill him.
+        tank: AoE tank Incarcerators.
+        healer: AoE.
+        dps: AoE all 9 Incarcerators.
+        mechanics:
+          - Nine Incarcerators — kill all to release
+      - name: Emberseer Active
+        hp_threshold: null
+        description: Fire elemental released.
+        tank: Central.
+        healer: Fire damage.
+        dps: Burn. Move out of AoE.
+        mechanics:
+          - Fire Nova — AoE
+          - Fire Shield
+
+  - name: Solakar Flamewreath
+    order: 2
+    aliases: [Solakar]
+    phases:
+      - name: Trash Waves
+        hp_threshold: null
+        description: >
+          Summoned via the Rookery Egg event. Waves of rookery
+          whelps and hatchlings, then Solakar.
+        tank: AoE tank waves.
+        healer: Heavy AoE.
+        dps: AoE waves.
+        mechanics:
+          - Multiple waves of rookery adds
+      - name: Solakar Active
+        hp_threshold: null
+        description: Drake boss.
+        tank: Central.
+        healer: Fire damage.
+        dps: Behind.
+        mechanics:
+          - Fireball — heavy hit
+          - Rain of Fire — AoE
+
+  - name: Jed Runewatcher
+    order: 3
+    aliases: [Jed]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Rare caster orc. Random spawn in the Hordemar area.
+        tank: Central.
+        healer: Fire + frost dispel.
+        dps: Interrupt.
+        mechanics:
+          - Flame Shock
+          - Frost Nova
+
+  - name: Goraluk Anvilcrack
+    order: 4
+    aliases: [Goraluk]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Blacksmith boss in the forge.
+        tank: Central.
+        healer: Fire.
+        dps: Burn.
+        mechanics:
+          - Enrage
+          - Flamebreak
+
+  - name: The Beast
+    order: 5
+    aliases: [Beast]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Giant demon-beast in the Beast's Pit.
+        tank: Central. Face away.
+        healer: Heavy AoE fire damage.
+        dps: Behind. Move out of Fire Nova.
+        mechanics:
+          - Fire Nova — AoE
+          - Flame Break — frontal
+          - Terrifying Roar — fear
+
+  - name: General Drakkisath
+    order: 6
+    aliases: [Drakkisath]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Giant Rend's lieutenant with two dragonkin guards.
+        tank: Pick up all three.
+        healer: AoE. Heavy tank damage.
+        dps: Kill Drakkisath first if possible — guards respawn. Stay behind him.
+        mechanics:
+          - Two Blackhand Dragonspawn guards
+          - Fire Nova — AoE
+          - Cleave
+
+  - name: Warchief Rend Blackhand
+    order: 7
+    aliases: [Rend, Gyth]
+    phases:
+      - name: Gyth Phase
+        hp_threshold: null
+        description: >
+          Rend mounted on Gyth, a chromatic drake. Burn Gyth first.
+        tank: Central.
+        healer: Heavy AoE.
+        dps: Kill Gyth first. Multiple dragon element resists.
+        mechanics:
+          - Gyth dies first, revealing Rend
+          - Rend Blackhand Orders summons adds
+          - Breaths of multiple elements
+      - name: Rend Dismounted
+        hp_threshold: null
+        description: After Gyth dies, Rend fights on foot.
+        tank: Re-pick up.
+        healer: Physical damage.
+        dps: Burn.
+        mechanics:
+          - Mortal Strike
+          - Thunderclap
+          - Whirlwind

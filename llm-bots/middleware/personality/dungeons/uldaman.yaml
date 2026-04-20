@@ -1,0 +1,127 @@
+key: uldaman
+name: Uldaman
+map_id: 70
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 35
+max_level: 45
+leader_role: tank
+general_notes: >
+  Badlands titan ruin. Troggs and Titan constructs. Multiple
+  bosses ending at the Dwarven escort / Archaedas.
+
+bosses:
+  - name: Revelosh
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Troll archaeologist boss.
+        tank: Central.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Chain Bolt
+
+  - name: Baron Aquanis
+    order: 2
+    aliases: [Aquanis]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Water elemental optional boss.
+        tank: Central.
+        healer: Frost dispel.
+        dps: Burn.
+        mechanics:
+          - Depth Charge
+
+  - name: Ironaya
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Earthen boss. Guards the deeper chambers.
+        tank: Central.
+        healer: Stun damage.
+        dps: Burn.
+        mechanics:
+          - Arcing Smash
+          - Earthquake — AoE
+
+  - name: Obsidian Sentinel
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Activate Map of the World puzzle to summon.
+        tank: Standard.
+        healer: Physical damage.
+        dps: Burn.
+        mechanics:
+          - Summons via puzzle
+
+  - name: Ancient Stone Keeper
+    order: 5
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Titan guardian.
+        tank: Central.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Ground Tremor — AoE
+
+  - name: Galgann Firehammer
+    order: 6
+    aliases: [Galgann]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Dark Iron boss.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt Flame Lash.
+        mechanics:
+          - Flame Lash — AoE
+          - Hand of Thaurissan
+
+  - name: Grimlok
+    order: 7
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Trogg chieftain boss.
+        tank: Central.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Chain Bolt
+
+  - name: Archaedas
+    order: 8
+    aliases: []
+    phases:
+      - name: Escort + Boss
+        hp_threshold: null
+        description: >
+          Final titan keeper. Escort a dwarven NPC who starts a
+          dialogue, then Archaedas awakens and surrounds you with
+          eight stone guardians.
+        tank: AoE tank the Earthen Stone Guardians.
+        healer: Massive AoE.
+        dps: Eight Earthen Guardians — AoE or focus one at a time. Then Archaedas.
+        mechanics:
+          - Escort starts the fight
+          - Eight Earthen Guardians activate in sequence
+          - Ground Tremor — AoE damage

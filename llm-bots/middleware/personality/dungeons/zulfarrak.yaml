@@ -1,0 +1,141 @@
+key: zulfarrak
+name: Zul'Farrak
+map_id: 209
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 44
+max_level: 54
+leader_role: tank
+general_notes: >
+  Tanaris troll city. Famous "pyramid" pull where waves of trolls
+  descend the stairs. Multiple bosses.
+
+bosses:
+  - name: Antu'sul
+    order: 1
+    aliases: [Antusul, Antu'sul]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Troll shaman. Summons Healing and Fire totems.
+        tank: Pull to open yard. Kill totems.
+        healer: AoE.
+        dps: Kill Healing Ward totem first. Then Fire totems.
+        mechanics:
+          - Healing Ward — totem heals boss
+          - Summons Sul'lithuz Broodlings
+
+  - name: Theka the Martyr
+    order: 2
+    aliases: [Theka]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Scarab-summoning boss.
+        tank: Pick up scarab adds.
+        healer: AoE.
+        dps: AoE scarabs. Interrupt Fevered Plague.
+        mechanics:
+          - Fevered Plague — disease
+          - Summons Scarab adds
+
+  - name: Witch Doctor Zum'rah
+    order: 3
+    aliases: [Zumrah, Zum'rah]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Necromancer on a pillar.
+        tank: Pull down off pillar.
+        healer: Dispel curses.
+        dps: Kill Hexed Troll Skeletons.
+        mechanics:
+          - Hex — polymorph
+          - Shadow Bolt
+          - Summons Hexed Troll Skeletons
+
+  - name: Nekrum Gutchewer & Shadowpriest Sezz'ziz
+    order: 4
+    aliases: [Nekrum, Sezzziz, Sezz'ziz]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Paired boss fight.
+        tank: Tank Nekrum (melee) + Sezz'ziz (caster).
+        healer: Dispel Sezz'ziz curses.
+        dps: Kill the shadowpriest Sezz'ziz first. Interrupt Mind Blast.
+        mechanics:
+          - Mind Blast — priest casts
+          - Cleave from Nekrum
+
+  - name: Stairs Event + Chief Ukorz Sandscalp
+    order: 5
+    aliases: [Ukorz, Sandscalp]
+    phases:
+      - name: Stair Pull
+        hp_threshold: null
+        description: >
+          Classic Zul'Farrak stair pull. Freed NPCs attack ~40
+          troll adds on the stairs. Survive the wave.
+        tank: Position at stair top. AoE all adds.
+        healer: Massive AoE healing.
+        dps: AoE cleave everything.
+        mechanics:
+          - Free NPCs trigger troll wave
+          - Descending troll waves on the stairs
+      - name: Boss Phase
+        hp_threshold: null
+        description: Chief engages after stair event.
+        tank: Central.
+        healer: Heavy damage.
+        dps: Burn.
+        mechanics:
+          - Cleave
+          - Sunder Armor
+
+  - name: Hydromancer Velratha
+    order: 6
+    aliases: [Velratha]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Water caster boss.
+        tank: Central.
+        healer: Frost damage.
+        dps: Interrupt.
+        mechanics:
+          - Cone of Cold
+
+  - name: Sandfury Executioner
+    order: 7
+    aliases: [Executioner]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Paired fight.
+        tank: Tank + cleave.
+        healer: Heavy damage.
+        dps: Burn.
+        mechanics:
+          - Cleave
+          - Kick
+
+  - name: Gahz'rilla
+    order: 8
+    aliases: [Gahzrilla]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Summoned hydra boss in a pool. Summon via the Mallet of
+          Zul'Farrak on the gong.
+        tank: Tank in pool.
+        healer: AoE.
+        dps: Behind. Move after Geyser.
+        mechanics:
+          - Geyser — knocks players up
+          - Summons via Mallet of Zul'Farrak

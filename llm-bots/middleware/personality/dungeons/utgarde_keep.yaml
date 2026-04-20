@@ -1,0 +1,158 @@
+# Dungeon knowledge: Utgarde Keep (normal)
+#
+# Schema used by personality/dungeons/loader.py:
+#   key            Unique string id (file stem). Heroic overlays set
+#                  `overlay_of` to this.
+#   name           Display name.
+#   map_id         WoW map id. One dungeon key per (map_id, sub_zone,
+#                  difficulty) triple.
+#   sub_zone       Null for single-wing dungeons. Pipe-zone string
+#                  (e.g. "The Library") for multi-wing maps.
+#   expansion      vanilla | tbc | wotlk
+#   difficulty     normal | heroic
+#   overlay_of     null on base files. Set on heroic deltas that only
+#                  adjust a subset of fields.
+#   strategy_key   mod-playerbots +strategy activated on entry, or null
+#                  when no C++ dungeon strategy exists yet.
+#   cpp_coverage   How much of this dungeon's mechanics is handled by
+#                  the C++ combat AI. Informs how much the LLM should
+#                  rely on its own callouts vs. trust the bots to
+#                  react correctly.
+#                    full    — boss-specific triggers implemented
+#                    partial — generic AI plus a handful of triggers
+#                    none    — generic combat AI only (no dungeon strat)
+#   min_level /    Intended party level range.
+#   max_level
+#   leader_role    Role that naturally leads pulls: tank | healer | dps
+#   general_notes  One short paragraph shared across all bots.
+#   bosses         Ordered list. Each boss has phases; phase 1 has
+#                  hp_threshold: null (initial) and subsequent phases
+#                  trigger when boss hp crosses the threshold downward.
+
+key: utgarde_keep
+name: Utgarde Keep
+map_id: 574
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-uk
+cpp_coverage: full
+min_level: 68
+max_level: 72
+leader_role: tank
+general_notes: >
+  Short linear Vrykul dungeon. Tank leads through corridors, pulls one
+  patrol pack at a time. Three bosses: Keleseth, the Skarvald/Dalronn
+  duo, then Ingvar.
+
+bosses:
+  - name: Prince Keleseth
+    order: 1
+    aliases: [Keleseth]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: >
+          Shadow-caster fight with Frost Tomb adds. Keleseth summons
+          skeletal minions and encases random players in Frost Tombs.
+        tank: >
+          Pull Keleseth to the center of the dais, face him away from
+          the party. Pick up the skeletal adds that spawn through
+          the fight.
+        healer: >
+          Steady single-target healing on the tank. Keep a cooldown
+          ready for the Shadow Bolt volley. Dispel frost if specced.
+        dps: >
+          Break Frost Tombs the instant they appear — tombed players
+          die fast. After tombs are clear, burn Keleseth. Skeletons
+          are tank priority.
+        mechanics:
+          - Frost Tomb roots and damages a random party member
+          - Shadow Bolt on the tank hits hard
+          - Skeletal Infantry adds throughout the fight
+
+  - name: Skarvald and Dalronn
+    order: 2
+    aliases: [Skarvald, Dalronn, Skarvald the Constructor, Dalronn the Controller]
+    phases:
+      - name: Both alive
+        hp_threshold: null
+        description: >
+          Two-boss fight. Skarvald is melee; Dalronn is a caster.
+          Whichever dies first remains as a ghost that harasses the
+          party until the other dies.
+        tank: >
+          Tank Skarvald. Keep him faced away from the group so
+          Charge / Stone Strike don't cleave casters.
+        healer: >
+          Watch for Skarvald's Charge knockback. Dispel Dalronn's
+          curses if specced. Save a cooldown for the ghost phase.
+        dps: >
+          Focus Skarvald first, interrupt Dalronn's Shadow Bolts on
+          cooldown. Ignore the ghost of whoever dies first.
+        mechanics:
+          - Skarvald Charges random players
+          - Dalronn casts Shadow Bolt and Debilitate
+          - Dead boss returns as a damaging ghost until both are down
+      - name: Ghost phase
+        hp_threshold: 0
+        description: >
+          First-killed boss is now a ghost. Finish the remaining boss
+          while the ghost harasses.
+        tank: >
+          Do not swap to the ghost — it has no threat table. Keep
+          tanking the live boss.
+        healer: >
+          Ghost deals moderate AoE shadow damage. Top the group
+          between heals on the tank.
+        dps: >
+          Ignore the ghost entirely. Burn whichever boss is still
+          alive; ghost despawns on the kill.
+        mechanics:
+          - Ghost deals shadow damage AoE but cannot be tanked
+
+  - name: Ingvar the Plunderer
+    order: 3
+    aliases: [Ingvar, Annhylde the Caller]
+    phases:
+      - name: Phase 1 (Alive)
+        hp_threshold: null
+        description: >
+          Heavy-hitting melee boss. Dodges Smash frontal cones and
+          Staggering Roar fears.
+        tank: >
+          Pull Ingvar to center, face him away, do not move during
+          Smash casts. Use a cooldown for Staggering Roar if you
+          can't dodge the fear.
+        healer: >
+          Keep the tank topped. Dispel Staggering Roar's fear if
+          possible. Watch positioning — moving during Smash is lethal.
+        dps: >
+          Always behind him. Move out of the frontal Smash cone the
+          instant you see the cast bar. Interrupt nothing in this
+          phase (he has no interruptible casts).
+        mechanics:
+          - Smash is a frontal cone — dodge if not the tank
+          - Staggering Roar fears the party
+          - Enrage at low health increases damage
+      - name: Phase 2 (Undead)
+        hp_threshold: 0
+        description: >
+          Annhylde the Caller resurrects Ingvar as an undead. Same
+          mechanic shapes at higher damage plus Dark Smash and
+          Shadow Axe throw.
+        tank: >
+          Re-engage after the resurrection cutscene. Same
+          positioning — face away, don't move during Smash.
+        healer: >
+          Damage spike in this phase. Pre-cast before the
+          resurrection cutscene ends. Use major cooldowns.
+        dps: >
+          Burn. Move out of Dark Smash (ground effect). Shadow Axe
+          throws at a random player — keep moving to avoid the
+          return path.
+        mechanics:
+          - Dark Smash puts a shadow pool on the ground — move
+          - Shadow Axe throw lands damage on its return path
+          - All Phase 1 mechanics persist

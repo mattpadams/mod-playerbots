@@ -1,0 +1,73 @@
+key: shattered_halls
+name: The Shattered Halls
+map_id: 540
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 67
+max_level: 70
+leader_role: tank
+general_notes: >
+  Third Hellfire wing. Long, trash-heavy, notorious for tight pulls.
+  Three bosses. Heroic adds the Executioner and a 55-minute timed
+  save-the-prisoners event.
+
+bosses:
+  - name: Grand Warlock Nethekurse
+    order: 1
+    aliases: [Nethekurse]
+    phases:
+      - name: Trash Phase
+        hp_threshold: null
+        description: Nethekurse watches while his Follower adds attack.
+        tank: Pick up Followers. AoE threat.
+        healer: Dispel Dark Spin if specced.
+        dps: AoE the Followers.
+        mechanics:
+          - Followers drop on wave spawns
+      - name: Active
+        hp_threshold: null
+        description: Nethekurse engages.
+        tank: Pull to center.
+        healer: Death Coil deals damage + fear — dispel.
+        dps: Dispel Dark Spin on yourself if you get it. Interrupt Shadow Bolt.
+        mechanics:
+          - Dark Spin — rooted AoE damage around a target
+          - Shadow Fissure — ground pool
+
+  - name: Warbringer O'mrogg
+    order: 2
+    aliases: [Omrogg]
+    phases:
+      - name: Active (two heads)
+        hp_threshold: null
+        description: >
+          Two-headed ogre boss. Each head has its own ability set.
+          Hate management is chaotic — he swaps aggro randomly.
+        tank: Expect hate drops. Burn threat regenerators.
+        healer: Fear Ground Slam is a party-wide stun fear.
+        dps: Move during Blast Wave ticks. Ramp damage on his Burning Maul phase.
+        mechanics:
+          - Blast Wave — AoE fire
+          - Burning Maul — damage amp
+          - Thunderclap — AoE stun
+
+  - name: Warchief Kargath Bladefist
+    order: 3
+    aliases: [Kargath]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Orc warrior. Charges around the room leaving a trail.
+          Periodically bladewhirls (spinning AoE).
+        tank: Open area. Kite if you get Charge'd.
+        healer: Heavy tank damage during Blade Dance.
+        dps: Don't stand in Blade Dance. He becomes untargetable during it.
+        mechanics:
+          - Blade Dance — spinning AoE, move away
+          - Charge — targets random player
+          - Summons reinforcements at low hp

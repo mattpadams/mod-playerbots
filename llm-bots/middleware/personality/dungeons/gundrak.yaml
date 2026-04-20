@@ -1,0 +1,111 @@
+key: gundrak
+name: Gundrak
+map_id: 604
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-gd
+cpp_coverage: full
+min_level: 76
+max_level: 80
+leader_role: tank
+general_notes: >
+  Drakkari troll dungeon. Four main bosses plus an optional Eck the
+  Ferocious on heroic. Bosses can be done in any order.
+
+bosses:
+  - name: Slad'ran
+    order: 1
+    aliases: [Sladran, Slad'ran]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Snake boss. Roots players in Venom Coils and summons
+          constrictor adds that grip players.
+        tank: Central. Pick up Constrictor adds immediately.
+        healer: Poison Nova is AoE — AoE heal.
+        dps: Kill Constrictors that are gripping party members (they hold the target immobile). Cleanse poisons.
+        mechanics:
+          - Snake Wrap — summons Constrictor that grips a player
+          - Venom Coils — AoE poison
+          - Poison Nova — AoE on cast
+
+  - name: Moorabi
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Mammoth shaman. Casts Transformation — if it completes
+          he becomes a mammoth and hits much harder.
+        tank: Central. Stand still during Ground Tremor stun.
+        healer: Watch for Ground Tremor party stun.
+        dps: INTERRUPT Transformation at all costs. Every interrupter lines up rotations on his cast bar.
+        mechanics:
+          - Transformation — long cast, MUST be interrupted
+          - Ground Tremor — AoE stun
+          - Mojo Frenzy — attack speed buff
+
+  - name: Drakkari Colossus
+    order: 3
+    aliases: [Colossus]
+    phases:
+      - name: Colossus Phase
+        hp_threshold: null
+        description: >
+          Stone colossus. At 50% hp splits into a Drakkari Elemental
+          ooze + colossus becomes inactive.
+        tank: Central. Deal with the Elemental at phase transition.
+        healer: Mortal Strikes reduce healing — time big heals carefully.
+        dps: Straightforward burn. Save burst for the Elemental phase.
+        mechanics:
+          - Mortal Strikes stack healing-reduction debuff
+          - Mighty Blow — frontal cone
+      - name: Elemental Phase
+        hp_threshold: 50
+        description: >
+          Elemental separates from Colossus. Reunites if not killed.
+        tank: Pick up the Elemental.
+        healer: Merge phase is heavy damage.
+        dps: Kill the Elemental. Merging back triggers a full Colossus re-engage.
+        mechanics:
+          - Elemental Emerge/Merge — Colossus regains hp if Elemental merges back
+      - name: Enraged Colossus
+        hp_threshold: 0
+        description: >
+          After Elemental dies, Colossus returns enraged.
+        tank: Re-pick up, expect spike damage.
+        healer: Cooldowns — he hits hard now.
+        dps: Burn. Finish him.
+        mechanics:
+          - Enraged Colossus hits for much more
+
+  - name: Gal'darah
+    order: 4
+    aliases: [Galdarah, Gal'darah]
+    phases:
+      - name: Troll Phase
+        hp_threshold: null
+        description: >
+          Melee troll form. Impales periodically.
+        tank: Central. Face away.
+        healer: Impale debuff bleeds — dispel if specced.
+        dps: Behind. Interrupt Stampede (knocks players around).
+        mechanics:
+          - Impale — stacking bleed
+          - Whirling Slash — AoE melee
+          - Puncture — armor reduction
+      - name: Rhino Phase
+        hp_threshold: null
+        description: >
+          Transforms into a rhino. Charges random players.
+        tank: Reposition after each charge.
+        healer: Charge knocks players around — heal through.
+        dps: Move out of his charge path.
+        mechanics:
+          - Enraged Trample — charge at a random player
+          - Stampede — multiple rhino charges
+        # Phases alternate on timer, not hp.

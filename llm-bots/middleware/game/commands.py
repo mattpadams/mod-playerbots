@@ -37,7 +37,22 @@ class CommandType(str, Enum):
 
     # Quest
     ACCEPT_QUEST = "accept_quest"
-    ABANDON_QUEST = "abandon_quest"
+    DROP_QUEST = "drop_quest"
+    SHARE_QUEST = "share_quest"
+
+    # M4: Items + interaction
+    TRADE_ITEM = "trade_item"
+    VENDOR_BUY = "vendor_buy"
+    VENDOR_SELL = "vendor_sell"
+    CRAFT_ITEM = "craft_item"
+    LOOT_ROLL = "loot_roll"
+    CAST_SPELL = "cast_spell"
+    USE_ITEM = "use_item"
+    INTERACT_OBJECT = "interact_object"
+    TALK_TO_NPC = "talk_to_npc"
+
+    # M4: RPG behavior
+    SET_RPG_MODE = "set_rpg_mode"
 
 
 class BotCommand(BaseModel):

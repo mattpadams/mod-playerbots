@@ -1,0 +1,35 @@
+key: halls_of_reflection_heroic
+name: Halls of Reflection (Heroic)
+difficulty: heroic
+overlay_of: halls_of_reflection
+min_level: 80
+max_level: 80
+general_notes: >
+  Famous for being punishing. Every phase matters and the Lich
+  King gauntlet wipes groups that lose focus.
+
+bosses:
+  - name: Wave Gauntlet (pre-Falric)
+    phases:
+      - name: Waves 1–5
+        healer: >
+          Heroic waves deal massive group damage — preemptive
+          cooldowns every wave.
+        dps: >
+          Priority kill rotation is unforgiving — AoE the trash,
+          nuke the Leader.
+
+  - name: Lich King Gauntlet (escape)
+    phases:
+      - name: Escape Run
+        tank: >
+          Frostmourne's reach is long — stay well ahead of the
+          Lich King. If he catches up, everyone dies.
+        healer: >
+          Escort hp is low on heroic — keep Jaina/Sylvanas topped
+          or the run fails.
+        dps: >
+          Ice Wraiths are the make-or-break — kill them in under
+          3 seconds each or the escort stalls.
+        mechanics:
+          - Lich King catches up on delay — zero tolerance for hesitation

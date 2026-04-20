@@ -1,0 +1,16 @@
+key: azjol_nerub_heroic
+name: Azjol-Nerub (Heroic)
+difficulty: heroic
+overlay_of: azjol_nerub
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Anub'arak
+    phases:
+      - name: Burrow Phase
+        dps: >
+          Nerubian Assassin fears are nearly lethal on heroic —
+          kill them instantly.
+        mechanics:
+          - More Nerubian Assassins spawn per burrow

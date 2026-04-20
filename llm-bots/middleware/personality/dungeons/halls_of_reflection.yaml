@@ -1,0 +1,98 @@
+key: halls_of_reflection
+name: Halls of Reflection
+map_id: 668
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+# NOTE: mod-playerbots currently falls back to Utgarde Keep's strategy
+# for HoR (DungeonStrategyContext.h:84) — the dedicated strategy is
+# not yet implemented. Boss callouts still work via LLM narration.
+strategy_key: wotlk-hor
+cpp_coverage: partial
+min_level: 80
+max_level: 80
+leader_role: tank
+general_notes: >
+  Third ICC 5-man. Two bosses (Falric and Marwyn) reached through
+  ten waves of Lich King-summoned adds, then an Arthas gauntlet
+  escape sequence.
+
+bosses:
+  - name: Wave Gauntlet (pre-Falric)
+    order: 1
+    aliases: [Wave, Phantom]
+    phases:
+      - name: Waves 1–5
+        hp_threshold: null
+        description: >
+          Five waves of Lich-King-summoned phantoms — mixed Ranger,
+          Priest, Mage, Footman, Marauder adds. Leader in each wave
+          heals — priority kill.
+        tank: Pick up every add. Leader has a distinctive name.
+        healer: AoE group damage is heavy.
+        dps: Kill the wave Leader (priest type) first. Interrupt Arcane Blast.
+        mechanics:
+          - Leader in each wave heals/buffs — kill first
+          - Phantom adds die quickly to AoE
+      - name: Waves 6–9
+        hp_threshold: null
+        description: >
+          Waves 6–9 feature larger packs with mixed compositions.
+        tank: Same tactics scaled up.
+        healer: Mana management — cooldowns.
+        dps: Same priorities. Interrupt the Hallowed Ones specifically.
+        mechanics:
+          - Heavier wave composition approaching Falric
+
+  - name: Falric
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Captain of Lordaeron. Impending Despair + Defiling
+          Horror fear.
+        tank: Central. Don't let him cleave casters.
+        healer: Impending Despair heals him — dispel.
+        dps: Move out of Defiling Horror fear range. Burn.
+        mechanics:
+          - Impending Despair — absorbs incoming healing
+          - Defiling Horror — AoE fear
+          - Hopelessness — damage amp
+
+  - name: Marwyn
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Dark warden. Corrupted Flesh and Well of Corruption pools.
+        tank: Central. Face away.
+        healer: Corrupted Flesh stacks — dispel.
+        dps: Move out of Well of Corruption pools. Interrupt Shared Suffering.
+        mechanics:
+          - Well of Corruption — ground pool
+          - Corrupted Flesh — stacking disease, dispel
+          - Shared Suffering — splits damage across party
+
+  - name: Lich King Gauntlet (escape)
+    order: 4
+    aliases: [Lich King, Escape]
+    phases:
+      - name: Escape Run
+        hp_threshold: null
+        description: >
+          After Marwyn, the Lich King spawns. You cannot kill him —
+          escape while Jaina (Alliance) or Sylvanas (Horde) holds
+          him off. Stay behind the escort NPC, drop ice walls, kill
+          Ice Wraiths.
+        tank: Stay grouped with the escort. Don't aggro Lich King directly.
+        healer: Heal the escort NPC and party through ice wraith waves.
+        dps: Kill Ice Wraiths AS THEY SPAWN — the escort pauses if wraiths are alive.
+        mechanics:
+          - Lich King is invincible — don't engage
+          - Ice Wraiths spawn in waves — kill immediately
+          - Escort Jaina/Sylvanas breaks ice walls

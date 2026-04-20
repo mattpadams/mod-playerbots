@@ -1,0 +1,119 @@
+key: stratholme_undead
+name: "Stratholme: Undead Side"
+map_id: 329
+sub_zone: "The Gauntlet"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 56
+max_level: 60
+leader_role: tank
+general_notes: >
+  Scourge side of Stratholme. Rivendare's court. The Gauntlet —
+  a timed zombie-wave event — is famous.
+
+bosses:
+  - name: Unrelenting Trainee
+    order: 1
+    aliases: [Trainee]
+    phases:
+      - name: Gauntlet Phase
+        hp_threshold: null
+        description: >
+          Kill waves of zombies to slow Baron Rivendare's timer.
+          Sustained AoE critical.
+        tank: AoE tank waves.
+        healer: Heavy AoE heals.
+        dps: AoE everything in sight.
+        mechanics:
+          - Timed zombie waves
+          - Zombie pack density is punishing
+
+  - name: Postmaster Malown
+    order: 2
+    aliases: [Malown]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Rare mailbox ghost. Summoned by opening mailboxes.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt.
+        mechanics:
+          - Summons via mailbox clicks
+
+  - name: Nerub'enkan
+    order: 3
+    aliases: [Nerubenkan, Nerub'enkan]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Spider boss.
+        tank: Open area.
+        healer: Poison dispel.
+        dps: Burn.
+        mechanics:
+          - Encasing Webs — root
+          - Crypt Scarabs
+
+  - name: Maleki the Pallid
+    order: 4
+    aliases: [Maleki]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Lich boss.
+        tank: Central.
+        healer: Frost.
+        dps: Interrupt Frostbolt.
+        mechanics:
+          - Frostbolt
+          - Frost Nova
+
+  - name: Magistrate Barthilas (Undead version)
+    order: 5
+    aliases: [Barthilas]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Executioner boss.
+        tank: Central.
+        healer: Fear.
+        dps: Burn.
+        mechanics:
+          - Drain Life
+          - Crusader Strike
+
+  - name: Ramstein the Gorger
+    order: 6
+    aliases: [Ramstein]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Abomination. Spawns after killing six skeletons.
+        tank: Central. Face away.
+        healer: Heavy physical.
+        dps: Burn. Move out of Chain Knockback.
+        mechanics:
+          - Knockout — AoE knockback
+          - Trample — heavy damage
+
+  - name: Baron Rivendare
+    order: 7
+    aliases: [Rivendare]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Final undead boss. Rides a skeletal horse (drops mount if
+          group kills him under 45 min of gauntlet start).
+        tank: Central.
+        healer: Heavy AoE. Raise Dead minions.
+        dps: Kill Skeletal Horses. Interrupt Shadow Bolt.
+        mechanics:
+          - Raise Dead — summons skeletal adds
+          - Shadow Bolt
+          - Mortal Strike
+          - Drops Deathcharger's Reins (rare mount) under tight timer

@@ -1,0 +1,109 @@
+key: utgarde_pinnacle
+name: Utgarde Pinnacle
+map_id: 575
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-up
+cpp_coverage: full
+min_level: 78
+max_level: 80
+leader_role: tank
+general_notes: >
+  Top of Utgarde. Four bosses: the Svala Sorrowgrave ritual, Gortok
+  Palehoof's four beasts, Skadi the Ruthless (gauntlet + harpoon
+  drake), then King Ymiron at the top.
+
+bosses:
+  - name: Svala Sorrowgrave
+    order: 1
+    aliases: [Svala]
+    phases:
+      - name: Ritual (intro)
+        hp_threshold: null
+        description: >
+          Short intro cutscene. Svala ascends and becomes the boss.
+        tank: Wait through the intro, then pick her up on the central platform.
+        healer: Top everyone before engagement.
+        dps: Do not break the intro early.
+        mechanics:
+          - Untankable during the ritual
+      - name: Phase 1
+        hp_threshold: 100
+        description: >
+          Melee boss with Ritual of the Sword — a player is teleported
+          to an altar, flanked by cultists. Free them or they die.
+        tank: Hold Svala in center, face her away.
+        healer: Pre-shield the Ritual target, heavy heals until adds die.
+        dps: Swap to the two cultists the moment Ritual triggers — they must die before the sword cast finishes.
+        mechanics:
+          - Ritual of the Sword — free the tethered player
+          - Flame pools on the ground — move out
+
+  - name: Gortok Palehoof
+    order: 2
+    aliases: [Palehoof]
+    phases:
+      - name: Beast Waves
+        hp_threshold: null
+        description: >
+          Palehoof is inactive. Four beast adds spawn in sequence;
+          kill each in turn.
+        tank: Pick up each beast as it spawns. Frenzied Worgen goes first if random.
+        healer: Cooldowns on each beast transition.
+        dps: Focus the active beast. Jormungar Worm stacks poison — back away to drop stacks.
+        mechanics:
+          - Ravenous Furbolg, Massive Jormungar, Ferocious Rhino, Frenzied Worgen spawn in order
+      - name: Palehoof Active
+        hp_threshold: 0
+        description: >
+          After all four beasts die, Palehoof engages.
+        tank: Tank in center. Watch for his Arcane Bolt silence.
+        healer: He does consistent melee damage. Interrupt Arcane Bolt on cooldown.
+        dps: Stay in melee range to interrupt. Impale is a frontal — stay behind.
+        mechanics:
+          - Arcane Bolt — interrupt
+          - Impale — frontal cone
+
+  - name: Skadi the Ruthless
+    order: 3
+    aliases: [Skadi]
+    phases:
+      - name: Drake Phase
+        hp_threshold: null
+        description: >
+          Skadi rides Grauf. Party dodges flame breath and grabs
+          harpoons from add waves.
+        tank: Pick up the trash waves (Vrykul warriors + harpooners).
+        healer: AoE heal the group during breath passes. Stay grouped.
+        dps: Kill harpooners to collect harpoons. Throw harpoons at Grauf three times to ground him.
+        mechanics:
+          - Grauf's flame breath telegraphs — move perpendicular
+          - Three harpoons ground the drake
+      - name: Ground Phase
+        hp_threshold: 0
+        description: >
+          Skadi dismounts. Standard melee fight.
+        tank: Pick him up where he lands, face away.
+        healer: Normal tank healing, watch for Whirlwind.
+        dps: Behind him. Move out of Whirlwind.
+        mechanics:
+          - Whirlwind — back off melee
+
+  - name: King Ymiron
+    order: 4
+    aliases: [Ymiron]
+    phases:
+      - name: Active phase
+        hp_threshold: null
+        description: >
+          Melee boss. Periodically becomes invulnerable and
+          summons his ancestors.
+        tank: Pull to center. Let fear happen unless you have a trinket.
+        healer: Pre-heal before ancestor summons — each ancestor does AoE damage.
+        dps: Burn him. Move out of Bane (stationary debuff). Don't use cooldowns during his invulnerable phase.
+        mechanics:
+          - Bane — debuff drops a damage pool; move
+          - Fear — party-wide, trinket if you have it
+          - Invulnerability during ancestor summons

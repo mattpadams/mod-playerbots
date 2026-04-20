@@ -1,0 +1,40 @@
+<div class="status-grid">
+  <div class="stat">
+    <div class="muted">Provider</div>
+    <div class="val">{{ status.llm.provider }}</div>
+  </div>
+  <div class="stat">
+    <div class="muted">Kill Switch</div>
+    <div class="val {% if status.llm.kill_switch %}danger{% else %}ok{% endif %}">
+      {{ "ON" if status.llm.kill_switch else "off" }}
+    </div>
+  </div>
+  <div class="stat">
+    <div class="muted">Elevated Bots</div>
+    <div class="val">{{ status.bots.elevated }} / {{ status.bots.max_agents }}</div>
+  </div>
+  <div class="stat">
+    <div class="muted">Pinned</div>
+    <div class="val">{{ status.bots.pinned }}</div>
+  </div>
+  <div class="stat">
+    <div class="muted">Auto</div>
+    <div class="val">{{ status.bots.auto }}</div>
+  </div>
+  <div class="stat">
+    <div class="muted">Degraded</div>
+    <div class="val {% if status.bots.degraded %}danger{% endif %}">{{ status.bots.degraded }}</div>
+  </div>
+  <div class="stat">
+    <div class="muted">Budget</div>
+    <div class="val">{{ status.cost.budget_state }}</div>
+  </div>
+  <div class="stat">
+    <div class="muted">Hourly $</div>
+    <div class="val">${{ status.cost.hourly_spend_usd }} / ${{ status.cost.hourly_limit_usd }}</div>
+  </div>
+  <div class="stat">
+    <div class="muted">Auto-elevation</div>
+    <div class="val">{{ "on" if status.scheduler.auto_elevation_enabled else "off" }}</div>
+  </div>
+</div>

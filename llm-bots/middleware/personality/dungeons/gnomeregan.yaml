@@ -1,0 +1,98 @@
+key: gnomeregan
+name: Gnomeregan
+map_id: 90
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 24
+max_level: 34
+leader_role: tank
+general_notes: >
+  Irradiated gnome city. Confusing maze. Several optional bosses
+  plus Mekgineer Thermaplugg.
+
+bosses:
+  - name: Grubbis
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Troggs leader escort encounter.
+        tank: Defend the NPC escort.
+        healer: AoE.
+        dps: Kill Grubbis + adds.
+        mechanics:
+          - Escort event with ambush
+
+  - name: Viscous Fallout
+    order: 2
+    aliases: [Fallout]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Toxic waste elemental.
+        tank: Open area.
+        healer: Dispel poison.
+        dps: Burn.
+        mechanics:
+          - Toxic Volley — AoE poison
+
+  - name: Electrocutioner 6000
+    order: 3
+    aliases: [Electrocutioner]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Electric construct.
+        tank: Spread for Chain Lightning.
+        healer: Shield conducts.
+        dps: Spread.
+        mechanics:
+          - Chain Lightning between close targets
+
+  - name: Crowd Pummeler 9-60
+    order: 4
+    aliases: [Pummeler]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Construct with knockback.
+        tank: Corner tank.
+        healer: Knockback-heal.
+        dps: Burn.
+        mechanics:
+          - Hardened Arm — armor debuff
+
+  - name: Dark Iron Ambassador
+    order: 5
+    aliases: [Ambassador]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Optional secret boss in Workshop area.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt Fireball.
+        mechanics:
+          - Fireball
+          - War Stomp
+
+  - name: Mekgineer Thermaplugg
+    order: 6
+    aliases: [Thermaplugg]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Final boss. Periodically summons Walking Bombs — kill
+          them before they reach him.
+        tank: Central.
+        healer: AoE.
+        dps: Kill Walking Bombs before they explode (they buff his damage).
+        mechanics:
+          - Walking Bombs spawn from alcoves
+          - Activate Bomb — damage amp on hit

@@ -1,0 +1,35 @@
+{% if not roster %}
+<p class="empty">No bots elevated yet. Use the form above to elevate one.</p>
+{% else %}
+<table class="roster">
+  <thead>
+    <tr>
+      <th>Name</th><th>Personality</th><th>Zone</th><th>State</th>
+      <th>HP</th><th>Last Action</th><th>Calls</th><th>Cost</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for b in roster %}
+    <tr class="{% if b.degraded %}degraded{% endif %}">
+      <td><strong>{{ b.name }}</strong> <span class="muted">#{{ b.guid }}</span></td>
+      <td>{{ b.personality }}</td>
+      <td>{{ b.zone }}</td>
+      <td><span class="state state-{{ b.state|replace('-', '') }}">{{ b.state }}</span></td>
+      <td>
+        <div class="hpbar"><span style="width: {{ b.hp_pct }}%"></span></div>
+        <span class="muted">{{ b.hp_pct }}%</span>
+      </td>
+      <td><code>{{ b.last_action }}</code></td>
+      <td>{{ b.llm_calls }}</td>
+      <td>${{ "%.4f"|format(b.cost_usd) }}</td>
+      <td class="row-actions">
+        <a href="/memories?guid={{ b.guid }}">mem</a>
+        <button hx-post="/api/bots/{{ b.guid }}/demote"
+                hx-confirm="Demote {{ b.name }}?"
+                hx-swap="none">demote</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}

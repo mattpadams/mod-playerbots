@@ -1,0 +1,20 @@
+key: underbog_heroic
+name: The Underbog (Heroic)
+difficulty: heroic
+overlay_of: underbog
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Hungarfen
+    phases:
+      - name: Active
+        dps: >
+          Mushrooms explode for much more damage — priority kill.
+
+  - name: The Black Stalker
+    phases:
+      - name: Active
+        healer: >
+          Chain Lightning bounces deal heavy damage — spread more
+          than usual.

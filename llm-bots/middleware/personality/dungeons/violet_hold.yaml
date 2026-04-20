@@ -1,0 +1,71 @@
+key: violet_hold
+name: The Violet Hold
+map_id: 608
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-vh
+cpp_coverage: full
+min_level: 75
+max_level: 80
+leader_role: tank
+general_notes: >
+  Dalaran prison. 18 timed waves of mixed adds from four portals,
+  with two mini-bosses at waves 6 and 12, and a final boss.
+  Defend the central crystal (Sinclari prison) — its hp depletes
+  if adds reach it.
+
+bosses:
+  - name: Wave Mini-Boss 6
+    order: 1
+    aliases: [Erekem, Moragg, Ichoron, Xevozz, Lavanthor, Zuramat]
+    phases:
+      - name: Random mini-boss
+        hp_threshold: null
+        description: >
+          One of six random mini-bosses spawns at wave 6. Mechanics
+          vary — the LLM should read the spawn and adapt.
+        tank: Pick up whatever spawns. Standard tank positioning.
+        healer: Different mini-bosses stress the healer differently — be reactive.
+        dps: Priority kill. Return to wave clearing after.
+        mechanics:
+          - Erekem — caster w/ two kyrelf adds
+          - Moragg — eye beams, standstill tank
+          - Ichoron — water elemental, splits
+          - Xevozz — summons spheres that explode on contact
+          - Lavanthor — fire caster, cone
+          - Zuramat — void caster, summons void sentries
+
+  - name: Wave Mini-Boss 12
+    order: 2
+    aliases: [Erekem, Moragg, Ichoron, Xevozz, Lavanthor, Zuramat]
+    phases:
+      - name: Random mini-boss
+        hp_threshold: null
+        description: >
+          Second random mini-boss. Same pool as wave 6, excluding
+          the one that already spawned.
+        tank: Same tactics as wave 6 adjusted for which mini-boss spawned.
+        healer: Adapt based on boss.
+        dps: Same.
+        mechanics:
+          - Pool of six mini-bosses, one drawn each mini-boss wave
+
+  - name: Cyanigosa
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Blue dragonflight dragon. Final boss. Tail Sweep, Arcane
+          Vacuum.
+        tank: Face her away from the group. Don't let her tail-sweep anyone.
+        healer: Arcane Vacuum pulls everyone in — stay spread before the cast.
+        dps: Behind her. Move out of the Vacuum pull (it channels).
+        mechanics:
+          - Tail Sweep — 180° behind her, knockback
+          - Arcane Vacuum — pulls players to center
+          - Blizzard — ground AoE
+          - Mana Destruction — AoE mana burn

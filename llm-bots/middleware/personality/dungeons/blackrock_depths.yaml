@@ -1,0 +1,220 @@
+key: blackrock_depths
+name: Blackrock Depths
+map_id: 230
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 47
+max_level: 60
+leader_role: tank
+general_notes: >
+  Massive Dark Iron dwarf city. Longest vanilla 5-man. Dozens of
+  sub-areas and 14+ bosses. Often run in segments. The Ring of Law
+  gladiatorial event is a highlight; Emperor Dagran Thaurissan is
+  the final boss.
+
+bosses:
+  - name: High Interrogator Gerstahn
+    order: 1
+    aliases: [Gerstahn]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Priest boss, Detention Block.
+        tank: Central.
+        healer: Dispel.
+        dps: "Interrupt Shadow Word: Pain. Interrupt heals."
+        mechanics:
+          - Mind Blast
+          - Smite
+
+  - name: Ring of Law
+    order: 2
+    aliases: [Coren Direbrew, Gorosh, Grizzle, Eviscerator, Ok'thor, Anub'shiah, Hedrum]
+    phases:
+      - name: Arena Waves
+        hp_threshold: null
+        description: >
+          Gladiator arena. Six trash waves, then a random boss
+          from a pool of seven appears.
+        tank: AoE tank waves.
+        healer: AoE heals.
+        dps: AoE waves, then focus the random boss.
+        mechanics:
+          - Six waves of trash
+          - Random single boss after waves
+
+  - name: Lord Roccor
+    order: 3
+    aliases: [Roccor]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Earth elemental boss. Manacles of Rebirth room.
+        tank: Central.
+        healer: AoE damage.
+        dps: Burn.
+        mechanics:
+          - Earthquake — AoE
+
+  - name: Houndmaster Grebmar
+    order: 4
+    aliases: [Grebmar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Dog handler + three Black War Hounds.
+        tank: Pick up hounds.
+        healer: AoE.
+        dps: Kill hounds first.
+        mechanics:
+          - Three hound adds
+          - Frenzy — stacking
+
+  - name: Pyromancer Loregrain
+    order: 5
+    aliases: [Loregrain]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fire caster boss.
+        tank: Central.
+        healer: Fire dispel.
+        dps: Interrupt Fireball.
+        mechanics:
+          - Molten Blast — AoE
+          - Fireball
+
+  - name: Warder Stilgiss + Verek
+    order: 6
+    aliases: [Stilgiss, Verek]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Paired boss + pet encounter.
+        tank: Stilgiss + Verek (his wolf pet).
+        healer: AoE.
+        dps: Kill Verek first (pet).
+        mechanics:
+          - Frost Nova from Stilgiss
+          - Summons Verek add
+
+  - name: Fineous Darkvire
+    order: 7
+    aliases: [Darkvire]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Paladin boss in the Tomb of the Seven area.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt Holy Strike.
+        mechanics:
+          - Fineous Cleave
+          - Hammer
+
+  - name: The Seven
+    order: 8
+    aliases: [Dughal Stormwing, Angerrel, Doomrel, Gorosh the Dervish, Hategrel, Vilerel, Seethrel]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Seven dwarf dungeon-bosses summoned from graves. Kill in
+          sequence they appear.
+        tank: Focus tank one at a time — they spawn one per death.
+        healer: AoE.
+        dps: Focus current boss. Skills rotate per dwarf.
+        mechanics:
+          - Seven bosses spawn sequentially
+          - Each has a unique class ability
+
+  - name: Bael'Gar
+    order: 9
+    aliases: [Baelgar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fire giant boss.
+        tank: Central.
+        healer: Fire.
+        dps: Burn.
+        mechanics:
+          - Flamebreak — AoE
+
+  - name: General Angerforge
+    order: 10
+    aliases: [Angerforge]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Dark Iron general with two Anvilrage reinforcements.
+        tank: AoE tank.
+        healer: AoE.
+        dps: Kill adds first.
+        mechanics:
+          - Summons reinforcements
+          - Enrage at low hp
+
+  - name: Golem Lord Argelmach
+    order: 11
+    aliases: [Argelmach]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Golem boss. Trash golems nearby respond to engagement.
+        tank: Pull away from golems if possible.
+        healer: AoE.
+        dps: Golems first if pulled.
+        mechanics:
+          - Chain Lightning
+          - Shock
+
+  - name: Ambassador Flamelash
+    order: 12
+    aliases: [Flamelash]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fire elemental. Summons Burning Spirits.
+        tank: Central.
+        healer: Fire damage.
+        dps: AoE spirits.
+        mechanics:
+          - Burning Spirits — AoE spirit adds
+          - Fireball
+
+  - name: Magmus
+    order: 13
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Giant fire elemental guarding Thaurissan's chamber.
+        tank: Central.
+        healer: Fire burst.
+        dps: Burn.
+        mechanics:
+          - Fiery Burst
+          - War Stomp
+
+  - name: Emperor Dagran Thaurissan
+    order: 14
+    aliases: [Thaurissan, Dagran]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Dark Iron emperor. Final boss. Casts Hand of Thaurissan
+          which can be redirected to his consort Princess Moira.
+          Don't kill Moira — she's a reward NPC.
+        tank: Pull Thaurissan AWAY from Princess Moira.
+        healer: AoE.
+        dps: Burn Thaurissan. Don't hit Princess Moira.
+        mechanics:
+          - Hand of Thaurissan — knockback
+          - Princess Moira heals him — move away or CC her
+          - AVOID KILLING Princess Moira (quest NPC)

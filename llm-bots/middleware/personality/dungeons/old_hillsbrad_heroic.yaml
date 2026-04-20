@@ -1,0 +1,14 @@
+key: old_hillsbrad_heroic
+name: Old Hillsbrad Foothills (Heroic)
+difficulty: heroic
+overlay_of: old_hillsbrad
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Epoch Hunter
+    phases:
+      - name: Active
+        healer: >
+          Thrall's hp is tight on heroic — heal him throughout
+          the escort, not just boss phases.

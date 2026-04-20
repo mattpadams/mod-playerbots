@@ -1,0 +1,82 @@
+key: mechanar
+name: The Mechanar
+map_id: 554
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 68
+max_level: 71
+leader_role: tank
+general_notes: >
+  Tempest Keep satellite dungeon. Four bosses. Blood Elf
+  engineering-themed.
+
+bosses:
+  - name: Gyro-Kill
+    order: 1
+    aliases: [Gatewatcher Gyro-Kill, Gyrokill]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Construct. Line-attack saw abilities.
+        tank: Face him away.
+        healer: Shadow Power debuff on tank — dispel.
+        dps: Stay out of Saw Blade line.
+        mechanics:
+          - Saw Blade — line attack
+          - Shadow Power — dispel
+
+  - name: Gatewatcher Iron-Hand
+    order: 2
+    aliases: [Ironhand, Iron-Hand]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Construct. Hammer punishes melee.
+        tank: Face away.
+        healer: Jackhammer AoE stun — be ready.
+        dps: Step out during Jackhammer.
+        mechanics:
+          - Jackhammer — AoE stun
+          - Stream of Machine Fluid — ground line
+
+  - name: Mechano-Lord Capacitus
+    order: 3
+    aliases: [Capacitus]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Mecha-gnome. Positive/negative polarity debuffs.
+        tank: Central.
+        healer: Split the group by polarity — positives stack, negatives stack separately.
+        dps: Check your buff icon — Positive stands with Positive, Negative with Negative. Opposite polarities nearby = big damage.
+        mechanics:
+          - Polarity Shift — assigns Positive or Negative buff
+          - Reflective Magic Shield — stop magic DPS on cast
+          - Headcrack — tank damage
+
+  - name: Pathaleon the Calculator
+    order: 4
+    aliases: [Pathaleon]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: Blood elf caster boss.
+        tank: Central. Interrupt Manadrain on yourself.
+        healer: Mana management — he drains.
+        dps: Interrupt cast.
+        mechanics:
+          - Manadrain — single-target mana steal
+          - Domination — mind control
+      - name: Mind Control
+        hp_threshold: 50
+        description: Summons multiple adds at 50%.
+        tank: Pick up waves of Nether Wraiths.
+        healer: AoE heals.
+        dps: AoE adds; don't forget boss has a damage buff during this phase.
+        mechanics:
+          - Multiple Nether Wraith adds at 50%

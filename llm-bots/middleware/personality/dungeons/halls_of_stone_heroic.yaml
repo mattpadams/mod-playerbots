@@ -1,0 +1,25 @@
+key: halls_of_stone_heroic
+name: Halls of Stone (Heroic)
+difficulty: heroic
+overlay_of: halls_of_stone
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Tribunal of the Ages (event)
+    phases:
+      - name: Defense
+        tank: >
+          Wave spawns are faster on heroic — position centrally
+          near Brann.
+        dps: >
+          AoE immediately; casters are priority or they kill Brann
+          with ranged damage.
+
+  - name: Sjonnir the Ironshaper
+    phases:
+      - name: Ooze Phase
+        healer: >
+          Heavy damage ramp on heroic — save cooldowns for 50%.
+        mechanics:
+          - Additional oozes spawn faster

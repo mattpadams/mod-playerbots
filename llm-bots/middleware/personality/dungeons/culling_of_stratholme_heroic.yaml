@@ -1,0 +1,20 @@
+key: culling_of_stratholme_heroic
+name: The Culling of Stratholme (Heroic)
+difficulty: heroic
+overlay_of: culling_of_stratholme
+min_level: 80
+max_level: 80
+general_notes: >
+  Heroic CoS adds the Infinite Corruptor achievement — kill him
+  before the 25-minute timer expires for an epic drake mount.
+
+bosses:
+  - name: Mal'Ganis
+    phases:
+      - name: Active (trigger phase)
+        healer: >
+          Vampiric Touch MUST be dispelled on heroic — it heals
+          him significantly.
+        mechanics:
+          - Void Zones linger longer
+          - Sleep is lethal if not dispelled before Carrion Swarm

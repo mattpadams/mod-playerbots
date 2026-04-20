@@ -1,0 +1,93 @@
+key: sunken_temple
+name: Sunken Temple
+map_id: 109
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 45
+max_level: 55
+leader_role: tank
+general_notes: >
+  Temple of Atal'Hakkar in the Swamp of Sorrows. Large and
+  maze-like. Six dragonkin statues puzzle + multiple bosses
+  culminating at Jammal'an and Shade of Eranikus.
+
+bosses:
+  - name: Atal'alarion
+    order: 1
+    aliases: [Atalalarion]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Optional stone guardian summoned by puzzle.
+        tank: Central.
+        healer: Heavy physical.
+        dps: Burn.
+        mechanics:
+          - Earthgrab
+          - Uppercut
+
+  - name: Dragonkin Bosses (x6)
+    order: 2
+    aliases: [Dreamscythe, Weaver, Morphaz, Hazzas, Gasher, Loro]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Six green-dragonflight pair bosses on the middle ring.
+          Kill in pairs.
+        tank: Pick up both of a pair.
+        healer: AoE.
+        dps: Kill one at a time per pair.
+        mechanics:
+          - Green dragonkin abilities (Sleep, Noxious Breath)
+
+  - name: Jammal'an the Prophet
+    order: 3
+    aliases: [Jammalan, Jammal'an, Ogom the Wretched]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Troll high priest paired with Ogom the Wretched (undead
+          priest). Twin fight.
+        tank: Pick up both.
+        healer: Dispel curses.
+        dps: Kill Ogom first (healer priority).
+        mechanics:
+          - Ogom heals the boss — kill first
+          - Hex — polymorph
+          - Mind Blast
+
+  - name: Avatar of Hakkar (Bloodkeeper)
+    order: 4
+    aliases: [Avatar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Summoned via altar puzzle.
+        tank: Central.
+        healer: Heavy group damage.
+        dps: Kill Hakkari Blood add first.
+        mechanics:
+          - Cause Insanity — fear
+          - Summons Hakkari Bloodkeeper
+
+  - name: Shade of Eranikus
+    order: 5
+    aliases: [Eranikus]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Green dragon shade. Final boss in the lowest chamber.
+        tank: Pull to open floor.
+        healer: Heavy AoE.
+        dps: Move out of Deep Slumber. Interrupt Acid Breath.
+        mechanics:
+          - Deep Slumber — AoE sleep
+          - Acid Breath — frontal
+          - Wing Flap — knockback

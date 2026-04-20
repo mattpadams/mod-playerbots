@@ -1,0 +1,83 @@
+key: culling_of_stratholme
+name: The Culling of Stratholme
+map_id: 595
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-cos
+cpp_coverage: full
+min_level: 78
+max_level: 80
+leader_role: tank
+general_notes: >
+  Caverns of Time event. Wave-based infected-citizen waves, then
+  four bosses. Waves auto-spawn — stay grouped with Arthas. Heroic
+  grants access to the Infinite Corruptor side boss via a 25-minute
+  timed run.
+
+bosses:
+  - name: Meathook
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          First named. Frontal cone + disease debuff.
+        tank: Pull him away from Arthas. Face him off to the side.
+        healer: Cleanse Constricting Chains. Disease Expulsion is dispellable.
+        dps: Stay behind him. Move out of Frenzy.
+        mechanics:
+          - Constricting Chains — AoE root, cleanse
+          - Disease Expulsion — disease, dispel
+
+  - name: Salramm the Fleshcrafter
+    order: 2
+    aliases: [Salramm]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Warlock boss. Summons Ghouls and casts Shadow Bolt.
+        tank: Hold both the boss and the ghouls. AoE threat needed.
+        healer: Mana Burn at ~50% — save heals for after.
+        dps: Kill ghouls first — they hit hard. Interrupt Shadow Bolt.
+        mechanics:
+          - Explode Ghoul — kill ghouls before he detonates them
+          - Curse of Twisted Flesh — dispellable
+          - Steal Flesh — damage amp debuff
+
+  - name: Chrono-Lord Epoch
+    order: 3
+    aliases: [Epoch]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Time-bronze dragonkin. Hits hard, grips players periodically.
+        tank: Central. Expect to be grip-pulled occasionally.
+        healer: Time Stop silences everyone for ~2s — be ahead on heals.
+        dps: Move out of Wounding Strike debuff. Burn him.
+        mechanics:
+          - Curse of Exertion — mana drain, dispel
+          - Time Warp — slow + hit reduction on tank
+          - Time Stop — 2s party-wide stun
+
+  - name: Mal'Ganis
+    order: 4
+    aliases: [Mal'Ganis, Malganis]
+    phases:
+      - name: Active (trigger phase)
+        hp_threshold: null
+        description: >
+          Dreadlord. Fight ends at ~1% — he flees, does not die.
+          Vampiric Touch heals him — interrupt/dispel.
+        tank: Central. Face away from group (Carrion Swarm is a frontal).
+        healer: Dispel Vampiric Touch off the tank — it heals him for the damage dealt.
+        dps: Don't stand in Void Zones on the floor. Interrupt Carrion Swarm if possible.
+        mechanics:
+          - Vampiric Touch — heals boss, dispellable
+          - Sleep — CC on a random player, dispel
+          - Carrion Swarm — frontal cone shadow damage
+          - Fight ends at ~1% hp

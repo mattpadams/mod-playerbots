@@ -1,0 +1,43 @@
+<p class="muted">DB overrides win over on-disk YAML. Blank YAML deletes the row.</p>
+<table class="grid-table">
+  <thead>
+    <tr><th>Name</th><th>Source</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for name in db_names %}
+    <tr>
+      <td><strong>{{ name }}</strong></td>
+      <td class="ok">db</td>
+      <td>
+        <button class="danger small"
+                hx-delete="/api/v2/personalities/{{ name }}"
+                hx-confirm="Delete DB personality '{{ name }}' (YAML fallback remains)?"
+                hx-swap="none"
+                hx-on::after-request="htmx.trigger(document.body,'admin-refresh-personalities')">
+          Delete DB copy
+        </button>
+      </td>
+    </tr>
+    {% endfor %}
+    {% for name in yaml_only %}
+    <tr>
+      <td><strong>{{ name }}</strong></td>
+      <td class="muted">yaml</td>
+      <td class="muted">read-only</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<form class="admin-form"
+      hx-post="/api/v2/personalities"
+      hx-ext="json-enc"
+      hx-swap="none"
+      hx-on::after-request="this.reset(); htmx.trigger(document.body,'admin-refresh-personalities')">
+  <label>Name <input name="name" required maxlength="64" /></label>
+  <label>YAML
+    <textarea name="yaml_data" rows="8" required
+              placeholder="name: rude_warrior&#10;traits: [aggressive, direct]&#10;speech_style: short, confrontational"></textarea>
+  </label>
+  <button>Upsert Personality</button>
+</form>

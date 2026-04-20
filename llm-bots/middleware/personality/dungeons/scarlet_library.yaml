@@ -1,0 +1,44 @@
+key: scarlet_library
+name: "Scarlet Monastery: Library"
+map_id: 189
+sub_zone: "Library"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 29
+max_level: 39
+leader_role: tank
+general_notes: >
+  SM Library wing. Houndmaster + Doan. Melee-dense patrols.
+
+bosses:
+  - name: Houndmaster Loksey
+    order: 1
+    aliases: [Loksey]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Hunter boss with three Scarlet Tracking Hounds.
+        tank: Pick up all three hounds.
+        healer: AoE.
+        dps: Kill hounds first. Interrupt Loksey's casts.
+        mechanics:
+          - Three hound adds at start
+          - Bloodlust buff on hounds
+
+  - name: Arcanist Doan
+    order: 2
+    aliases: [Doan]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: Mage boss. Periodically shields and casts Arcane Explosion.
+        tank: Central.
+        healer: Stay at max range during Arcane Explosion cast.
+        dps: Interrupt/silence normally. When shield goes up — he casts Arcane Explosion in ~10s. RUN BEHIND A PILLAR or die.
+        mechanics:
+          - Shield phase → Arcane Explosion channel
+          - Break LoS on pillars during Explosion
+          - Polymorph between Explosions

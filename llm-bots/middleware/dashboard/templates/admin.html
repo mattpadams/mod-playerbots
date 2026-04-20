@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Admin · AC LLM Bots{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="panel-header"><h2>LLM Settings</h2></div>
+  <div id="admin-settings"
+       hx-get="/fragments/admin/settings"
+       hx-trigger="load, every 10s"
+       hx-swap="innerHTML">
+    {% include "partials/admin_settings.html" %}
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-header"><h2>AI Status</h2></div>
+  <div id="admin-status"
+       hx-get="/fragments/admin/status"
+       hx-trigger="load, every 5s"
+       hx-swap="innerHTML">
+    {% include "partials/admin_status.html" %}
+  </div>
+</section>
+
+<section class="grid-2">
+  <div class="panel">
+    <div class="panel-header"><h2>Accounts</h2></div>
+    <div id="admin-accounts"
+         hx-get="/fragments/admin/accounts"
+         hx-trigger="load, every 15s, admin-refresh-accounts from:body"
+         hx-swap="innerHTML">
+      {% include "partials/admin_accounts.html" %}
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header"><h2>Bot Characters</h2></div>
+    <div id="admin-bots"
+         hx-get="/fragments/admin/bots"
+         hx-trigger="load, every 15s, admin-refresh-bots from:body"
+         hx-swap="innerHTML">
+      {% include "partials/admin_bots.html" %}
+    </div>
+  </div>
+</section>
+
+<section class="grid-2">
+  <div class="panel">
+    <div class="panel-header"><h2>Build Templates</h2></div>
+    <div id="admin-builds"
+         hx-get="/fragments/admin/builds"
+         hx-trigger="load, every 15s, admin-refresh-builds from:body"
+         hx-swap="innerHTML">
+      {% include "partials/admin_builds.html" %}
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header"><h2>Personality Templates</h2></div>
+    <div id="admin-personalities"
+         hx-get="/fragments/admin/personalities"
+         hx-trigger="load, every 15s, admin-refresh-personalities from:body"
+         hx-swap="innerHTML">
+      {% include "partials/admin_personalities.html" %}
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-header"><h2>Player Assignments</h2></div>
+  <div id="admin-assignments"
+       hx-get="/fragments/admin/assignments"
+       hx-trigger="load, admin-refresh-assignments from:body"
+       hx-swap="innerHTML"
+       hx-include="#assignment-player-input">
+    {% include "partials/admin_assignments.html" %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+key: halls_of_lightning_heroic
+name: Halls of Lightning (Heroic)
+difficulty: heroic
+overlay_of: halls_of_lightning
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Volkhan
+    phases:
+      - name: Active
+        dps: >
+          Golems shatter for lethal damage on heroic — never let
+          one reach low hp before Shatter.
+
+  - name: Loken
+    phases:
+      - name: Active (distance check)
+        healer: >
+          Pulsing Shockwave damage is very high — 10–15 yards is
+          the sweet spot. Miss it and the group dies in seconds.
+        mechanics:
+          - Tight distance window — practice positioning

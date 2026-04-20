@@ -1,0 +1,103 @@
+key: trial_of_champion
+name: Trial of the Champion
+map_id: 650
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-toc
+cpp_coverage: full
+min_level: 80
+max_level: 80
+leader_role: tank
+general_notes: >
+  Argent Tournament coliseum. Three encounters: Grand Champions
+  jousting, faction champion, then Black Knight in three phases.
+
+bosses:
+  - name: Grand Champions
+    order: 1
+    aliases: [Marshal Jacob Alerius, Ambrose Boltspark, Colosos, Runok Wildmane, Mokra the Skullcrusher, Eressea Dawnsinger, Lana Stouthammer, Jaelyne Evensong, Zul'tore, Deathstalker Visceri]
+    phases:
+      - name: Joust Phase
+        hp_threshold: null
+        description: >
+          Three Grand Champions ride out on mounts. Mount combat —
+          use the argent lance. Knock each off their mount.
+        tank: Use Shield-Breaker to strip shields, then charge with Lance.
+        healer: Emergency heal your own mount with Defend stacks.
+        dps: Charge and Thrust. Save Shield-Breaker for their shield charges.
+        mechanics:
+          - Mount combat mechanics replace normal abilities
+          - Three Defend stacks reduce incoming damage
+      - name: Dismounted Phase
+        hp_threshold: null
+        description: >
+          After being unmounted, they fight on foot. Three random
+          champions from a pool of classes.
+        tank: Pick up all three. Disarm/stun whichever is the healer type first.
+        healer: AoE heal. Dispel CCs.
+        dps: Kill order — healer type (priest/shaman), then caster, then melee. Interrupt heals.
+        mechanics:
+          - Random class composition — adapt to what spawns
+
+  - name: Argent Confessor Paletress or Eadric the Pure
+    order: 2
+    aliases: [Paletress, Eadric]
+    phases:
+      - name: Paletress — Active
+        hp_threshold: null
+        description: >
+          Priest boss. Summons a Memory (random old dungeon boss)
+          as an add.
+        tank: Pick up the Memory immediately.
+        healer: Interrupt Smite and Mind Control.
+        dps: Burn the Memory first. Interrupt Renew (heals boss).
+        mechanics:
+          - Memory spawn — random classic boss, must die before boss
+          - Mind Control on a random player
+      - name: Eadric — Active
+        hp_threshold: null
+        description: >
+          Paladin boss. Hammer of Justice throws that can be
+          reflected; Radiance blind cast.
+        tank: Central. Interrupt Hammer of Justice where possible.
+        healer: Radiance is a facing-based blind — turn away during cast.
+        dps: During Radiance turn away (not facing him). Pick up the Hammer of the Righteous and throw back at boss for big damage.
+        mechanics:
+          - Radiance — turn away from boss during cast
+          - Hammer of the Righteous — pick up + throw back
+
+  - name: The Black Knight
+    order: 3
+    aliases: [Black Knight]
+    phases:
+      - name: Phase 1 (Alive)
+        hp_threshold: null
+        description: >
+          Undead knight. Death Coil on random players.
+        tank: Central. Expect to be Death Coiled occasionally.
+        healer: Dispel Plague Strike bleeds.
+        dps: Behind him. Move out of Desecration ground effects.
+        mechanics:
+          - Plague Strike — stacking bleed
+          - Desecration — ground pool
+      - name: Phase 2 (Ghoul)
+        hp_threshold: 0
+        description: >
+          After death, his corpse rises as a ghoul.
+        tank: Pick up the ghoul.
+        healer: Standard tank healing.
+        dps: Interrupt Ghoul Explode — he channels a self-destruct.
+        mechanics:
+          - Ghoul Explode — interruptible, massive AoE if completes
+      - name: Phase 3 (Skeleton)
+        hp_threshold: 0
+        description: >
+          Ghoul dies, skeleton rises. Army of the Dead phase.
+        tank: Grab skeleton + summoned skeletons.
+        healer: Heavy AoE — cooldowns.
+        dps: AoE the summoned skeletons. Burn the boss.
+        mechanics:
+          - Army of the Dead — summons skeleton adds
+          - Marked for Death — damage amp debuff

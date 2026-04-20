@@ -1,0 +1,23 @@
+key: pit_of_saron_heroic
+name: Pit of Saron (Heroic)
+difficulty: heroic
+overlay_of: pit_of_saron
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Ick and Krick
+    phases:
+      - name: Active
+        dps: >
+          Pursuit targets must run further on heroic — don't stop
+          until it ends or it kills you.
+
+  - name: Scourgelord Tyrannus
+    phases:
+      - name: Rimefang Phase (initial)
+        healer: >
+          Hoarfrost covers more ground on heroic — maintaining
+          uptime is tricky.
+        mechanics:
+          - Icy Blast freezes for longer — break out is mandatory

@@ -1,0 +1,70 @@
+key: forge_of_souls
+name: The Forge of Souls
+map_id: 632
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-fos
+cpp_coverage: full
+min_level: 80
+max_level: 80
+leader_role: tank
+general_notes: >
+  First of the ICC 5-man trilogy. Two bosses: Bronjahm then the
+  Devourer of Souls.
+
+bosses:
+  - name: Bronjahm
+    order: 1
+    aliases: [The Godfather]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: >
+          Warlock boss. Summons Corrupted Souls that chase random
+          players.
+        tank: Hold Bronjahm central.
+        healer: Corrupted Soul explodes on contact — help kill.
+        dps: Kill Corrupted Souls before they reach their target. Interrupt Shadow Bolts.
+        mechanics:
+          - Corrupted Soul — add chases random player, explodes on touch
+          - Magic's Bane — shadow damage debuff
+      - name: Phase 2 (Soul Storm)
+        hp_threshold: 30
+        description: >
+          At 30% he casts Soulstorm and stays still pulling
+          everyone in with swirling shadow damage.
+        tank: Stay on him. Hp check phase.
+        healer: Heavy constant damage — cooldowns.
+        dps: Burn. Stay out of the moving shadow orbs around him.
+        mechanics:
+          - Soulstorm — orbs rotate around boss, damage if touched
+          - Transition means a burn-phase race
+
+  - name: Devourer of Souls
+    order: 2
+    aliases: [Devourer]
+    phases:
+      - name: Phase 1 (three faces)
+        hp_threshold: null
+        description: >
+          Three faces: Mage (purple), Healer (green, heals him — MUST
+          interrupt), and Rogue (red, frontal cone).
+        tank: Keep him faced away from group. Purple face = move out of cone.
+        healer: Interrupt the green face's healing cast. Dispel Unbound Plague.
+        dps: Interrupt green face Well of Souls heal. Move out of purple Phantom Blast cone.
+        mechanics:
+          - Purple face — Phantom Blast (frontal cone)
+          - Green face — heals himself, must interrupt
+          - Red face — Mirrored Soul damage mirror
+      - name: Phase 2 (Mirrored Soul)
+        hp_threshold: 50
+        description: >
+          Random player gets Mirrored Soul — all damage the boss
+          takes also hits them.
+        tank: Standard.
+        healer: Keep Mirrored Soul target topped.
+        dps: Check if you have Mirrored Soul — if so STOP DPS (you'll kill yourself).
+        mechanics:
+          - Mirrored Soul — stop DPS if you have the debuff

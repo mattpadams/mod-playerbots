@@ -1,0 +1,193 @@
+key: scholomance
+name: Scholomance
+map_id: 289
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 55
+max_level: 60
+leader_role: tank
+general_notes: >
+  Necromancy school under Caer Darrow. Multiple floors.
+  Classic vanilla dungeon. Final boss is Darkmaster Gandling.
+
+bosses:
+  - name: Kirtonos the Herald
+    order: 1
+    aliases: [Kirtonos]
+    phases:
+      - name: Summon Event
+        hp_threshold: null
+        description: >
+          Vampire boss summoned via ritual at a blood altar. Spawns
+          in Gandling's room.
+        tank: Central.
+        healer: Dispel.
+        dps: Burn.
+        mechanics:
+          - Summoned via altar ritual
+          - Swoop — knockback
+          - Shadow Bolt
+
+  - name: Jandice Barov
+    order: 2
+    aliases: [Jandice]
+    phases:
+      - name: Illusion Phase
+        hp_threshold: null
+        description: >
+          Summons ~10 illusionary copies of herself. Only the real
+          one takes damage.
+        tank: Pick up all copies initially.
+        healer: AoE.
+        dps: Find the real Jandice (non-illusion hp bar responds) — kill copies first is fine.
+        mechanics:
+          - Summons Illusion of Jandice Barov
+          - Only real Jandice takes damage
+
+  - name: Rattlegore
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Giant bone construct.
+        tank: Central.
+        healer: Heavy physical.
+        dps: Burn.
+        mechanics:
+          - War Stomp — AoE stun
+          - Cleave
+
+  - name: Death Knight Darkreaver
+    order: 4
+    aliases: [Darkreaver]
+    phases:
+      - name: Summon
+        hp_threshold: null
+        description: Optional boss summoned via an old quest item.
+        tank: Central.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Summoned via quest item
+
+  - name: Marduk Blackpool + Vectus
+    order: 5
+    aliases: [Marduk, Vectus]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Two paired bosses in the training hall.
+        tank: Tank both. Face away.
+        healer: AoE.
+        dps: Kill Marduk first (caster).
+        mechanics:
+          - Marduk — Shadow Bolt Volley
+          - Vectus — Melee + Fire
+
+  - name: Ras Frostwhisper
+    order: 6
+    aliases: [Ras]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Lich boss.
+        tank: Central.
+        healer: Frost dispel.
+        dps: Interrupt Frostbolt.
+        mechanics:
+          - Frostbolt
+          - Frost Volley
+          - Frostshock
+
+  - name: Instructor Malicia
+    order: 7
+    aliases: [Malicia]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Undead priest.
+        tank: Central.
+        healer: Dispel heals.
+        dps: Interrupt Heal.
+        mechanics:
+          - Heal
+          - Call of the Grave — AoE
+
+  - name: Doctor Theolen Krastinov
+    order: 8
+    aliases: [Krastinov]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Butcher boss with Lord Blackwood adds.
+        tank: Pick up adds.
+        healer: Bleeds.
+        dps: AoE adds. Burn boss.
+        mechanics:
+          - Bone Shield
+          - Rend
+
+  - name: Lorekeeper Polkelt
+    order: 9
+    aliases: [Polkelt]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Book-keeper undead.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt Volatile Infection.
+        mechanics:
+          - Volatile Infection — disease
+          - Dark Plague
+
+  - name: The Ravenian
+    order: 10
+    aliases: [Ravenian]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Bone-golem boss.
+        tank: Central.
+        healer: Heavy physical.
+        dps: Move out of Sunder Cleave.
+        mechanics:
+          - Cleave
+          - Sunder Armor
+
+  - name: Lord Alexei Barov
+    order: 11
+    aliases: [Barov]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Undead nobleman.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt Shadow Volley.
+        mechanics:
+          - Shadow Bolt Volley
+          - Shadow Shield
+
+  - name: Darkmaster Gandling
+    order: 12
+    aliases: [Gandling]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Headmaster. Periodically teleports a random player into
+          a sealed classroom with adds.
+        tank: Central.
+        healer: Heal the teleported player (you see a debuff icon).
+        dps: If YOU are teleported, kill the adds in your room fast — you're released after.
+        mechanics:
+          - Shadow Portal — teleports random player to side room
+          - Random player fights classroom adds alone
+          - Curse of Bleeding
+          - Shadow Shield

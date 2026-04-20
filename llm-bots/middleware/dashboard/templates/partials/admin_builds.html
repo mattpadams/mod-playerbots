@@ -1,0 +1,58 @@
+<table class="grid-table">
+  <thead>
+    <tr>
+      <th>ID</th><th>Name</th><th>Cls</th><th>Race</th>
+      <th>Spec</th><th>Lvl</th><th>Gear</th><th>Zone</th><th>Personality</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in templates %}
+    <tr>
+      <td>{{ t.id }}</td>
+      <td><strong>{{ t.name }}</strong></td>
+      <td>{{ t.class_id }}</td>
+      <td>{{ t.race_id }}</td>
+      <td>{{ t.spec_index }}</td>
+      <td>{{ t.level }}</td>
+      <td>{{ t.gear_tier }}</td>
+      <td>{{ t.starting_zone }}</td>
+      <td>{{ t.personality }}</td>
+      <td>
+        <button class="danger small"
+                hx-delete="/api/v2/builds/{{ t.id }}"
+                hx-confirm="Delete build template '{{ t.name }}'?"
+                hx-swap="none"
+                hx-on::after-request="htmx.trigger(document.body,'admin-refresh-builds')">
+          Delete
+        </button>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="10" class="empty">No build templates.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<form class="admin-form"
+      hx-post="/api/v2/builds"
+      hx-ext="json-enc"
+      hx-swap="none"
+      hx-on::after-request="this.reset(); htmx.trigger(document.body,'admin-refresh-builds')">
+  <label>Name <input name="name" required maxlength="64" /></label>
+  <label>Class ID <input name="class_id" type="number" required /></label>
+  <label>Race ID <input name="race_id" type="number" required /></label>
+  <label>Spec <input name="spec_index" type="number" value="0" /></label>
+  <label>Level <input name="level" type="number" value="1" min="1" max="80" /></label>
+  <label>Gear Tier
+    <select name="gear_tier">
+      <option>starter</option>
+      <option>leveling</option>
+      <option>heroic</option>
+      <option>raid</option>
+    </select>
+  </label>
+  <label>Starting Zone <input name="starting_zone" /></label>
+  <label>Personality <input name="personality" value="default" /></label>
+  <label>Notes <input name="notes" /></label>
+  <button>Create Template</button>
+</form>

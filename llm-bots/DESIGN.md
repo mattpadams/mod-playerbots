@@ -2,7 +2,23 @@
 
 **Version:** 1.0
 **Date:** 2026-04-13
-**Status:** Draft
+**Status:** In Progress
+
+## Milestone Progress
+
+| # | Milestone | Status | Notes |
+|---|-----------|--------|-------|
+| 0 | Infrastructure & Connectivity | ✅ Complete | Committed `b930cb7bd` |
+| 1 | Chat MVP | ✅ Complete | Committed `b930cb7bd` |
+| 2 | Reactive Events (C++ Hook) | ✅ Complete | C++ rebuilt & deployed 2026-04-14; Python wake-on-push live |
+| 3 | Combat Integration | ✅ Complete | EventPolicy registry, DebounceFilter, CombatContext, 5 raid tools, C++ `party,guid` TCP command — deployed 2026-04-14 |
+| 4 | Questing, Trading, Full RPG | ⏳ Not started | Includes deferred `MANA_CRITICAL` event from M3 |
+| 5 | Dungeon & Raid Coordination | ⏳ Not started | Includes deferred `PARTY_MEMBER_DIED`, `ADDS_SPAWNED`, `BOSS_PHASE_CHANGED` events from M3 |
+| 6 | Observability Dashboard | 🧪 Implemented, pending in-game test | Dashboard at `:8080`, SSE live feed, SQLite trace log, per-bot cost, Prometheus wired |
+| 7 | Scale to 50+ Active Agents | ⏳ Not started | |
+
+**To fully activate M2 push flow**, set in `worldserver.conf`:
+`AiPlayerbot.LlmBridgeEndpoint = "http://ac-bot-middleware:8180/events/chat"`
 
 ---
 
@@ -301,11 +317,11 @@ asyncio.run(test())
 
 ### Success Criteria
 
-- [ ] `docker compose up` starts all 4 containers (worldserver, database, middleware, qdrant)
-- [ ] TCP query returns valid bot state from middleware container
-- [ ] SOAP command executes successfully
-- [ ] Qdrant health check passes
-- [ ] FastAPI health endpoint returns 200 at `http://localhost:8080/health`
+- [x] `docker compose up` starts all 4 containers (worldserver, database, middleware, qdrant)
+- [x] TCP query returns valid bot state from middleware container
+- [x] SOAP command executes successfully
+- [x] Qdrant health check passes
+- [x] FastAPI health endpoint returns 200 at `http://localhost:8080/health`
 
 ---
 
@@ -575,12 +591,12 @@ GET  /admin/cost
 
 ### Success Criteria
 
-- [ ] Bot responds in-character within 5 seconds of receiving a whisper
-- [ ] Response matches personality profile (tone, vocabulary, backstory)
-- [ ] Bot remembers previous conversation in the same session
-- [ ] Bot uses emotes naturally during conversation
-- [ ] Cost tracking shows accurate token counts
-- [ ] Demoting a bot returns it to rule-engine behavior immediately
+- [x] Bot responds in-character within 5 seconds of receiving a whisper
+- [x] Response matches personality profile (tone, vocabulary, backstory)
+- [x] Bot remembers previous conversation in the same session
+- [x] Bot uses emotes naturally during conversation
+- [x] Cost tracking shows accurate token counts
+- [x] Demoting a bot returns it to rule-engine behavior immediately
 
 ---
 
@@ -745,11 +761,24 @@ to the bot's `EventBus` queue. The supervisor picks it up on the next tick
 
 ### Success Criteria
 
-- [ ] Chat events arrive at the middleware within 100ms of being sent in-game
-- [ ] Bot responds to whispers within 3 seconds consistently
-- [ ] The C++ hook does not impact game server performance (detached thread)
-- [ ] Disabling the config setting (`LlmBridgeEndpoint = ""`) fully disables the hook
-- [ ] Polling continues to work as a fallback for non-chat events
+- [x] Chat events arrive at the middleware within 100ms of being sent in-game
+- [x] Bot responds to whispers within 3 seconds consistently
+- [x] The C++ hook does not impact game server performance (detached thread + bounded queue)
+- [x] Disabling the config setting (`LlmBridgeEndpoint = ""`) fully disables the hook
+- [x] Polling continues to work as a fallback for non-chat events
+
+### M2 Implementation Notes
+
+- **C++ side**: `LlmBridgeHook` fire-and-forget HTTP POST with background worker thread and
+  1000-item bounded queue. Integrated in `Playerbots.cpp` for whisper/party/raid/guild chat.
+  `WORLDHOOK_ON_SHUTDOWN` calls `LlmBridgeHook::Shutdown()` to drain cleanly.
+- **Python side**: `EventBus` exposes an `asyncio.Event` wake flag set on every `publish()`.
+  The supervisor replaced `asyncio.sleep(tick_interval)` with `asyncio.wait({wake, stop, timer},
+  FIRST_COMPLETED)` so push events wake it immediately instead of waiting the full 3s poll.
+- **Deferred**: say/yell hooks. These bypass `OnPlayerCanUseChat` in AzerothCore's core
+  chat handler and would require spatial queries for nearby bots — not in M2 scope.
+- **Tests**: `tests/test_m2_reactive_events.py` — 6 tests, all passing (covers wake
+  flag, endpoint publishing, and supervisor early-wake integration).
 
 ---
 
@@ -898,12 +927,82 @@ Alternatively, add new SQL queries to read party composition from
 
 ### Success Criteria
 
-- [ ] Bot calls `change_strategy` appropriately when combat starts
-- [ ] Bot uses `party_chat` to coordinate with group members
-- [ ] Bot calls `flee` when health is critical and fight is unwinnable
-- [ ] Rule engine continues handling spell rotation smoothly
-- [ ] LLM is NOT called on every combat tick (only at start + critical health)
-- [ ] Strategy changes are contextually appropriate (e.g., healer switches to heal focus)
+- [x] Bot calls `change_strategy` appropriately when combat starts
+- [x] Bot uses `party_chat` to coordinate with group members
+- [x] Bot calls `flee` when health is critical and fight is unwinnable
+- [x] Rule engine continues handling spell rotation smoothly
+- [x] LLM is NOT called on every combat tick (only at start + critical health, with 30s cooldown)
+- [x] Strategy changes are contextually appropriate (e.g., healer switches to heal focus)
+
+### M3 Implementation Notes
+
+**Architecture** — introduced three reusable abstractions that pay off in M4-M7:
+
+- `game/event_policy.py` — `EventPolicy` dataclass + `POLICY_REGISTRY` as the
+  single source of truth for "does this event trigger an LLM call, at what
+  priority, with which model tier, and does it need combat context?" Replaces
+  scattered if-chains in `BotAgent._should_invoke_llm`, the supervisor's
+  `_pick_best_event` priority dict, and `CostController._IMPORTANT_EVENTS` set.
+  Adding a new event type for M4-M7 is one registry entry.
+- `game/debounce.py` — per-bot `DebounceFilter` sits between `state_differ.diff()`
+  and the event queue. Reads `EventPolicy.cooldown_seconds`. Created/destroyed
+  with each `BotAgent` in the supervisor.
+- `combat/` package — `CombatContextBuilder` fetches party composition + enemy
+  state via TCP queries, but only when a policy's `needs_combat_context=True`
+  (currently `COMBAT_START` and `HEALTH_CRITICAL`). Heavy queries stay off the
+  3-second polling path.
+
+**Raid tools** (`bot_agents/tools/raid_tools.py`) — 5 new tools composed over
+existing `PARTY_CHAT` / `EXECUTE_ACTION` / `SET_STRATEGY` commands, no new
+`CommandType` enums needed:
+
+- `focus_target` — party-chat callout + `+dps assist` strategy
+- `mark_target` — raid marker icon (skull/cross/etc.) + party-chat announcement
+- `assist_player` — target whoever a player is targeting (uses `assist <name>`)
+- `request_heal` — three urgency levels, formatted party-chat call for heals
+- `call_out_mechanic` — party-chat warning for boss mechanics (capped at 100 chars)
+
+**C++ side** (`modules/mod-playerbots/src/Bot/PlayerbotAI.cpp`) — added one new
+TCP command `party,guid` returning pipe-delimited `Name:Class:HpPct`. Returns
+empty string when solo. Also fixed a latent upstream bug in
+`Value.cpp:Uint8CalculatedValue::Format()` where `out << uint8(n)` was emitting
+a raw byte instead of a decimal string (affected `attacker count`,
+`my attacker count`, `balance percentage`, and every other `Uint8CalculatedValue`).
+
+**Decisions** —
+
+- **No "one LLM call per combat" hard guard.** Raids have phases and can last
+  10+ minutes; the rate limiter (6 calls/min/bot) + 30s `HEALTH_CRITICAL`
+  cooldown is the ceiling. `COMBAT_START` fires every time combat begins, and
+  can fire again within the same fight if target or state transitions restart it.
+- **No HP re-arm gate for `HEALTH_CRITICAL`.** An earlier design required HP to
+  recover above 40% before re-firing. Dropped because the differ only fires on
+  threshold *crossings* anyway — if HP stays below 20%, there's no duplicate to
+  debounce. Cooldown alone is sufficient and doesn't silence legitimate
+  re-evaluations during long fights.
+- **`_idle_counter` encapsulation fix** — M1 had the supervisor mutating
+  `BotAgent._idle_counter` directly. Fixed as part of M3 polish via a new
+  `BotAgent.maybe_emit_idle()` method that owns both the counter and the event
+  emission.
+- **Graceful degradation** — `CombatContextBuilder` tolerates failure of either
+  TCP query; missing data just means the `[COMBAT SITUATION]` prompt block is
+  smaller. The system still functions if the worldserver is rolled back to a
+  build without the `party,guid` command.
+
+**Deferred (tracked for future milestones)** —
+
+- `MANA_CRITICAL` event + detection → **M4** (resource management)
+- `PARTY_MEMBER_DIED` event → **M5** (raid/dungeon coordination)
+- `ADDS_SPAWNED` event → **M5** (boss encounter awareness)
+- `BOSS_PHASE_CHANGED` event → **M5** (dungeon scope per design doc)
+- `TARGET_HEALTH_CRITICAL` event → **M5** or ad-hoc follow-up
+- `COMBAT_END` LLM call → **M4** (post-combat "what next" decisions)
+
+**Tests** — `tests/test_m3_combat.py`: 38 tests covering policy registry, debounce
+cooldown + regression guard, parser edge cases (malformed, raw-byte uint8,
+singular/plural attacker-count key variants), prompt rendering, raid tool
+dispatch, and `maybe_emit_idle` lifecycle. Combined suite: 44 passing
+(38 M3 + 6 M2).
 
 ---
 

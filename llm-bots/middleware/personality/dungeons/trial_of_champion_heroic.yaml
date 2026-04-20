@@ -1,0 +1,25 @@
+key: trial_of_champion_heroic
+name: Trial of the Champion (Heroic)
+difficulty: heroic
+overlay_of: trial_of_champion
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Grand Champions
+    phases:
+      - name: Joust Phase
+        tank: >
+          Mount hp is lower on heroic — use Defend stacks
+          aggressively.
+
+  - name: The Black Knight
+    phases:
+      - name: Phase 2 (Ghoul)
+        dps: >
+          Ghoul Explode is nearly lethal — every player capable of
+          interrupting must be ready.
+      - name: Phase 3 (Skeleton)
+        healer: >
+          Army of the Dead summons more skeletons on heroic —
+          heavy AoE healing.

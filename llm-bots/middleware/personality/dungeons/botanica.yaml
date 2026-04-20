@@ -1,0 +1,91 @@
+key: botanica
+name: The Botanica
+map_id: 553
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 68
+max_level: 70
+leader_role: tank
+general_notes: >
+  Tempest Keep botanical garden. Four bosses. Fey/plant theme.
+
+bosses:
+  - name: Commander Sarannis
+    order: 1
+    aliases: [Sarannis]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Blood elf commander. Summons Blood Elf Chamberlain reinforcements at 50%.
+        tank: Pick up adds at 50%.
+        healer: AoE during add phase.
+        dps: Interrupt Arcane Resonance. AoE add wave.
+        mechanics:
+          - Reinforcements at 50%
+          - Arcane Resonance — AoE arcane
+          - Arcane Devastation — single hit
+
+  - name: High Botanist Freywinn
+    order: 2
+    aliases: [Freywinn]
+    phases:
+      - name: Tree Phase (periodic)
+        hp_threshold: null
+        description: >
+          Periodically becomes a tree and summons Frayer Protector
+          plant adds.
+        tank: Pick up Frayer Protectors.
+        healer: AoE healing during tree phase.
+        dps: AoE the plant adds. Boss is invulnerable in tree form.
+        mechanics:
+          - Tree of Life form — boss invulnerable, summons plants
+          - Summon Seedlings — spawn plant adds
+
+  - name: Thorngrin the Tender
+    order: 3
+    aliases: [Thorngrin]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fel satyr. Periodically becomes invulnerable.
+        tank: Central.
+        healer: Hellfire damage while invulnerable — heavy AoE.
+        dps: Wait out Sacrifice (he's untargetable). Dispel curses.
+        mechanics:
+          - Sacrifice — invulnerable + AoE fire
+          - Curse — damage amp
+          - Hellfire — AoE during invuln
+
+  - name: Laj
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Nature/arcane/shadow/fire/frost school-shift plant boss.
+        tank: Face away. Shift your resistance/defensives based on school.
+        healer: Shield the current-school target.
+        dps: School rotates — swap elemental damage types if possible.
+        mechanics:
+          - Shift Elements — changes school of damage
+          - Summon adds at intervals
+
+  - name: Warp Splinter
+    order: 5
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Tree ancient. Summons six Warp Splinter Treants (saplings)
+          that run toward him to heal him.
+        tank: Central.
+        healer: AoE heal when saplings are returning.
+        dps: AoE Warp Splinter Treants before they reach him. If they touch him he heals significantly.
+        mechanics:
+          - Saplings run to boss to heal him — AoE them down
+          - War Stomp — AoE stun

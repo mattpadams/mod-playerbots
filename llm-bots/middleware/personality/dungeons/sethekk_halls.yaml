@@ -1,0 +1,52 @@
+key: sethekk_halls
+name: Sethekk Halls
+map_id: 556
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 65
+max_level: 67
+leader_role: tank
+general_notes: >
+  Auchindoun third wing. Arakkoa dungeon. Two bosses, plus an
+  optional Anzu summoned via the Druid Flight Form quest.
+
+bosses:
+  - name: Darkweaver Syth
+    order: 1
+    aliases: [Syth]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: Caster boss. School-shifting.
+        tank: Central. Face away.
+        healer: Dispel Shock of the Elements.
+        dps: Interrupt Flame/Frost/Arcane/Shock casts. Spread for Volley.
+        mechanics:
+          - Frost/Fire/Arcane/Shock Shocks — rotating elemental damage
+      - name: Elemental Phase
+        hp_threshold: 50
+        description: Summons one of each elemental type.
+        tank: Pick up all four elementals.
+        healer: AoE heal.
+        dps: AoE all four elementals at once.
+        mechanics:
+          - Four elemental adds — Frost, Fire, Shock, Arcane
+
+  - name: Talon King Ikiss
+    order: 2
+    aliases: [Ikiss]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Arakkoa mage. Periodic Arcane Explosion with LoS break.
+        tank: Central. Move to a pillar for LoS when he starts Explosion cast.
+        healer: Heavy AoE during Explosion if not LoS'd.
+        dps: BREAK LoS behind the pillars when Arcane Explosion channels. Interrupt other casts.
+        mechanics:
+          - Arcane Explosion — long cast, break LoS via pillars
+          - Polymorph — random player sheep
+          - Slow — on random player

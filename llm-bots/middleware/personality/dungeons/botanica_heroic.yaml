@@ -1,0 +1,14 @@
+key: botanica_heroic
+name: The Botanica (Heroic)
+difficulty: heroic
+overlay_of: botanica
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Warp Splinter
+    phases:
+      - name: Active
+        dps: >
+          Saplings have higher hp — AoE earlier or he regens
+          significantly.

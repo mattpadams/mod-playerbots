@@ -1,0 +1,23 @@
+key: ahnkahet_heroic
+name: "Ahn'kahet: The Old Kingdom (Heroic)"
+difficulty: heroic
+overlay_of: ahnkahet
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Jedoga Shadowseeker
+    phases:
+      - name: Phase 1 (levitating)
+        dps: >
+          Chosen Initiate moves faster on heroic — call it out
+          immediately and swap all DPS.
+
+  - name: Herald Volazj
+    phases:
+      - name: Active
+        dps: >
+          Insanity illusions hit harder on heroic — if you can't
+          solo your own class's shadow copies, the group wipes.
+        mechanics:
+          - Illusions hit for heroic-level damage — class-aware play required

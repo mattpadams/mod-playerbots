@@ -1,0 +1,106 @@
+key: dire_maul_west
+name: "Dire Maul: West"
+map_id: 429
+sub_zone: "Capital Gardens"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 55
+max_level: 60
+leader_role: tank
+general_notes: >
+  West wing. Contains Prince Tortheldrin, a tribute target that
+  despawns non-trash bosses if the "tribute run" is chosen.
+
+bosses:
+  - name: Tendris Warpwood
+    order: 1
+    aliases: [Tendris]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Massive tree ancient.
+        tank: Central.
+        healer: Heavy physical.
+        dps: Move during Trample.
+        mechanics:
+          - Trample — knockdown
+          - Grasping Vines — root
+
+  - name: Illyanna Ravenoak
+    order: 2
+    aliases: [Illyanna]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Elf archer boss with Ghost pet.
+        tank: Pick up Ghost pet.
+        healer: Ranged healing.
+        dps: Kill Ghost first. Dodge Multi-Shot.
+        mechanics:
+          - Ghost Tiger pet
+          - Multi-Shot
+          - Volley — AoE
+
+  - name: Magister Kalendris
+    order: 3
+    aliases: [Kalendris]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Elf mage boss.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt Shadow Bolt.
+        mechanics:
+          - Shadow Bolt
+          - "Shadow Word: Pain"
+
+  - name: Tsu'zee
+    order: 4
+    aliases: [Tsuzee]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Rare flying satyr. Random spawn.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt.
+        mechanics:
+          - Frost Bolt
+
+  - name: Immol'thar
+    order: 5
+    aliases: [Immolthar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Eye of Kilrogg demon. Bound by five Highborne Summoners.
+          Kill the summoners first to weaken him.
+        tank: Central.
+        healer: AoE.
+        dps: Kill all five Highborne Summoners first — they boost him.
+        mechanics:
+          - Five Highborne Summoner tethers
+          - Trample
+          - Mana Burn
+
+  - name: Prince Tortheldrin
+    order: 6
+    aliases: [Tortheldrin]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Elven prince. If engaged BEFORE clearing earlier bosses,
+          he's harder — he offers a "tribute run" option.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt. Move out of Whirlwind.
+        mechanics:
+          - Whirlwind
+          - Thunderclap
+          - Counterspell — silence

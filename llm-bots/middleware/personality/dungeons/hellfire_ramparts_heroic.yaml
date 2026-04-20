@@ -1,0 +1,14 @@
+key: hellfire_ramparts_heroic
+name: Hellfire Ramparts (Heroic)
+difficulty: heroic
+overlay_of: hellfire_ramparts
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Vazruden the Herald & Nazan
+    phases:
+      - name: Dragon Phase
+        dps: >
+          Fireball impact damage is significant — dodge aggressively
+          or group wipes.

@@ -1,0 +1,13 @@
+key: slave_pens_heroic
+name: The Slave Pens (Heroic)
+difficulty: heroic
+overlay_of: slave_pens
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Rokmar the Crackler
+    phases:
+      - name: Active
+        healer: >
+          Grievous Wound stacks faster — dispel priority.

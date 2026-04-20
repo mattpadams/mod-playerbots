@@ -1,0 +1,97 @@
+key: the_oculus
+name: The Oculus
+map_id: 578
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-occ
+cpp_coverage: full
+min_level: 78
+max_level: 80
+leader_role: tank
+general_notes: >
+  Drake dungeon. First three bosses on ground, final boss on drake
+  mount. Drakes (amber tank, emerald healer, ruby dps) drop from
+  Belgaristrasz after Drakos. Drake phase is the hardest wipe risk
+  — class identity changes entirely.
+
+bosses:
+  - name: Drakos the Interrogator
+    order: 1
+    aliases: [Drakos]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Ogre. Periodically pulls all party to him with a magnetic
+          pull and spawns add waves.
+        tank: Central platform. Face away. Pick up adds after magnetic pull.
+        healer: Pre-cast after magnetic pull — heavy raid damage lands.
+        dps: Burn Drakos, swap to add waves when they spawn. The small Centrifuge Constructs are kill-priority.
+        mechanics:
+          - Magnetic Pull — all players drawn to boss
+          - Thundering Stomp — AoE around the boss
+          - Add waves every ~30s
+
+  - name: Varos Cloudstrider
+    order: 2
+    aliases: [Varos]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Caster boss. Surrounded by Azure Ring-Captain flyers that
+          strafe the floor with Call Azure Ring.
+        tank: Tank Varos in melee. Stay near him to avoid the strafing beams.
+        healer: Watch for Amplify Magic debuff — dispel or heal through.
+        dps: Hug the boss — the strafe beams kill anyone outside melee range. Ignore the flyers.
+        mechanics:
+          - Azure Ring strafing beams — lethal if hit, stay in melee
+          - Energy Bolt Volley — AoE arcane damage
+          - Amplify Magic increases magic damage taken
+
+  - name: Mage-Lord Urom
+    order: 3
+    aliases: [Urom]
+    phases:
+      - name: Platform Phase
+        hp_threshold: null
+        description: >
+          Urom teleports across three platforms spawning adds on
+          each. Clear each wave.
+        tank: Pick up adds at each platform.
+        healer: Recover between teleports.
+        dps: Swap to the active platform. Arcane Constructs are priority.
+        mechanics:
+          - Three platforms to clear before Urom engages
+      - name: Final Platform
+        hp_threshold: null
+        description: >
+          After clearing platforms, Urom engages. Casts a massive
+          Explosion telegraph — run off the platform.
+        tank: Pull him to edge. Run off and back on when Explosion telegraphs.
+        healer: Explosion one-shots anyone still on the disk — run off immediately.
+        dps: Explosion cast is long — run off the platform, wait, run back. Burn between casts.
+        mechanics:
+          - Empowered Arcane Explosion — run off the platform during cast
+          - Frostbomb — stacking debuff
+
+  - name: Ley-Guardian Eregos
+    order: 4
+    aliases: [Eregos]
+    phases:
+      - name: Drake Fight
+        hp_threshold: null
+        description: >
+          Entire fight on drake mount. Each drake color has three
+          abilities and a dramatically different role. Ruby = DPS,
+          Emerald = Heals, Amber = Tank.
+        tank: Amber drake. Use Shock Lance to break his shield, then Martyr to take damage for the group.
+        healer: Emerald drake. Leeching Poison on boss, Touch the Nightmare on self for big heal.
+        dps: Ruby drake. Stack Martyr debuff on boss, dump Searing Wrath at high stacks. Dodge Arcane Barrage orbs.
+        mechanics:
+          - Drake mount abilities replace your class abilities entirely
+          - Planar Shift — boss becomes invulnerable briefly
+          - Arcane Barrage orbs follow players — dodge
+          - Amber must break shield with Shock Lance 3 times

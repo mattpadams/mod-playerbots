@@ -1,0 +1,41 @@
+key: scarlet_armory
+name: "Scarlet Monastery: Armory"
+map_id: 189
+sub_zone: "Armory"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 32
+max_level: 42
+leader_role: tank
+general_notes: >
+  Short Armory wing. Single boss: Herod.
+
+bosses:
+  - name: Herod
+    order: 1
+    aliases: []
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: >
+          Champion. Whirlwinds and buff stacks. Engaging him
+          triggers a large trainee add wave at low hp.
+        tank: Central. Back off during Whirlwind.
+        healer: Heavy damage through Whirlwind.
+        dps: Stop melee during Whirlwind.
+        mechanics:
+          - Whirlwind — 20-yard AoE
+          - Rushing Charge — random player
+          - Cleave
+      - name: Trainee Wave
+        hp_threshold: 0
+        description: >
+          At death, a wave of Scarlet Trainees run into the room.
+        tank: Pick up the wave (AoE tanking).
+        healer: AoE heals.
+        dps: AoE down the trainees.
+        mechanics:
+          - Large add wave on Herod's death

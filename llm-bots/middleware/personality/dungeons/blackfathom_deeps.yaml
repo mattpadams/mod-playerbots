@@ -1,0 +1,96 @@
+key: blackfathom_deeps
+name: Blackfathom Deeps
+map_id: 48
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 20
+max_level: 30
+leader_role: tank
+general_notes: >
+  Ashenvale water cave. Naga/tribal worshippers of Aku'mai.
+
+bosses:
+  - name: Ghamoo-ra
+    order: 1
+    aliases: [Ghamoora, Ghamoo-ra]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Giant turtle.
+        tank: Pull to central platform.
+        healer: Heavy physical damage.
+        dps: Burn.
+        mechanics:
+          - Crush — heavy melee
+
+  - name: Lady Sarevess
+    order: 2
+    aliases: [Sarevess]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Naga mystic.
+        tank: Central.
+        healer: Dispel Slow.
+        dps: Interrupt Forked Lightning.
+        mechanics:
+          - Forked Lightning — AoE
+          - Slow — on casters
+
+  - name: Gelihast
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Murloc boss guarding the fire.
+        tank: Central.
+        healer: Standard.
+        dps: Interrupt Frost Nova.
+        mechanics:
+          - Frost Nova — AoE freeze
+
+  - name: Twilight Lord Kelris
+    order: 4
+    aliases: [Kelris]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Twilight Hammer caster.
+        tank: Central.
+        healer: Dispel sleep.
+        dps: Interrupt Mind Blast.
+        mechanics:
+          - Sleep — CC
+          - Mind Blast
+
+  - name: Old Serra'kis
+    order: 5
+    aliases: [Serrakis]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Giant shark. Optional.
+        tank: Pull to the underwater arena.
+        healer: Frenzy phase = burst heals.
+        dps: Burn.
+        mechanics:
+          - Thrash — attack speed
+
+  - name: Aku'mai
+    order: 6
+    aliases: [Akumai, Aku'mai]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Final boss. Sea snake elemental.
+        tank: Central.
+        healer: AoE poison damage.
+        dps: Move out of Poison Cloud.
+        mechanics:
+          - Poison Cloud
+          - Lash

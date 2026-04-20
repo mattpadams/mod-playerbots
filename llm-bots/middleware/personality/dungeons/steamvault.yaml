@@ -1,0 +1,66 @@
+key: steamvault
+name: The Steamvault
+map_id: 546
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 67
+max_level: 70
+leader_role: tank
+general_notes: >
+  Coilfang third wing. Naga engineer dungeon. Three bosses. Heroic
+  attunement quest was a classic TBC staple.
+
+bosses:
+  - name: Hydromancer Thespia
+    order: 1
+    aliases: [Thespia]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Caster boss with two elemental adds.
+        tank: Pick up Thespia + two Coilfang Water Elementals.
+        healer: AoE damage while elementals are up.
+        dps: Kill elementals first. Interrupt Lightning Cloud.
+        mechanics:
+          - Two Water Elemental adds at start
+          - Lightning Cloud — stationary zap field
+          - Enveloping Winds — silence
+
+  - name: Mekgineer Steamrigger
+    order: 2
+    aliases: [Steamrigger]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Steam-dwarf boss. Summons repair mechanic adds that heal
+          him mid-fight.
+        tank: Pick up Steam Surger adds.
+        healer: Mana-efficient healing — fight drags.
+        dps: Kill Steam Surger repair adds immediately when they run in.
+        mechanics:
+          - Steam Surger adds — heal boss, must die first
+          - Saronite Vapor — debuff
+          - Enrage at low hp
+
+  - name: Warlord Kalithresh
+    order: 3
+    aliases: [Kalithresh]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Naga warlord surrounded by four Naga Distiller tanks.
+          Periodically runs to a tank to drink Empowering Spawn,
+          reducing his hp and buffing himself.
+        tank: Central. Expect him to run to distillers.
+        healer: Watch for his buff — heavy damage during Rage.
+        dps: Kill Naga Distillers BEFORE he reaches them. If he drinks from one, Rage buff makes him lethal.
+        mechanics:
+          - Four Naga Distillers in corners — kill before he drinks
+          - Rage — massive damage amp after drinking
+          - Spell Reflection

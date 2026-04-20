@@ -1,0 +1,70 @@
+<div class="admin-grid">
+  <div>
+    <h3>Player Lookup</h3>
+    <form hx-get="/fragments/admin/assignments"
+          hx-target="#admin-assignments"
+          hx-swap="innerHTML"
+          hx-trigger="submit, change from:input delay:400ms">
+      <label>Player GUID
+        <input id="assignment-player-input" name="player_guid" type="number"
+               value="{{ player_guid or '' }}" />
+      </label>
+    </form>
+
+    {% if player_settings %}
+    <h4>Player Settings</h4>
+    <form class="admin-form"
+          hx-put="/api/v2/players/{{ player_guid }}/settings"
+          hx-ext="json-enc"
+          hx-swap="none"
+          hx-on::after-request="htmx.trigger(document.body,'admin-refresh-assignments')">
+      <label class="checkbox">
+        <input type="checkbox" name="bots_enabled" value="true"
+               {% if player_settings.bots_enabled %}checked{% endif %} />
+        Bots enabled
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" name="llm_enabled" value="true"
+               {% if player_settings.llm_enabled %}checked{% endif %} />
+        LLM enabled
+      </label>
+      <button>Save</button>
+    </form>
+    {% endif %}
+  </div>
+
+  <div>
+    <h3>Current Assignments ({{ assignments|length }} bots)</h3>
+    {% if assignments %}
+    <table class="grid-table compact">
+      <thead><tr><th>Party</th><th>Slot</th><th>Bot GUID</th><th></th></tr></thead>
+      <tbody>
+        {% for a in assignments %}
+        <tr>
+          <td>{{ "MAIN" if a.party_slot == 0 else "P" ~ a.party_slot }}</td>
+          <td>{{ a.slot_position }}</td>
+          <td>{{ a.bot_guid }}</td>
+          <td>
+            <button class="small danger"
+                    hx-delete="/api/v2/players/{{ player_guid }}/assignments/{{ a.bot_guid }}"
+                    hx-swap="none"
+                    hx-on::after-request="htmx.trigger(document.body,'admin-refresh-assignments')">
+              Unassign
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="danger"
+            hx-delete="/api/v2/players/{{ player_guid }}/assignments"
+            hx-confirm="Clear all {{ assignments|length }} assignments for player {{ player_guid }}?"
+            hx-swap="none"
+            hx-on::after-request="htmx.trigger(document.body,'admin-refresh-assignments')">
+      Clear All Assignments
+    </button>
+    {% else %}
+    <p class="empty">No assignments for this player.</p>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,21 @@
+key: forge_of_souls_heroic
+name: The Forge of Souls (Heroic)
+difficulty: heroic
+overlay_of: forge_of_souls
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Bronjahm
+    phases:
+      - name: Phase 2 (Soul Storm)
+        healer: >
+          Soulstorm orbs deal lethal damage if touched on heroic —
+          tank and DPS must hug the boss without clipping orbs.
+
+  - name: Devourer of Souls
+    phases:
+      - name: Phase 1 (three faces)
+        dps: >
+          Green-face heal cast is long but punishing if missed —
+          rotate interrupts.

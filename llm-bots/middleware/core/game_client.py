@@ -15,8 +15,11 @@ from core.config import settings
 
 logger = structlog.get_logger()
 
-# One connection per concurrent query — enough for 6 parallel queries per bot.
-_POOL_SIZE = 8
+# Connection pool. Sized for the worst case during combat:
+#   6 light queries per bot in get_bot_state (state, position, hp, target,
+#   strategy, action) + 2 heavy queries on combat events (party, values).
+# 16 leaves headroom when several bots enter combat in the same tick.
+_POOL_SIZE = 16
 _CONNECT_TIMEOUT = 5.0
 _READ_TIMEOUT = 5.0
 
@@ -33,7 +36,16 @@ class BotSnapshot:
     map_id: int = 0
     orientation: float = 0.0
     zone: str = ""
+    # ``area`` is the inner sub-zone name (GetAreaId → area_name).
+    # For multi-wing instances (Dire Maul, Scarlet Monastery, etc.)
+    # it discriminates which wing the bot is in; falls back to the
+    # zone name when the server doesn't populate it.
+    area: str = ""
+    level: int = 0
     hp_pct: int = 100
+    # ``None`` for classes without a mana bar (warrior, rogue, death knight).
+    # ``int`` percentage otherwise. State-differ uses this for MANA_CRITICAL.
+    mana_pct: int | None = None
     target_hp_pct: int | None = None
     target_name: str = ""
     strategy: str = ""
@@ -117,7 +129,7 @@ class GameClient:
         snap = BotSnapshot(guid=guid)
 
         # Pre-assign connections to avoid lock contention under gather
-        conns = [self._next() for _ in range(6)]
+        conns = [self._next() for _ in range(9)]
 
         async def _q(conn: _Connection, cmd: str) -> str:
             try:
@@ -125,21 +137,50 @@ class GameClient:
             except (OSError, asyncio.IncompleteReadError, asyncio.TimeoutError):
                 return ""
 
-        state_raw, pos_raw, hp_raw, target_raw, strategy_raw, action_raw = (
-            await asyncio.gather(
-                _q(conns[0], "state"),
-                _q(conns[1], "position"),
-                _q(conns[2], "hp"),
-                _q(conns[3], "target"),
-                _q(conns[4], "strategy"),
-                _q(conns[5], "action"),
-            )
+        (
+            state_raw,
+            pos_raw,
+            hp_raw,
+            target_raw,
+            strategy_raw,
+            action_raw,
+            mana_raw,
+            level_raw,
+            area_raw,
+        ) = await asyncio.gather(
+            _q(conns[0], "state"),
+            _q(conns[1], "position"),
+            _q(conns[2], "hp"),
+            _q(conns[3], "target"),
+            _q(conns[4], "strategy"),
+            _q(conns[5], "action"),
+            _q(conns[6], "mana"),
+            _q(conns[7], "level"),
+            _q(conns[8], "area"),
         )
 
         snap.state = state_raw or "unknown"
         snap.last_action = action_raw
         snap.strategy = strategy_raw
         snap.target_name = target_raw
+
+        # mana: "NN%" or "n/a" for mana-less classes
+        if mana_raw and mana_raw != "n/a":
+            try:
+                snap.mana_pct = int(mana_raw.strip().rstrip("%"))
+            except ValueError:
+                pass
+
+        # level: integer. Absent on older builds without the "level" cmd.
+        if level_raw:
+            try:
+                snap.level = int(level_raw.strip())
+            except ValueError:
+                pass
+
+        # area: sub-zone name. Absent on older builds without the cmd.
+        if area_raw:
+            snap.area = area_raw.strip()
 
         # position: "x y z mapId orientation |ZoneName|"
         if pos_raw:

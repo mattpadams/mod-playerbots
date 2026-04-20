@@ -1,0 +1,76 @@
+key: mana_tombs
+name: Mana-Tombs
+map_id: 557
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 63
+max_level: 66
+leader_role: tank
+general_notes: >
+  Auchindoun first wing. Ethereal dungeon. Four bosses.
+
+bosses:
+  - name: Pandemonius
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Void boss. Dark Shell invulnerability phases.
+        tank: Central.
+        healer: Dispel Void Blast. Heal through Dark Shell (he's untargetable).
+        dps: Stop damage when Dark Shell is up — reflects magic. Interrupt Void Blast.
+        mechanics:
+          - Dark Shell — reflects magic, invulnerable
+          - Void Blast — ranged attack
+
+  - name: Tavarok
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Stone giant. Crystal Prison.
+        tank: Central.
+        healer: Heal the Crystal Prisoned target — they're locked in place.
+        dps: Break Crystal Prison with damage. Move out of Earthquake.
+        mechanics:
+          - Crystal Prison — roots a player, break with damage
+          - Earthquake — ground pool
+          - Massive Geyser — AoE
+
+  - name: Nexus-Prince Shaffar
+    order: 3
+    aliases: [Shaffar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Ethereal caster. Summons three Ethereal Beacons that cast
+          support abilities.
+        tank: Pick up Ethereal Beacons.
+        healer: Dispel Curse of Life.
+        dps: Kill Ethereal Beacons first. Interrupt Fireball. Stand outside Blink Strike.
+        mechanics:
+          - Three Ethereal Beacon adds (heal boss, stun, frost nova)
+          - Blink — teleports
+          - Fireball — interruptible
+
+  - name: Yor (optional heroic)
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Heroic-only summoned boss from Shaffar's chest.
+        tank: Tank with cooldowns — he hits hard.
+        healer: Dispel Double Attack if possible.
+        dps: Stay out of Stomp range.
+        mechanics:
+          - Heroic-only summon
+          - Double Attack — attack speed buff
+          - Stomp — AoE

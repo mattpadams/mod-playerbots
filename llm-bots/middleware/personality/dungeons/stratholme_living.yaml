@@ -1,0 +1,149 @@
+key: stratholme_living
+name: "Stratholme: Living Side"
+map_id: 329
+sub_zone: "Crusader's Square"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 56
+max_level: 60
+leader_role: tank
+general_notes: >
+  Scarlet Crusade side of Stratholme. Paladin-themed. Key bosses
+  include Balnazzar (who reveals Dathrohan was a dreadlord).
+
+bosses:
+  - name: Fras Siabi
+    order: 1
+    aliases: [Siabi]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Tobacco shopkeeper.
+        tank: Central.
+        healer: Light damage.
+        dps: Burn.
+        mechanics:
+          - Shoot
+
+  - name: Skul
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Skeletal rare.
+        tank: Central.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Frostbolt
+
+  - name: Hearthsinger Forresten
+    order: 3
+    aliases: [Forresten]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Rare bard ghost.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt.
+        mechanics:
+          - Song debuffs
+
+  - name: Timmy the Cruel
+    order: 4
+    aliases: [Timmy]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Rare ghoul. Summoned via killing waves.
+        tank: Central.
+        healer: Bleed damage.
+        dps: Burn.
+        mechanics:
+          - Ravenous Claw — heavy hit
+          - Deadly Poison
+
+  - name: Magistrate Barthilas
+    order: 5
+    aliases: [Barthilas]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Undead magistrate.
+        tank: Central.
+        healer: Dispel curses.
+        dps: Interrupt.
+        mechanics:
+          - Fear
+          - Curse of Blood
+
+  - name: Stratholme Courier
+    order: 6
+    aliases: [Courier]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Zombie rare.
+        tank: Central.
+        healer: Disease.
+        dps: Burn.
+        mechanics:
+          - Diseased
+          - Flurry
+
+  - name: Cannon Master Willey
+    order: 7
+    aliases: [Willey]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Cannoneer boss.
+        tank: LoS his cannon — pull around a corner.
+        healer: Heavy ranged burst.
+        dps: Stay behind cover from his cannon.
+        mechanics:
+          - Shoot — cannon, line damage
+          - Pummel — interrupt
+
+  - name: Archivist Galford
+    order: 8
+    aliases: [Galford]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Mage boss in the archives.
+        tank: Central.
+        healer: Fire.
+        dps: Interrupt Fireball.
+        mechanics:
+          - Fireball
+          - Exploding Shelves — AoE fire
+
+  - name: Balnazzar
+    order: 9
+    aliases: [Dathrohan, Grand Crusader Dathrohan]
+    phases:
+      - name: Dathrohan Phase
+        hp_threshold: null
+        description: >
+          Appears as Grand Crusader Dathrohan initially. At 50%
+          reveals as dreadlord Balnazzar.
+        tank: Central.
+        healer: Dispel.
+        dps: Burn.
+        mechanics:
+          - Paladin abilities in Dathrohan form
+      - name: Balnazzar Phase
+        hp_threshold: 50
+        description: Dreadlord revealed.
+        tank: Re-pick.
+        healer: Shadow dispel.
+        dps: Interrupt Shadow Bolt Volley.
+        mechanics:
+          - Shadow Bolt Volley — AoE
+          - Psychic Scream — fear

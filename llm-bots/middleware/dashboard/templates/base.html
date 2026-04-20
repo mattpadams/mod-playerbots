@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}AC LLM Bots{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+  <script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js"></script>
+  <script src="https://unpkg.com/htmx-ext-json-enc@2.0.1/json-enc.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>AzerothCore · LLM Bots</h1>
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/memories">Memories</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <small>Milestone 6 · Observability Dashboard</small>
+  </footer>
+</body>
+</html>

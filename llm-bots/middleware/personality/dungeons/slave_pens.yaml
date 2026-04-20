@@ -1,0 +1,59 @@
+key: slave_pens
+name: The Slave Pens
+map_id: 547
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 62
+max_level: 64
+leader_role: tank
+general_notes: >
+  Coilfang Reservoir, first wing. Naga dungeon. Three bosses.
+
+bosses:
+  - name: Mennu the Betrayer
+    order: 1
+    aliases: [Mennu]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Broken shaman boss. Summons totems.
+        tank: Hold boss away from totems.
+        healer: Watch for Earthgrab Totem (roots).
+        dps: Kill Fire Nova Totem first. Then Searing Totem. Ignore Earthgrab if you can.
+        mechanics:
+          - Multiple totems — priority kill Fire Nova
+          - Lightning Bolt — interruptible
+
+  - name: Rokmar the Crackler
+    order: 2
+    aliases: [Rokmar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Snapdragon boss. Hits hard with Crystallized Water.
+        tank: Open ground. Face away.
+        healer: Water Spit bleed — dispel.
+        dps: Move during Frenzy. Stay spread (Grievous Wound stacks on melee).
+        mechanics:
+          - Water Spit — bleed
+          - Frenzy — attack speed
+          - Grievous Wound — stacking bleed
+
+  - name: Quagmirran
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Sporewalker. Poison AoE and acid pools.
+        tank: Open area. Move out of Acid Geyser.
+        healer: Stay spread for Poison Bolt Volley.
+        dps: Move out of Acid Geyser immediately. Heavy melee punishment.
+        mechanics:
+          - Acid Geyser — ground pool
+          - Poison Bolt Volley — AoE
+          - Slow — single target

@@ -1,0 +1,16 @@
+key: shadow_labyrinth_heroic
+name: Shadow Labyrinth (Heroic)
+difficulty: heroic
+overlay_of: shadow_labyrinth
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Murmur
+    phases:
+      - name: Active
+        healer: >
+          Sonic Boom is unambiguously lethal on heroic — everyone
+          must LoS or die.
+        dps: >
+          Kill attempts often end here — respect the cast bar.

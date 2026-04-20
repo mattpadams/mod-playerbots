@@ -1,0 +1,16 @@
+key: mana_tombs_heroic
+name: Mana-Tombs (Heroic)
+difficulty: heroic
+overlay_of: mana_tombs
+min_level: 70
+max_level: 70
+general_notes: >
+  Heroic unlocks the optional Yor summon from Shaffar's loot chest.
+
+bosses:
+  - name: Nexus-Prince Shaffar
+    phases:
+      - name: Active
+        dps: >
+          Ethereal Beacons have higher hp — tight interrupts on
+          the beacon spellcasts.

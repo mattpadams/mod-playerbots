@@ -1,0 +1,77 @@
+key: scarlet_cathedral
+name: "Scarlet Monastery: Cathedral"
+map_id: 189
+sub_zone: "Cathedral"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 35
+max_level: 45
+leader_role: tank
+general_notes: >
+  SM Cathedral wing. Mograine + Whitemane is the classic vanilla
+  finale — High Inquisitor Whitemane resurrects Mograine after
+  he dies.
+
+bosses:
+  - name: High Inquisitor Fairbanks
+    order: 1
+    aliases: [Fairbanks]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Side room boss near the cathedral entrance.
+        tank: Central.
+        healer: Dispel curses.
+        dps: Interrupt heals.
+        mechanics:
+          - "Power Word: Shield"
+          - Heal — interruptible
+
+  - name: Scarlet Commander Mograine
+    order: 2
+    aliases: [Mograine]
+    phases:
+      - name: Phase 1
+        hp_threshold: null
+        description: >
+          Paladin commander in the cathedral. When he dies, High
+          Inquisitor Whitemane enters and resurrects him.
+        tank: Pull to cathedral back wall.
+        healer: Heavy tank damage.
+        dps: Burn him down — he "dies" to trigger Whitemane.
+        mechanics:
+          - Crusader Strike
+          - Hammer of Justice — stun
+          - Retribution Aura
+
+  - name: High Inquisitor Whitemane
+    order: 3
+    aliases: [Whitemane]
+    phases:
+      - name: Phase 1 (Whitemane alone)
+        hp_threshold: null
+        description: >
+          Whitemane enters after Mograine dies and resurrects him.
+          She heals and Mograine attacks — focus swap.
+        tank: Pick up resurrected Mograine.
+        healer: Dispel Whitemane's Holy Smite if possible.
+        dps: Swap to Whitemane first — burn her to 50% and she deep sleeps the party temporarily.
+        mechanics:
+          - Whitemane enters, resurrects Mograine
+          - Deep Sleep — AoE sleep at 50% Whitemane hp
+          - Holy Smite
+          - "Power Word: Shield on self"
+      - name: Deep Sleep phase
+        hp_threshold: 50
+        description: >
+          Whitemane casts Deep Sleep on the party at 50%, making
+          herself untargetable briefly.
+        tank: Wake up, re-pull Mograine.
+        healer: Heal through the wake-up damage.
+        dps: Swap back to Mograine after Deep Sleep.
+        mechanics:
+          - Deep Sleep — 10s AoE sleep
+          - Whitemane untargetable during Deep Sleep

@@ -44,6 +44,46 @@ memory_operations_total = Counter(
     ["operation"],  # "store" or "recall"
 )
 
+# -- Milestone 7 scale metrics -------------------------------------------------
+
+auto_elevations_total = Counter(
+    "auto_elevations_total",
+    "Bots promoted to LLM mode by the auto-elevator",
+)
+
+auto_demotions_total = Counter(
+    "auto_demotions_total",
+    "Bots demoted from LLM mode by the auto-elevator",
+)
+
+auto_agents_gauge = Gauge(
+    "auto_agents",
+    "Currently elevated bots that were promoted automatically by proximity",
+)
+
+pinned_agents_gauge = Gauge(
+    "pinned_agents",
+    "Currently elevated bots that were promoted by an admin (pinned)",
+)
+
+rate_limit_errors_total = Counter(
+    "rate_limit_errors_total",
+    "LLM provider rate-limit responses",
+    ["scope"],  # "bot" or "global"
+)
+
+proximity_scan_duration_seconds = Histogram(
+    "proximity_scan_duration_seconds",
+    "Wall-clock time for one proximity scan cycle",
+    buckets=[0.01, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0],
+)
+
+tick_duration_seconds = Histogram(
+    "supervisor_tick_duration_seconds",
+    "Wall-clock time for one supervisor tick",
+    buckets=[0.1, 0.25, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0],
+)
+
 
 @router.get("/metrics")
 async def prometheus_metrics():

@@ -1,0 +1,38 @@
+<div class="cost-strip">
+  <div class="cost-cell">
+    <span class="label">Auto-elevation</span>
+    <strong>{% if scale.auto_elevation_enabled %}on{% else %}off{% endif %}</strong>
+  </div>
+  <div class="cost-cell">
+    <span class="label">Pinned</span>
+    <strong>{{ scale.pinned }}</strong>
+  </div>
+  <div class="cost-cell">
+    <span class="label">Auto</span>
+    <strong>{{ scale.auto }}</strong>
+  </div>
+  <div class="cost-cell">
+    <span class="label">Cap</span>
+    <strong>{{ scale.max_agents }}</strong>
+  </div>
+  <div class="cost-cell">
+    <span class="label">Degraded</span>
+    <strong>{{ scale.degraded }}</strong>
+  </div>
+  <div class="cost-cell">
+    <span class="label">Budget</span>
+    <strong>{{ scale.budget_state }}</strong>
+  </div>
+  <div class="cost-cell">
+    <span class="label">Backoff</span>
+    <strong>
+      {% if scale.global_backoff_active %}
+        {{ "%.0f"|format(scale.global_backoff_remaining_s) }}s
+      {% else %}—{% endif %}
+    </strong>
+  </div>
+  <div class="cost-cell">
+    <span class="label">429s</span>
+    <strong>{{ scale.rate_limit_errors_total }}</strong>
+  </div>
+</div>

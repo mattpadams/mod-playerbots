@@ -97,10 +97,18 @@ class CommandExecutor:
         return await self._game.send_command(cmd.bot_guid, "stay")
 
     async def _go_to(self, cmd: BotCommand) -> str:
+        # ``GoAction`` parses three semicolon-separated floats as an
+        # absolute map coord. ``destination`` (named zone / NPC / stored
+        # position / "travel <name>") short-circuits the coord path.
+        destination = cmd.payload.get("destination")
+        if destination:
+            return await self._game.send_command(
+                cmd.bot_guid, f"go {destination}"
+            )
         x = cmd.payload.get("x", 0)
         y = cmd.payload.get("y", 0)
         z = cmd.payload.get("z", 0)
-        return await self._game.send_command(cmd.bot_guid, f"go {x} {y} {z}")
+        return await self._game.send_command(cmd.bot_guid, f"go {x};{y};{z}")
 
     # -- Social ----------------------------------------------------------------
 
@@ -117,12 +125,90 @@ class CommandExecutor:
     # -- Quest -----------------------------------------------------------------
 
     async def _accept_quest(self, cmd: BotCommand) -> str:
-        quest_id = cmd.payload.get("quest_id", "")
-        return await self._game.send_command(cmd.bot_guid, f"accept quest {quest_id}")
+        # ``AcceptQuestAction`` parses a quest link or ``"*"`` for all
+        # available quests at the current quest giver.
+        link = (
+            cmd.payload.get("quest_link")
+            or cmd.payload.get("quest_id", "")
+        )
+        return await self._game.send_command(cmd.bot_guid, f"accept {link}")
 
-    async def _abandon_quest(self, cmd: BotCommand) -> str:
-        quest_id = cmd.payload.get("quest_id", "")
-        return await self._game.send_command(cmd.bot_guid, f"abandon quest {quest_id}")
+    async def _drop_quest(self, cmd: BotCommand) -> str:
+        # ``DropQuestAction`` takes either a quest link or a title
+        # substring; do not prefix with "abandon".
+        target = (
+            cmd.payload.get("quest_link")
+            or cmd.payload.get("quest_name")
+            or cmd.payload.get("quest_id", "")
+        )
+        return await self._game.send_command(cmd.bot_guid, f"drop {target}")
+
+    async def _share_quest(self, cmd: BotCommand) -> str:
+        link = cmd.payload.get("item_link") or cmd.payload.get("quest_name", "")
+        return await self._game.send_command(cmd.bot_guid, f"share {link}")
+
+    # -- M4: Items and interaction --------------------------------------------
+
+    async def _trade_item(self, cmd: BotCommand) -> str:
+        target = cmd.payload.get("target_player", "")
+        link = cmd.payload.get("item_link", "")
+        count = cmd.payload.get("count")
+        # mod-playerbots trade command: ``t [link] [target] [count]``
+        suffix = f" {count}" if count else ""
+        return await self._game.send_command(
+            cmd.bot_guid, f"t {link} {target}{suffix}"
+        )
+
+    async def _vendor_sell(self, cmd: BotCommand) -> str:
+        # filter: "gray", "vendor", or a specific item link
+        filt = cmd.payload.get("filter", "gray")
+        return await self._game.send_command(cmd.bot_guid, f"s {filt}")
+
+    async def _vendor_buy(self, cmd: BotCommand) -> str:
+        # ``BuyAction`` accepts the literal "vendor" (auto-buy useful
+        # items) or a parsed item link.
+        filt = cmd.payload.get("filter") or cmd.payload.get("item_link") or "vendor"
+        return await self._game.send_command(cmd.bot_guid, f"b {filt}")
+
+    async def _set_rpg_mode(self, cmd: BotCommand) -> str:
+        mode = cmd.payload.get("mode", "idle")
+        return await self._game.send_command(cmd.bot_guid, f"rpg mode {mode}")
+
+    async def _craft_item(self, cmd: BotCommand) -> str:
+        link = cmd.payload.get("item_link", "")
+        count = cmd.payload.get("count", 1)
+        # mod-playerbots craft command sets a craft target; count is
+        # advisory, so we run it ``count`` times via its built-in queue.
+        cmd_str = f"craft {link}" + (f" {count}" if count and count != 1 else "")
+        return await self._game.send_command(cmd.bot_guid, cmd_str)
+
+    async def _loot_roll(self, cmd: BotCommand) -> str:
+        decision = cmd.payload.get("decision", "pass")   # need | greed | pass
+        link = cmd.payload.get("item_link", "")
+        return await self._game.send_command(
+            cmd.bot_guid, f"roll {decision} {link}".rstrip()
+        )
+
+    async def _cast_spell(self, cmd: BotCommand) -> str:
+        spell = cmd.payload.get("spell", "")
+        target = cmd.payload.get("target", "")
+        tail = f" {target}" if target else ""
+        return await self._game.send_command(cmd.bot_guid, f"cast {spell}{tail}")
+
+    async def _use_item(self, cmd: BotCommand) -> str:
+        link = cmd.payload.get("item_link", "")
+        target = cmd.payload.get("target", "")
+        tail = f" {target}" if target else ""
+        return await self._game.send_command(cmd.bot_guid, f"u {link}{tail}")
+
+    async def _interact_object(self, cmd: BotCommand) -> str:
+        name = cmd.payload.get("object_name", "")
+        # ``go`` also handles named destinations / GameObjects
+        return await self._game.send_command(cmd.bot_guid, f"go {name}")
+
+    async def _talk_to_npc(self, cmd: BotCommand) -> str:
+        name = cmd.payload.get("npc_name", "")
+        return await self._game.send_command(cmd.bot_guid, f"talk {name}")
 
 
 # Dispatch table mapping CommandType → handler method
@@ -145,5 +231,16 @@ _DISPATCH: dict = {
     CommandType.ACCEPT_INVITE: CommandExecutor._accept_invite,
     CommandType.LEAVE_GROUP: CommandExecutor._leave_group,
     CommandType.ACCEPT_QUEST: CommandExecutor._accept_quest,
-    CommandType.ABANDON_QUEST: CommandExecutor._abandon_quest,
+    CommandType.DROP_QUEST: CommandExecutor._drop_quest,
+    CommandType.SHARE_QUEST: CommandExecutor._share_quest,
+    CommandType.TRADE_ITEM: CommandExecutor._trade_item,
+    CommandType.VENDOR_BUY: CommandExecutor._vendor_buy,
+    CommandType.VENDOR_SELL: CommandExecutor._vendor_sell,
+    CommandType.SET_RPG_MODE: CommandExecutor._set_rpg_mode,
+    CommandType.CRAFT_ITEM: CommandExecutor._craft_item,
+    CommandType.LOOT_ROLL: CommandExecutor._loot_roll,
+    CommandType.CAST_SPELL: CommandExecutor._cast_spell,
+    CommandType.USE_ITEM: CommandExecutor._use_item,
+    CommandType.INTERACT_OBJECT: CommandExecutor._interact_object,
+    CommandType.TALK_TO_NPC: CommandExecutor._talk_to_npc,
 }

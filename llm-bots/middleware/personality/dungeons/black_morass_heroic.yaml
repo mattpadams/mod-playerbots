@@ -1,0 +1,15 @@
+key: black_morass_heroic
+name: The Black Morass (Heroic)
+difficulty: heroic
+overlay_of: black_morass
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Aeonus
+    phases:
+      - name: Active
+        healer: >
+          Enrage damage is lethal — save cooldowns for sub-30%.
+        mechanics:
+          - Sand Breath ticks hit much harder on heroic

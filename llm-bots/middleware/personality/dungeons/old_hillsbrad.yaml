@@ -1,0 +1,60 @@
+key: old_hillsbrad
+name: Old Hillsbrad Foothills
+map_id: 560
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 64
+max_level: 67
+leader_role: tank
+general_notes: >
+  Caverns of Time. "Escape from Durnholde." Escort Thrall through
+  three waves of enemies. Thrall's hp is the encounter's hp —
+  keep him alive.
+
+bosses:
+  - name: Lieutenant Drake
+    order: 1
+    aliases: [Drake]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Paladin boss. Leader of the first wave.
+        tank: Pull him away from Thrall.
+        healer: Thunderclap stuns — dispel.
+        dps: Burn. Move out of Cleave.
+        mechanics:
+          - Thunderclap — AoE stun
+          - Cleave — frontal
+
+  - name: Captain Skarloc
+    order: 2
+    aliases: [Skarloc]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Second escort boss. Mounted paladin.
+        tank: Face away from Thrall.
+        healer: Heal Thrall (he takes damage).
+        dps: Same as Drake.
+        mechanics:
+          - Holy Fire on tank
+          - Cleansing Totem (if specced)
+
+  - name: Epoch Hunter
+    order: 3
+    aliases: [Epoch]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Infinite dragonkin. Final boss, protects Durnholde Keep approach.
+        tank: Central. Face him away from Thrall.
+        healer: Keep both tank and Thrall alive.
+        dps: Sand Breath is a cone — stay to his sides.
+        mechanics:
+          - Sand Breath — frontal cone slow + damage
+          - Wing Buffet — knockback
+          - Thrall must survive — watch his hp too

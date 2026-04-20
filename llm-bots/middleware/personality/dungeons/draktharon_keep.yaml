@@ -1,0 +1,100 @@
+key: draktharon_keep
+name: Drak'Tharon Keep
+map_id: 600
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-dtk
+cpp_coverage: full
+min_level: 74
+max_level: 76
+leader_role: tank
+general_notes: >
+  Troll-zombie fortress. Four bosses. Known for heavy trash and a
+  challenging final fight.
+
+bosses:
+  - name: Trollgore
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Drakkari behemoth. Consumes Flesh from corpses to grow a
+          Corpse Explode stack. Kill him before stacks get lethal.
+        tank: Pull him close to add corpses so he eats — but burn him fast.
+        healer: Corpse Explode is party-wide — stack up for AoE healing.
+        dps: Burn cooldowns immediately. Don't let the fight drag.
+        mechanics:
+          - Consume — eats corpses to stack damage
+          - Corpse Explode — AoE damage scaling with Consume stacks
+
+  - name: Novos the Summoner
+    order: 2
+    aliases: [Novos]
+    phases:
+      - name: Add Phase
+        hp_threshold: null
+        description: >
+          Novos is shielded. Four Crystal Handlers spawn on the
+          balconies; kill each to drop his shield.
+        tank: Run to each balcony as the Handler spawns.
+        healer: Keep the tank alive on the run.
+        dps: Kill each Crystal Handler. Ignore the skeletal waves spawning in the pit.
+        mechanics:
+          - Four Crystal Handlers on rotating balconies
+          - Skeletal adds spawn in the pit — ignore unless they overrun the healer
+      - name: Active
+        hp_threshold: null
+        description: >
+          Shield down. Novos casts from the center.
+        tank: Pull him to the pit edge, face away.
+        healer: Arcane Field AoE — stay spread.
+        dps: Interrupt Wrath of Misery. Burn.
+        mechanics:
+          - Wrath of Misery — AoE fear, interruptible
+          - Arcane Field — AoE damage around boss
+
+  - name: King Dred
+    order: 3
+    aliases: [Dred]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Devilsaur boss. Summons Drakkari Scytheclaw raptors.
+        tank: Pull him away from any patrolling raptors — adds stack fast.
+        healer: Piercing Slash stacks armor reduction on the tank — cooldowns late.
+        dps: Burn adds first with AoE. Don't stand in front (Bellowing Roar fears).
+        mechanics:
+          - Bellowing Roar — fear
+          - Grievous Bite — healing debuff
+          - Raptor adds — AoE priority
+
+  - name: The Prophet Tharon'ja
+    order: 4
+    aliases: [Tharon'ja, Tharonja, Prophet]
+    phases:
+      - name: Phase 1 (Skeletal)
+        hp_threshold: null
+        description: >
+          First phase is standard tank-and-spank with Curse of Life.
+        tank: Pull to center. Stack with the group for AoE heals.
+        healer: Dispel Curse of Life — it reverses healing.
+        dps: Burn. Interrupt Eye Beam.
+        mechanics:
+          - Curse of Life — dispel, reverses healing
+          - Eye Beam — interruptible
+      - name: Phase 2 (Flesh)
+        hp_threshold: 50
+        description: >
+          Party transforms into skeletons. New abilities, no class
+          abilities. Use the skeleton bar.
+        tank: Use Skeletal Root to hold threat.
+        healer: Use Skeletal Suffering — it heals the party.
+        dps: Use Decay and Poison Breath. Keep the rotation up.
+        mechanics:
+          - Players become skeletons with 4 abilities each
+          - No class abilities work in this phase

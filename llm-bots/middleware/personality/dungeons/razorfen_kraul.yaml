@@ -1,0 +1,98 @@
+key: razorfen_kraul
+name: Razorfen Kraul
+map_id: 47
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 24
+max_level: 34
+leader_role: tank
+general_notes: >
+  Barrens quilboar dungeon. Linear path through thorny warrens.
+
+bosses:
+  - name: Roogug
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: First quilboar boss.
+        tank: Central.
+        healer: Bleed dispel.
+        dps: Burn.
+        mechanics:
+          - Cleave
+
+  - name: Aggem Thorncurse
+    order: 2
+    aliases: [Aggem, Thorncurse]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Boar druid.
+        tank: Open area.
+        healer: Poison dispel.
+        dps: Interrupt Healing Touch.
+        mechanics:
+          - Healing Touch — interruptible
+          - Bloodthirst
+
+  - name: Death Speaker Jargba
+    order: 3
+    aliases: [Jargba]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Dreadspeaker boss with adherent adds.
+        tank: Pick up adds.
+        healer: AoE.
+        dps: Kill adds first (Jargba's Adherents heal him).
+        mechanics:
+          - Summons Jargba's Adherents
+          - Summons Jargba's Followers
+
+  - name: Overlord Ramtusk
+    order: 4
+    aliases: [Ramtusk]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Large warhog boss.
+        tank: Central.
+        healer: Heavy physical damage.
+        dps: Burn.
+        mechanics:
+          - Thrash
+          - Trample
+
+  - name: Agathelos the Raging
+    order: 5
+    aliases: [Agathelos]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Huge armored boar.
+        tank: Face away.
+        healer: Enrage damage.
+        dps: Burn.
+        mechanics:
+          - Enrage at low hp
+
+  - name: Charlga Razorflank
+    order: 6
+    aliases: [Razorflank]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Final quilboar matriarch.
+        tank: Central.
+        healer: Dispel curses.
+        dps: Interrupt Bloodrot.
+        mechanics:
+          - Bloodrot — DoT
+          - Demoralizing Shout
+          - War Stomp

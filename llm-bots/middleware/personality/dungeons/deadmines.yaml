@@ -1,0 +1,115 @@
+key: deadmines
+name: The Deadmines
+map_id: 36
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 17
+max_level: 26
+leader_role: tank
+general_notes: >
+  Alliance starter 5-man. Defias Brotherhood. Five bosses ending
+  at Edwin VanCleef aboard the Juggernaut.
+
+bosses:
+  - name: Rhahk'Zor
+    order: 1
+    aliases: [Rhahkzor]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Ogre foreman.
+        tank: Pull to center.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Cleave
+
+  - name: Sneed's Shredder / Sneed
+    order: 2
+    aliases: [Sneed]
+    phases:
+      - name: Shredder
+        hp_threshold: null
+        description: Sneed rides a shredder; kill shredder first.
+        tank: Pull shredder to the catwalk.
+        healer: Shredder hits hard.
+        dps: Kill shredder.
+        mechanics:
+          - Distracting Pain
+      - name: Sneed dismounted
+        hp_threshold: 0
+        description: After shredder dies, Sneed fights on foot.
+        tank: Re-pick.
+        healer: Light damage.
+        dps: Burn.
+        mechanics:
+          - Low hp in this phase
+
+  - name: Gilnid
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Foundry boss.
+        tank: Open area.
+        healer: Flames.
+        dps: Burn.
+        mechanics:
+          - Foundry cleave
+
+  - name: Mr. Smite
+    order: 4
+    aliases: [Mr Smite, Smite]
+    phases:
+      - name: Phase 1 (sword)
+        hp_threshold: null
+        description: Captain with a sword.
+        tank: Pull to center of the ship's deck.
+        healer: Face-plant stun.
+        dps: Move during Trash the Place.
+        mechanics:
+          - Smite's Face-plant
+          - Smite Slam
+      - name: Weapon swap
+        hp_threshold: 66
+        description: At 66% and 33% he swaps weapons (stun in between).
+        tank: Wait out the stun.
+        healer: Heal through the weapon swap downtime.
+        dps: Burn during swap — he's vulnerable.
+        mechanics:
+          - Stun during weapon swaps
+          - Switches between sword, hammer, two maces
+
+  - name: Captain Greenskin
+    order: 5
+    aliases: [Greenskin]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Goblin captain.
+        tank: Pull away from patrols.
+        healer: Watch for Multi-shot.
+        dps: Burn.
+        mechanics:
+          - Multi-shot
+          - Cleave
+
+  - name: Edwin VanCleef
+    order: 6
+    aliases: [VanCleef]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Rogue boss on the Juggernaut. Summons two Defias Blackguards.
+        tank: Pick up VanCleef + two Blackguards.
+        healer: AoE.
+        dps: Kill Blackguards first, then VanCleef.
+        mechanics:
+          - Summons two Defias Blackguards at engagement
+          - Summon Defias Blackguards — at 50% spawns another pair
+          - Sinister Strike

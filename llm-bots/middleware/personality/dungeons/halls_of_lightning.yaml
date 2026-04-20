@@ -1,0 +1,85 @@
+key: halls_of_lightning
+name: Halls of Lightning
+map_id: 602
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-hol
+cpp_coverage: full
+min_level: 78
+max_level: 80
+leader_role: tank
+general_notes: >
+  Titan-forge dungeon. Four bosses: General Bjarngrim, Volkhan,
+  Ionar, and Loken.
+
+bosses:
+  - name: General Bjarngrim
+    order: 1
+    aliases: [Bjarngrim]
+    phases:
+      - name: Stance cycling
+        hp_threshold: null
+        description: >
+          He cycles stances — Battle, Defensive, Berserker — each
+          changes his abilities. Attack only in Defensive stance.
+        tank: Hold him central. Avoid attacking in Battle/Berserker stances to minimize Spell Reflection.
+        healer: Knockdown stun in Defensive is the safest window; heavy damage in Berserker.
+        dps: Stop DPS in Battle stance (Spell Reflection). In Defensive, mortal strike debuffs healing — dispel the tank.
+        mechanics:
+          - Battle Stance — Spell Reflection, Cleave
+          - Defensive Stance — Disarm, Mortal Strike
+          - Berserker Stance — Pummel (interrupt tank), high damage
+
+  - name: Volkhan
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Forge boss. Summons Molten Golems; shatters them with
+          Shattering Stomp.
+        tank: Keep Volkhan near the center. Pick up golems.
+        healer: Shattering Stomp hits the party — top up before each one.
+        dps: Kill Molten Golems below 20% hp before Shatter — their explosions are lethal if they shatter.
+        mechanics:
+          - Molten Golems spawn periodically
+          - Shattering Stomp — breaks golems into damaging shards
+          - Heat — AoE fire damage
+
+  - name: Ionar
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Lightning elemental. Periodically disperses into Spark adds.
+        tank: Central. Don't kite — the dispersal phase handles spreading.
+        healer: Dispersal phase is heavy AoE damage — group up for heals.
+        dps: During Disperse, focus one Spark at a time — killing a Spark reduces damage. Don't try to burn all.
+        mechanics:
+          - Disperse — turns into moving Sparks that chase players
+          - Static Overload — AoE lightning
+          - Lightning Bolt — single-target caster
+
+  - name: Loken
+    order: 4
+    aliases: []
+    phases:
+      - name: Active (distance check)
+        hp_threshold: null
+        description: >
+          Extremely tight range check. Lightning Nova damages
+          everyone within ~10 yards, so ranged/healer play at max
+          range. Pulsing Shockwave damage scales INVERSELY with
+          distance — the farther from him, the MORE damage.
+        tank: Tank in melee. Eat Lightning Nova.
+        healer: Stand exactly at 10–15 yards. Too far = huge damage.
+        dps: Melee stay in. Ranged at 10–15 yards — between the two damage rings.
+        mechanics:
+          - Lightning Nova — AoE around boss (stay out if ranged)
+          - Pulsing Shockwave — MORE damage the FARTHER you are
+          - Lightning Bolts on random targets

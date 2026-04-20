@@ -3,9 +3,17 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 
+from api.models import (
+    CostLimitRequest,
+    ElevateRequest,
+    ForceSayRequest,
+    PersonalityUpdateRequest,
+)
 from core.bot_registry import BotRegistry
+from core.event_bus import EventBus
+from core.trace_store import TraceStore, trace_row_to_dict
+from game.events import AdminForceSayEvent
 from memory.qdrant_store import QdrantStore
 from personality.loader import list_profiles, reload_profile
 from scheduler.cost_controller import CostController
@@ -17,14 +25,25 @@ _registry: BotRegistry | None = None
 _qdrant: QdrantStore | None = None
 _cost: CostController | None = None
 _supervisor = None
+_event_bus: EventBus | None = None
+_trace_store: TraceStore | None = None
 
 
-def init(registry: BotRegistry, qdrant: QdrantStore, cost: CostController, supervisor) -> None:
-    global _registry, _qdrant, _cost, _supervisor
+def init(
+    registry: BotRegistry,
+    qdrant: QdrantStore,
+    cost: CostController,
+    supervisor,
+    event_bus: EventBus | None = None,
+    trace_store: TraceStore | None = None,
+) -> None:
+    global _registry, _qdrant, _cost, _supervisor, _event_bus, _trace_store
     _registry = registry
     _qdrant = qdrant
     _cost = cost
     _supervisor = supervisor
+    _event_bus = event_bus
+    _trace_store = trace_store
 
 
 def _require_registry() -> BotRegistry:
@@ -43,18 +62,6 @@ def _require_cost() -> CostController:
     if _cost is None:
         raise HTTPException(status_code=503, detail="Service not initialized")
     return _cost
-
-
-# -- Request/Response models ---------------------------------------------------
-
-
-class ElevateRequest(BaseModel):
-    name: str
-    personality: str = "default"
-
-
-class PersonalityUpdateRequest(BaseModel):
-    personality: str
 
 
 # -- Endpoints -----------------------------------------------------------------
@@ -129,13 +136,17 @@ async def clear_bot_memories(guid: int):
 
 @router.post("/bots/{guid}/personality")
 async def update_personality(guid: int, req: PersonalityUpdateRequest):
-    """Hot-swap a bot's personality profile."""
+    """Hot-swap a bot's personality profile and refresh the live agent."""
     registry = _require_registry()
     profile = registry.get(guid)
     if not profile:
         raise HTTPException(status_code=404, detail="Bot not elevated")
     profile.personality = req.personality
     reload_profile(req.personality)
+    if _supervisor is not None:
+        agent = _supervisor.get_agent(guid)
+        if agent is not None:
+            agent.reload_system_prompt()
     return {"status": "updated", "guid": guid, "personality": req.personality}
 
 
@@ -153,23 +164,41 @@ async def get_cost():
 
 
 @router.get("/traces")
-async def get_traces(limit: int = 50):
-    """Get recent agent reasoning traces."""
-    if _supervisor is None:
+async def get_traces(
+    bot_guid: int | None = None,
+    limit: int = 50,
+    before_id: int | None = None,
+):
+    """Get recent agent reasoning traces from the durable trace log."""
+    if _trace_store is None:
         return {"traces": []}
-    traces = _supervisor.traces[-limit:]
-    return {
-        "traces": [
-            {
-                "bot_guid": t.bot_guid,
-                "bot_name": t.bot_name,
-                "event_type": t.event_type,
-                "model": t.model,
-                "tokens_in": t.tokens_in,
-                "tokens_out": t.tokens_out,
-                "latency_ms": round(t.latency_ms),
-                "response_preview": t.response_preview,
-            }
-            for t in traces
-        ]
-    }
+    rows = await _trace_store.recent(
+        bot_guid=bot_guid, limit=limit, before_id=before_id
+    )
+    return {"traces": [trace_row_to_dict(r) for r in rows]}
+
+
+@router.post("/cost/limit")
+async def set_cost_limit(req: CostLimitRequest):
+    """Adjust the hourly spend cap at runtime."""
+    cost = _require_cost()
+    cost.set_hourly_limit(req.hourly_limit_usd)
+    return {"status": "updated", "hourly_limit_usd": cost.hourly_limit}
+
+
+@router.post("/bots/{guid}/say")
+async def force_bot_say(guid: int, req: ForceSayRequest):
+    """Inject a synthetic admin-prompt event into the bus for this bot.
+
+    The LLM will react to ``req.text`` as if it were top-priority chat.
+    """
+    registry = _require_registry()
+    profile = registry.get(guid)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Bot not elevated")
+    if _event_bus is None:
+        raise HTTPException(status_code=503, detail="Event bus not wired")
+    await _event_bus.publish(
+        AdminForceSayEvent(bot_guid=guid, bot_name=profile.name, text=req.text)
+    )
+    return {"status": "queued", "guid": guid, "text": req.text}

@@ -1,0 +1,18 @@
+key: shattered_halls_heroic
+name: The Shattered Halls (Heroic)
+difficulty: heroic
+overlay_of: shattered_halls
+min_level: 70
+max_level: 70
+general_notes: >
+  Heroic adds a 55-minute timed event to save three prisoners
+  from execution before first boss.
+
+bosses:
+  - name: Warchief Kargath Bladefist
+    phases:
+      - name: Active
+        dps: >
+          Blade Dance damage is heavy — never stand in it.
+        mechanics:
+          - Reinforcements spawn more aggressively on heroic

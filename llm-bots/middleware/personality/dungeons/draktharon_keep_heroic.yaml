@@ -1,0 +1,23 @@
+key: draktharon_keep_heroic
+name: Drak'Tharon Keep (Heroic)
+difficulty: heroic
+overlay_of: draktharon_keep
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Trollgore
+    phases:
+      - name: Active
+        healer: >
+          Corpse Explode hits hard — save major cooldowns for high
+          stack counts. Kill him before stacks get away.
+        mechanics:
+          - Consume stacks matter more — minimize fight time
+
+  - name: The Prophet Tharon'ja
+    phases:
+      - name: Phase 2 (Flesh)
+        healer: >
+          Skeleton phase heals less efficiently on heroic — make
+          every cast count.

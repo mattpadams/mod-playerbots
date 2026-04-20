@@ -1,0 +1,38 @@
+<table class="grid-table">
+  <thead>
+    <tr><th>ID</th><th>Username</th><th>Owner Player GUID</th><th>Notes</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for a in accounts %}
+    <tr>
+      <td>{{ a.id }}</td>
+      <td><strong>{{ a.username }}</strong></td>
+      <td>{{ a.owner_player_guid or "—" }}</td>
+      <td class="muted">{{ a.notes }}</td>
+      <td>
+        <button class="danger small"
+                hx-delete="/api/v2/accounts/{{ a.id }}"
+                hx-confirm="Delete account '{{ a.username }}' and all its bots?"
+                hx-swap="none"
+                hx-on::after-request="htmx.trigger(document.body,'admin-refresh-accounts'); htmx.trigger(document.body,'admin-refresh-bots')">
+          Delete
+        </button>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="empty">No accounts yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<form class="admin-form"
+      hx-post="/api/v2/accounts"
+      hx-ext="json-enc"
+      hx-swap="none"
+      hx-on::after-request="this.reset(); htmx.trigger(document.body,'admin-refresh-accounts')">
+  <label>Username <input name="username" required maxlength="32" /></label>
+  <label>Password <input name="password" type="text" required /></label>
+  <label>Owner Player GUID <input name="owner_player_guid" type="number" /></label>
+  <label>Notes <input name="notes" /></label>
+  <button>Create Account</button>
+</form>

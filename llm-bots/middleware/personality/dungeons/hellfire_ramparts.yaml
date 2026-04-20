@@ -1,0 +1,70 @@
+key: hellfire_ramparts
+name: Hellfire Ramparts
+map_id: 543
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 60
+max_level: 63
+leader_role: tank
+general_notes: >
+  First TBC 5-man. Short and linear. Three bosses: Watchkeeper
+  Gargolmar, Omor the Unscarred, and Vazruden + Nazan (drake).
+
+bosses:
+  - name: Watchkeeper Gargolmar
+    order: 1
+    aliases: [Gargolmar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Melee boss with two healer adds nearby.
+        tank: Pull him away from the healer adds if possible.
+        healer: Dispel Mortal Wound stacks on tank.
+        dps: Kill the Heartless healer adds first — they heal Gargolmar.
+        mechanics:
+          - Mortal Wound — healing reduction stacks on tank
+          - Retaliation — AoE parry damage
+          - Healer adds must die first
+
+  - name: Omor the Unscarred
+    order: 2
+    aliases: [Omor]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Warlock boss with a void felhound pet.
+        tank: Kill the felhound first — it interrupts casters.
+        healer: Dispel Shadow Whip knockback target.
+        dps: Interrupt Shadow Bolt. Move if you get Treacherous Aura (damages group if you go near others).
+        mechanics:
+          - Treacherous Aura — damages nearby players; move away from group
+          - Shadow Whip — knocks tank back
+          - Felhound pet — kill first
+
+  - name: Vazruden the Herald & Nazan
+    order: 3
+    aliases: [Vazruden, Nazan]
+    phases:
+      - name: Dragon Phase
+        hp_threshold: null
+        description: >
+          Nazan (drake) strafes while Vazruden (rider) casts from
+          above. Dodge fire pools.
+        tank: Stay central; pull the drake down by damage.
+        healer: Keep AoE heals going — fire pools tick hard.
+        dps: Move out of Fireball impact circles. Burn Nazan to bring them down.
+        mechanics:
+          - Fireball ground pools — move out
+          - "Two-phase: air → ground"
+      - name: Ground Phase
+        hp_threshold: null
+        description: Drake lands; Vazruden dismounts.
+        tank: Pick up Vazruden.
+        healer: Standard tank healing.
+        dps: Focus Vazruden — Nazan enrages at low hp.
+        mechanics:
+          - Nazan Enrages at low hp — cooldowns

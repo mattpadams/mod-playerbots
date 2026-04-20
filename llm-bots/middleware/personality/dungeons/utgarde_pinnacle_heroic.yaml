@@ -1,0 +1,39 @@
+key: utgarde_pinnacle_heroic
+name: Utgarde Pinnacle (Heroic)
+difficulty: heroic
+overlay_of: utgarde_pinnacle
+min_level: 80
+max_level: 80
+general_notes: >
+  Heroic UP. Svala's ritual is lethal if ignored. Skadi's harpoon
+  phase is on a strict timer — three harpoons or wipe.
+
+bosses:
+  - name: Svala Sorrowgrave
+    phases:
+      - name: Phase 1
+        dps: >
+          Rituals now one-shot if the sword cast finishes — kill
+          both flanking cultists fast.
+        mechanics:
+          - Flame pools tick for much more damage
+
+  - name: Gortok Palehoof
+    phases:
+      - name: Beast Waves
+        healer: >
+          Jormungar Worm's poison stacks are significant on heroic.
+          Dispel or use a defensive.
+
+  - name: Skadi the Ruthless
+    phases:
+      - name: Drake Phase
+        dps: >
+          Tighter harpoon timer — miss a harpoon and you'll run
+          out of time for a ground phase.
+
+  - name: King Ymiron
+    phases:
+      - name: Active phase
+        mechanics:
+          - Fear is lethal on heroic — use fear wards / trinkets

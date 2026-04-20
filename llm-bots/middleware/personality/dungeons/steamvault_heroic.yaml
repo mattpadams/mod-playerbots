@@ -1,0 +1,16 @@
+key: steamvault_heroic
+name: The Steamvault (Heroic)
+difficulty: heroic
+overlay_of: steamvault
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Warlord Kalithresh
+    phases:
+      - name: Active
+        dps: >
+          Distillers have higher hp — start killing them before
+          Kalithresh is engaged if possible.
+        mechanics:
+          - Rage buff is fight-ending — zero tolerance for drinks

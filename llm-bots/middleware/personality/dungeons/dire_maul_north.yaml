@@ -1,0 +1,118 @@
+key: dire_maul_north
+name: "Dire Maul: North"
+map_id: 429
+sub_zone: "Gordok Commons"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 55
+max_level: 60
+leader_role: tank
+general_notes: >
+  Ogre wing. Four ogre kings plus King Gordok. Classic "tribute
+  run" strategy: kill all 4 kings without dying to earn a buff
+  from King Gordok.
+
+bosses:
+  - name: Guard Mol'dar
+    order: 1
+    aliases: [Moldar, Mol'dar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: First ogre king.
+        tank: Central.
+        healer: Physical.
+        dps: Burn.
+        mechanics:
+          - Cleave
+          - Sunder Armor
+
+  - name: Stomper Kreeg
+    order: 2
+    aliases: [Kreeg]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Drunken ogre boss.
+        tank: Central.
+        healer: Physical.
+        dps: Burn.
+        mechanics:
+          - Drunken Rage — damage amp
+          - Thunderclap
+
+  - name: Guard Fengus
+    order: 3
+    aliases: [Fengus]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Second ogre king.
+        tank: Central.
+        healer: Physical.
+        dps: Burn.
+        mechanics:
+          - Cleave
+          - Rend
+
+  - name: Guard Slip'kik
+    order: 4
+    aliases: [Slipkik, Slip'kik]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Third ogre king. Surrounded by traps.
+        tank: Pull carefully — traps stun.
+        healer: AoE.
+        dps: Disarm traps first (rogue) if possible.
+        mechanics:
+          - Traps on the floor — stun
+          - Cleave
+
+  - name: Captain Kromcrush
+    order: 5
+    aliases: [Kromcrush]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fourth ogre captain. Can be pacified with Gordok Ogre Suit quest.
+        tank: Central.
+        healer: Physical.
+        dps: Burn.
+        mechanics:
+          - Mortal Strike
+          - Disarm
+
+  - name: Cho'Rush the Observer
+    order: 6
+    aliases: [Chorush, Cho'Rush]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Priest boss near King Gordok.
+        tank: Central.
+        healer: Dispel heals.
+        dps: Interrupt Heal.
+        mechanics:
+          - Heal — interruptible
+          - Dominate Mind — MC
+
+  - name: King Gordok
+    order: 7
+    aliases: [Gordok]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Ogre king. Last fight. Drops the tribute if the group
+          kept him alive through the others and did "tribute run."
+        tank: Central.
+        healer: Heavy physical.
+        dps: Burn.
+        mechanics:
+          - Mortal Strike
+          - War Stomp
+          - Whirlwind

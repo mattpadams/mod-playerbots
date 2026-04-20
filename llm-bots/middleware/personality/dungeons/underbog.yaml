@@ -1,0 +1,76 @@
+key: underbog
+name: The Underbog
+map_id: 545
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 63
+max_level: 65
+leader_role: tank
+general_notes: >
+  Coilfang Reservoir second wing. Sporebat/bog lord dungeon. Four
+  bosses.
+
+bosses:
+  - name: Hungarfen
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Giant bog lord. Summons Underbog Mushrooms that explode.
+        tank: Pick up mushrooms + boss.
+        healer: Kill mushrooms before they detonate.
+        dps: Burn mushrooms first — they explode for heavy AoE.
+        mechanics:
+          - Underbog Mushrooms spawn and detonate
+          - Foul Spores — AoE poison
+          - Acid Geyser — ground
+
+  - name: Ghaz'an
+    order: 2
+    aliases: [Ghazan, Ghaz'an]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Hydra. Tail Sweep (frontal and back cone).
+        tank: Position so the group is to his sides only.
+        healer: Dispel Acid Breath.
+        dps: Stay on his flanks — never in front or behind.
+        mechanics:
+          - Tail Sweep — both frontal and rear cones
+          - Acid Breath — DoT
+          - Enrage at low hp
+
+  - name: Swamplord Musel'ek
+    order: 3
+    aliases: [Muselek, Musel'ek]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Hunter boss paired with Claw (a bear pet).
+        tank: Tank Claw. Dps Musel'ek.
+        healer: AoE heal — Claw does cleave damage.
+        dps: Burn Musel'ek first. He's a ranged caster — LOS if needed. Claw is immune to stun.
+        mechanics:
+          - Aimed Shot — heavy burst
+          - Multi-Shot — cone attack
+          - Claw pet — cleave attacks
+
+  - name: The Black Stalker
+    order: 4
+    aliases: [Black Stalker]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Massive sporebat. Levitates players and zaps.
+        tank: Central. Face away.
+        healer: Static Charge stacks — cleanse if possible.
+        dps: Don't stand near levitated players — Chain Lightning bounces.
+        mechanics:
+          - Levitate — pulls random players into the air
+          - Chain Lightning — bounces between nearby targets
+          - Static Charge — stacking debuff

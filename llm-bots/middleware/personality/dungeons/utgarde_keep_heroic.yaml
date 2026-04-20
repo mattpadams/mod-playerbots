@@ -1,0 +1,38 @@
+# Heroic Utgarde Keep — overlay on utgarde_keep.yaml.
+#
+# Only override fields that actually differ on heroic. The loader
+# deep-merges this onto the base so any omitted field inherits.
+# Boss order and hp_threshold shapes must not be changed here —
+# overlays only add/override per-phase text and mechanics lists.
+
+key: utgarde_keep_heroic
+name: Utgarde Keep (Heroic)
+difficulty: heroic
+overlay_of: utgarde_keep
+min_level: 80
+max_level: 80
+general_notes: >
+  Heroic version of Utgarde Keep. Same fights, tighter damage
+  checks. Crowd control and interrupt discipline matter.
+
+bosses:
+  - name: Prince Keleseth
+    phases:
+      - name: Phase 1
+        tank: >
+          Same positioning. Additional Skeletal Infantry waves hit
+          harder — pop a cooldown during the second wave.
+        dps: >
+          Frost Tombs now kill very fast — break them instantly. CC
+          one skeleton pack if your group has CC available.
+        mechanics:
+          - Frost Tomb damage scales harder; break on sight
+          - Shadow Bolt volley hits the tank for significant damage
+
+  - name: Ingvar the Plunderer
+    phases:
+      - name: Phase 2 (Undead)
+        mechanics:
+          - Dark Smash pools persist longer and stack damage
+          - Shadow Axe throws more frequently
+          - Healer cooldowns are expected in Phase 2

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · AC LLM Bots{% endblock %}
+
+{% block content %}
+<section id="cost-strip"
+         hx-get="/fragments/cost"
+         hx-trigger="every 3s"
+         hx-swap="innerHTML">
+  {% include "partials/cost_strip.html" %}
+</section>
+
+<section id="scale-strip"
+         hx-get="/fragments/scale"
+         hx-trigger="every 5s"
+         hx-swap="innerHTML">
+  {% include "partials/scale_strip.html" %}
+</section>
+
+<section class="grid-2">
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Bot Roster</h2>
+      <form class="inline-form"
+            hx-post="/api/bots/0/elevate"
+            hx-on::before-request="event.detail.path = '/api/bots/' + this.elements.guid.value + '/elevate'; event.detail.parameters = {name: this.elements.name.value, personality: this.elements.personality.value}"
+            hx-trigger="submit">
+        <input name="guid" type="number" placeholder="GUID" required />
+        <input name="name" placeholder="Name" required />
+        <select name="personality">
+          {% for p in personalities %}<option>{{ p }}</option>{% endfor %}
+        </select>
+        <button>Elevate</button>
+      </form>
+    </div>
+    <div id="roster"
+         hx-get="/fragments/roster"
+         hx-trigger="every 3s"
+         hx-swap="innerHTML">
+      {% include "partials/roster_table.html" %}
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Live Agent Feed</h2>
+      <span class="dot pulsing"></span>
+    </div>
+    <div id="trace-feed"
+         hx-ext="sse"
+         sse-connect="/api/traces/stream"
+         sse-swap="trace"
+         hx-swap="afterbegin"
+         class="trace-feed">
+      <div class="empty">Waiting for agent activity…</div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-header"><h2>Admin</h2></div>
+  <div class="admin-grid">
+    <form hx-post="/api/cost/limit" hx-ext="json-enc">
+      <label>Hourly limit (USD)
+        <input name="hourly_limit_usd" type="number" step="0.01" min="0" value="{{ cost.hourly_limit_usd }}" />
+      </label>
+      <button>Update</button>
+    </form>
+    <form class="inline-form"
+          hx-trigger="submit"
+          hx-on::before-request="event.detail.path = '/api/bots/' + this.elements.guid.value + '/say'; event.detail.parameters = {text: this.elements.text.value}">
+      <input name="guid" type="number" placeholder="Bot GUID" required />
+      <input name="text" placeholder="Prompt the bot to react to…" required />
+      <button>Force-say</button>
+    </form>
+  </div>
+</section>
+
+<!-- HTMX SSE event shapes the payload as {data}; we render it into a card -->
+<script>
+  document.body.addEventListener("htmx:sseBeforeMessage", (ev) => {
+    try {
+      const t = JSON.parse(ev.detail.data);
+      const card = document.createElement("div");
+      card.className = "trace-card";
+      card.innerHTML = `
+        <div class="trace-head">
+          <span class="badge">${t.event_type}</span>
+          <strong>${t.bot_name}</strong>
+          <span class="muted">#${t.bot_guid}</span>
+          <span class="muted">· ${t.model}</span>
+          <span class="muted">· ${t.latency_ms}ms</span>
+          <span class="muted">· $${t.cost_usd.toFixed(4)}</span>
+        </div>
+        <div class="trace-tools">${(t.tool_calls || []).map(n => `<code>${n}</code>`).join(" ")}</div>
+        <div class="trace-preview">${escapeHtml(t.response_preview || "")}</div>`;
+      ev.detail.elt.prepend(card);
+      ev.preventDefault();
+      // Trim to last 50 cards
+      while (ev.detail.elt.children.length > 50) {
+        ev.detail.elt.removeChild(ev.detail.elt.lastChild);
+      }
+    } catch (e) { /* keep-alive comments land here */ }
+  });
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
+</script>
+{% endblock %}

@@ -14,6 +14,25 @@ _PROFILES_DIR = Path(__file__).parent / "profiles"
 # Cache loaded profiles in memory
 _cache: dict[str, dict] = {}
 
+# DB-sourced overrides pushed in by ``admin.personality_service`` on
+# startup and after every upsert/delete. When a name is present here,
+# the returned dict is merged on top of the on-disk YAML.
+_db_overrides: dict[str, dict] = {}
+
+
+def set_db_override(name: str, data: dict | None) -> None:
+    """Install or clear the DB override for ``name`` and bust the cache."""
+    if data is None:
+        _db_overrides.pop(name, None)
+    else:
+        _db_overrides[name] = data
+    _cache.pop(name, None)
+
+
+def clear_db_overrides() -> None:
+    _db_overrides.clear()
+    _cache.clear()
+
 
 def _load_yaml(path: Path) -> dict:
     with open(path, "r", encoding="utf-8") as f:
@@ -36,14 +55,20 @@ def load_profile(personality_name: str) -> dict:
 
     if profile_path.exists() and profile_path != base_path:
         override = _load_yaml(profile_path)
-        # Merge: override wins, base fills gaps
         merged = {**base, **override}
+    elif personality_name in _db_overrides:
+        # DB-only profile (no YAML on disk yet) — built straight off base.
+        merged = {**base}
     else:
         merged = base
         if personality_name != "base" and personality_name != "default":
             logger.warning(
                 "personality.not_found_using_base", personality=personality_name
             )
+
+    db_override = _db_overrides.get(personality_name)
+    if db_override:
+        merged = {**merged, **db_override}
 
     _cache[personality_name] = merged
     return merged
@@ -56,5 +81,7 @@ def reload_profile(personality_name: str) -> dict:
 
 
 def list_profiles() -> list[str]:
-    """List all available personality profile names."""
-    return [p.stem for p in _PROFILES_DIR.glob("*.yaml")]
+    """List all available personality profile names (YAML + DB overrides)."""
+    names = {p.stem for p in _PROFILES_DIR.glob("*.yaml")}
+    names.update(_db_overrides.keys())
+    return sorted(names)

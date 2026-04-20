@@ -1,0 +1,63 @@
+<table class="grid-table">
+  <thead>
+    <tr>
+      <th>GUID</th><th>Name</th><th>Account</th>
+      <th>Class</th><th>Race</th><th>Lvl</th>
+      <th>Personality</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for b in bots %}
+    <tr>
+      <td>{{ b.character_guid }}</td>
+      <td><strong>{{ b.character_name }}</strong></td>
+      <td>{{ b.account_id }}</td>
+      <td>{{ b.class_id }}</td>
+      <td>{{ b.race_id }}</td>
+      <td>{{ b.level }}</td>
+      <td>
+        <form class="inline-form"
+              hx-patch="/api/v2/bots/{{ b.character_guid }}/personality"
+              hx-ext="json-enc"
+              hx-swap="none"
+              hx-on::after-request="htmx.trigger(document.body,'admin-refresh-bots')">
+          <input name="personality" value="{{ b.personality_name }}" />
+          <button class="small">Save</button>
+        </form>
+      </td>
+      <td>
+        <button class="danger small"
+                hx-delete="/api/v2/bots/{{ b.character_guid }}"
+                hx-confirm="Delete bot '{{ b.character_name }}'?"
+                hx-swap="none"
+                hx-on::after-request="htmx.trigger(document.body,'admin-refresh-bots')">
+          Delete
+        </button>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" class="empty">No bots yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<form class="admin-form"
+      hx-post="/api/v2/bots"
+      hx-ext="json-enc"
+      hx-swap="none"
+      hx-on::after-request="this.reset(); htmx.trigger(document.body,'admin-refresh-bots')">
+  <label>Account ID <input name="account_id" type="number" required /></label>
+  <label>Account Username <input name="account_username" required /></label>
+  <label>Character Name <input name="character_name" required minlength="2" maxlength="12" /></label>
+  <label>Class ID <input name="class_id" type="number" required min="1" max="11" /></label>
+  <label>Race ID <input name="race_id" type="number" required min="1" max="11" /></label>
+  <label>Level <input name="level" type="number" value="1" min="1" max="80" /></label>
+  <label>Build Template ID <input name="build_template_id" type="number" /></label>
+  <label>Personality
+    <select name="personality_name">
+      <option value="default">default</option>
+      {% for p in personalities %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+    </select>
+  </label>
+  <button>Create Bot</button>
+</form>

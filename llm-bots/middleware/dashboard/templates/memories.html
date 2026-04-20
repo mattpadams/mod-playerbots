@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Memories · AC LLM Bots{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="panel-header"><h2>Memory Browser</h2></div>
+  <form class="inline-form" method="get" action="/memories">
+    <select name="guid" required>
+      <option value="">Pick a bot…</option>
+      {% for b in roster %}
+      <option value="{{ b.guid }}" {% if guid == b.guid %}selected{% endif %}>
+        {{ b.name }} (#{{ b.guid }})
+      </option>
+      {% endfor %}
+    </select>
+    <input name="q" value="{{ query }}" placeholder="Search query" />
+    <input name="limit" type="number" min="1" max="100" value="{{ limit }}" />
+    <button>Search</button>
+    {% if guid %}
+    <button type="button"
+            hx-delete="/api/bots/{{ guid }}/memories"
+            hx-confirm="Clear ALL memories for {{ bot_name }}?"
+            hx-swap="none"
+            class="danger">Clear all</button>
+    {% endif %}
+  </form>
+
+  {% if guid is not none %}
+  <h3>Results for {{ bot_name }} · “{{ query }}”</h3>
+  {% if not memories %}
+    <p class="empty">No memories matched.</p>
+  {% else %}
+    <ul class="memory-list">
+      {% for m in memories %}
+      <li class="memory">
+        <div class="memory-head">
+          <span class="badge">{{ m.type }}</span>
+          <span class="muted">importance {{ "%.2f"|format(m.importance) }}</span>
+          <span class="muted">· {{ m.created_at[:19] }}</span>
+          {% if m.related_players %}
+          <span class="muted">· with {{ m.related_players|join(", ") }}</span>
+          {% endif %}
+        </div>
+        <p>{{ m.content }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% endif %}
+</section>
+{% endblock %}

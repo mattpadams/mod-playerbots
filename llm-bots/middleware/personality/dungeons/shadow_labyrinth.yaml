@@ -1,0 +1,82 @@
+key: shadow_labyrinth
+name: Shadow Labyrinth
+map_id: 555
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 67
+max_level: 70
+leader_role: tank
+general_notes: >
+  Auchindoun fourth wing. Shadow Council dungeon. Four bosses —
+  Murmur is the final, infamous sonic boom.
+
+bosses:
+  - name: Ambassador Hellmaw
+    order: 1
+    aliases: [Hellmaw]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fel lord. Fear Aura unless banished.
+        tank: Pull back to where Grandmaster Vorpil banished him originally if possible.
+        healer: Heal through fear — dispel.
+        dps: Behind him. Move out of Corrosive Acid.
+        mechanics:
+          - Banish — bosses in an aura of fear; dispelled by having him banished
+          - Corrosive Acid — ground cloud
+          - Enrage at low hp
+
+  - name: Blackheart the Inciter
+    order: 2
+    aliases: [Blackheart]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Ogre shaman. Mind Control'd periodically.
+        tank: Central. Expect MC chaos.
+        healer: Break Mind Control if dispellable.
+        dps: Don't burst MC'd allies — bring them down gently, they get back up.
+        mechanics:
+          - Incite Chaos — MC's the party for ~10s
+          - Charge — targets random player
+          - War Stomp — AoE stun
+
+  - name: Grandmaster Vorpil
+    order: 3
+    aliases: [Vorpil]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Ethereal warlock. Summons Voidwalker adds via Void Portals.
+        tank: Central. Pick up Voidwalkers.
+        healer: AoE during Rain of Fire. Stay out of Void Portal circles.
+        dps: Kill Voidwalkers — they explode if they reach him. Interrupt Shadow Bolt.
+        mechanics:
+          - Void Portals spawn around room — move near them to pull Voidwalkers
+          - Voidwalker adds — kill before they contact boss
+          - Rain of Fire — ground pool
+          - Teleport — boss teleports to center periodically
+
+  - name: Murmur
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Sound elemental. Sonic Boom is an 8-second AoE that
+          kills everyone in range — RUN to the walls and LOS break
+          before it lands.
+        tank: Central. Sprint to a wall when Sonic Boom casts.
+        healer: Cast on the move. Stop casting when Sonic Boom announces.
+        dps: Sonic Boom wipes groups — run to max range and LoS break. Touch debuff stacks on random players.
+        mechanics:
+          - Sonic Boom — 8s cast, max-range LoS break required
+          - Touch of Murmur — magic debuff
+          - Resonance — AoE damage
+          - Murmur's Shockwave — cone

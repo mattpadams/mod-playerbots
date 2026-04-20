@@ -1,0 +1,83 @@
+key: azjol_nerub
+name: Azjol-Nerub
+map_id: 601
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-an
+cpp_coverage: full
+min_level: 72
+max_level: 74
+leader_role: tank
+general_notes: >
+  Short Nerubian dungeon. Three bosses. Quick run but the final
+  fight has unusual burrowing mechanics.
+
+bosses:
+  - name: Krik'thir the Gatewatcher
+    order: 1
+    aliases: [Krikthir, Krik'thir]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Spider boss flanked by three named spider adds.
+        tank: Pick up Krik'thir plus all three adds. AoE threat critical.
+        healer: Heavy party damage from add abilities — AoE heal.
+        dps: Kill adds first — Watcher Gashra, Watcher Narjil, Watcher Silthik in order (Gashra empowers the others).
+        mechanics:
+          - Three add watchers buff/debuff the party
+          - Mind Flay on random player
+          - Swarm — summons untargetable spiderling adds
+
+  - name: Hadronox
+    order: 2
+    aliases: []
+    phases:
+      - name: Kited Phase
+        hp_threshold: null
+        description: >
+          Hadronox is at the bottom of a long ramp. Trash mobs chase
+          her up the ramp. Pull her up while adds follow.
+        tank: Pull Hadronox up the ramp slowly. The trash mobs follow.
+        healer: Heavy damage on the tank from Web Grab + poison.
+        dps: Kill adds that the tank has picked up. Don't pull ahead of the tank.
+        mechanics:
+          - Web Grab pulls random players into melee
+          - Acid Cloud — ground pool
+      - name: Top of Ramp
+        hp_threshold: null
+        description: Engage at the top where adds are cleared.
+        tank: Pull to the rim, face away.
+        healer: Watch for Pierce Armor stacks on tank.
+        dps: Standard burn. Move out of Acid Cloud.
+        mechanics:
+          - Pierce Armor stacks — tank cooldowns at high stacks
+
+  - name: Anub'arak
+    order: 3
+    aliases: [Anubarak, Anub'arak]
+    phases:
+      - name: Surface Phase
+        hp_threshold: null
+        description: >
+          Standard melee phase.
+        tank: Central. Face away from group.
+        healer: Watch for Pound — tank damage spike.
+        dps: Move out of Impale ground effects. Burn the boss.
+        mechanics:
+          - Impale — line of spikes from the ground
+          - Pound — tank damage
+      - name: Burrow Phase
+        hp_threshold: 75
+        description: >
+          Anub'arak burrows. Adds spawn and chase the party.
+        tank: Root-effective tanking — pick up Nerubian Assassin adds.
+        healer: AoE damage from Carrion Scarabs — stay grouped for heals.
+        dps: Kill the Nerubian Assassins (priority — they fear). Avoid burrowing shadow trails.
+        mechanics:
+          - Nerubian Assassins fear — kill fast
+          - Burrow trails under players — move
+          - Carrion Scarab AoE
+        # Repeats at 50% and 25% hp.

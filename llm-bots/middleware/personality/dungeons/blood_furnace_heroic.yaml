@@ -1,0 +1,19 @@
+key: blood_furnace_heroic
+name: The Blood Furnace (Heroic)
+difficulty: heroic
+overlay_of: blood_furnace
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: The Maker
+    phases:
+      - name: Active
+        dps: >
+          Mind Control is more frequent — assign a dispeller.
+
+  - name: Keli'dan the Breaker
+    phases:
+      - name: Channel Phase
+        mechanics:
+          - Channeler debuffs hit harder on heroic

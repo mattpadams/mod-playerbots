@@ -1,0 +1,112 @@
+key: razorfen_downs
+name: Razorfen Downs
+map_id: 129
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 34
+max_level: 44
+leader_role: tank
+general_notes: >
+  Undead-corrupted quilboar warren. Scourge invasion theme.
+
+bosses:
+  - name: Tuten'kash
+    order: 1
+    aliases: [Tutenkash]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Massive spider boss.
+        tank: Pull away from egg sacs.
+        healer: Poison dispel.
+        dps: Kill spiderling eggs before they hatch.
+        mechanics:
+          - Web Spray — AoE slow
+          - Poison — bleed
+
+  - name: Henry Stern
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Scarlet adventurer boss.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt Frost Nova.
+        mechanics:
+          - Frost Nova
+          - Blink
+
+  - name: Mordresh Fire Eye
+    order: 3
+    aliases: [Mordresh]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Undead caster.
+        tank: Central.
+        healer: Fire damage.
+        dps: Interrupt Fireball.
+        mechanics:
+          - Fire Nova — AoE
+          - Fireball
+
+  - name: Glutton
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Abomination.
+        tank: Open area.
+        healer: Disease dispel.
+        dps: Burn.
+        mechanics:
+          - Diseased Slime — DoT
+
+  - name: Ragglesnout
+    order: 5
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Quilboar necromancer.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt. Kill zombie adds.
+        mechanics:
+          - Summons zombies
+          - Polymorph
+
+  - name: Plaguemaw the Rotting
+    order: 6
+    aliases: [Plaguemaw]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Undead quilboar.
+        tank: Central.
+        healer: Disease dispel.
+        dps: Burn.
+        mechanics:
+          - Plague Vomit — AoE
+
+  - name: Amnennar the Coldbringer
+    order: 7
+    aliases: [Amnennar]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Final boss. Lich.
+        tank: Central.
+        healer: Frost + disease dispel.
+        dps: Kill Amnennar's Frostchains adds.
+        mechanics:
+          - Summons Frostchains adds
+          - Frostbolt Volley — AoE
+          - Frost Armor

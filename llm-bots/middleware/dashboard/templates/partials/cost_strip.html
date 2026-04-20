@@ -1,0 +1,21 @@
+{% set pct = (cost.hourly_spend_usd / cost.hourly_limit_usd * 100) if cost.hourly_limit_usd else 0 %}
+<div class="cost-strip">
+  <div class="cost-cell">
+    <span class="label">Hourly</span>
+    <strong>${{ "%.4f"|format(cost.hourly_spend_usd) }} / ${{ "%.2f"|format(cost.hourly_limit_usd) }}</strong>
+    <div class="bar"><span style="width: {{ pct|round(1) }}%"></span></div>
+  </div>
+  <div class="cost-cell"><span class="label">Total</span><strong>${{ "%.4f"|format(cost.total_spend_usd) }}</strong></div>
+  <div class="cost-cell"><span class="label">Agents</span><strong>{{ cost.active_agents }} / {{ cost.max_agents }}</strong></div>
+  <div class="cost-cell"><span class="label">Calls</span><strong>{{ cost.total_calls }}</strong></div>
+  <div class="cost-cell"><span class="label">Calls/hr</span><strong>{{ cost.calls_this_hour or 0 }}</strong></div>
+  <div class="cost-cell"><span class="label">Avg latency</span><strong>{{ "%.0f"|format(cost.avg_latency_ms or 0) }} ms</strong></div>
+  <div class="cost-cell">
+    <span class="label">Models</span>
+    <strong>
+      {% for m, p in (cost.model_distribution or {}).items() %}
+        {{ m.split('-')[1] }} {{ (p*100)|round(0) }}%{% if not loop.last %} · {% endif %}
+      {% else %}—{% endfor %}
+    </strong>
+  </div>
+</div>

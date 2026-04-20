@@ -1,0 +1,71 @@
+key: ragefire_chasm
+name: Ragefire Chasm
+map_id: 389
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 13
+max_level: 20
+leader_role: tank
+general_notes: >
+  Horde starter 5-man under Orgrimmar. Short and linear. Four
+  trash bosses.
+
+bosses:
+  - name: Oggleflint
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Troll ringleader.
+        tank: Pull to an open area.
+        healer: Tank damage is low; coast.
+        dps: Burn.
+        mechanics:
+          - Cleave
+
+  - name: Taragaman the Hungerer
+    order: 2
+    aliases: [Taragaman]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Lava elemental.
+        tank: Face away.
+        healer: Watch for Fire Nova.
+        dps: Fire Nova — spread.
+        mechanics:
+          - Fire Nova
+          - Uppercut
+
+  - name: Jergosh the Invoker
+    order: 3
+    aliases: [Jergosh]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Warlock boss.
+        tank: Pull to center.
+        healer: Watch for Curse of Weakness.
+        dps: Interrupt if possible.
+        mechanics:
+          - Immolate
+          - Curse of Weakness
+
+  - name: Bazzalan
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Rogue troll boss.
+        tank: Pull away from Jergosh if he's still alive.
+        healer: Dispel poison.
+        dps: Stay out of stealth distance.
+        mechanics:
+          - Sinister Strike
+          - Poison dagger

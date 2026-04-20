@@ -1,0 +1,126 @@
+key: shadowfang_keep
+name: Shadowfang Keep
+map_id: 33
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 17
+max_level: 26
+leader_role: tank
+general_notes: >
+  Worgen-haunted keep above Silverpine. Seven named bosses.
+
+bosses:
+  - name: Rethilgore
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: First worgen boss.
+        tank: Pull to the open floor.
+        healer: Dispel poisons.
+        dps: Burn.
+        mechanics:
+          - Soul Drain — self heal
+
+  - name: Razorclaw the Butcher
+    order: 2
+    aliases: [Razorclaw]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Butcher worgen, in the pantry.
+        tank: Pull out from cleavers.
+        healer: Bleed dispel.
+        dps: Burn.
+        mechanics:
+          - Enrage at low hp
+
+  - name: Baron Silverlaine
+    order: 3
+    aliases: [Silverlaine]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Ghostly baron.
+        tank: Central.
+        healer: Fear.
+        dps: Trinket fear, continue.
+        mechanics:
+          - Veil of Shadow — healing debuff
+
+  - name: Commander Springvale
+    order: 4
+    aliases: [Springvale]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Undead paladin. Aura of Protection.
+        tank: Face away.
+        healer: Dispel Holy Aura.
+        dps: Behind him.
+        mechanics:
+          - Holy Aura — buffs allies
+          - Hammer of Justice — stun
+
+  - name: Odo the Blindwatcher
+    order: 5
+    aliases: [Odo]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Worgen leader.
+        tank: Central.
+        healer: Dispel.
+        dps: Move out of Howling Rage.
+        mechanics:
+          - Howling Rage — damage amp
+          - Trample
+
+  - name: Fenrus the Devourer
+    order: 6
+    aliases: [Fenrus]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Large worgen. Bleeds hard.
+        tank: Central.
+        healer: Bleed dispel.
+        dps: Burn.
+        mechanics:
+          - Rending Howl — AoE damage
+          - Toxic Saliva — poison
+
+  - name: Wolf Master Nandos
+    order: 7
+    aliases: [Nandos]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Pet-summoning boss with a wolf pack.
+        tank: Pick up all wolves plus boss.
+        healer: AoE.
+        dps: AoE the wolves, then boss.
+        mechanics:
+          - Summons wolf adds
+          - Call of the Pack — pack buff
+
+  - name: Archmage Arugal
+    order: 8
+    aliases: [Arugal]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Shadow mage. Summons Voidwalkers.
+        tank: Pull to open balcony.
+        healer: Dispel magic debuffs.
+        dps: Kill Voidwalkers first. Interrupt Void Bolt.
+        mechanics:
+          - Summons two Voidwalker adds
+          - Void Bolt — high damage shadow
+          - Shadow Port — teleport
+          - Thundershock — AoE nature

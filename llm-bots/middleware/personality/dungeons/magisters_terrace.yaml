@@ -1,0 +1,96 @@
+key: magisters_terrace
+name: Magisters' Terrace
+map_id: 585
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 68
+max_level: 70
+leader_role: tank
+general_notes: >
+  Sunwell-era TBC 5-man. Four bosses culminating in Kael'thas.
+  One of the hardest TBC heroics.
+
+bosses:
+  - name: Selin Fireheart
+    order: 1
+    aliases: [Selin]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Blood elf fire mage. Runs to Fel Crystals in the room
+          periodically to drain mana.
+        tank: Central. Don't let him reach a Fel Crystal (LoS-pull away).
+        healer: Dispel Fel Explosion.
+        dps: When he casts Drain Life on a crystal, kill the crystal. Stop him from regen.
+        mechanics:
+          - Fel Crystals in room — kill or interrupt drains
+          - Fel Explosion — AoE
+          - Drain Life — self-heal
+
+  - name: Vexallus
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Mana elemental. Drops Pure Energy orbs that attach to
+          random players — they explode if not killed.
+        tank: Central.
+        healer: Overload debuff on players — heal or remove.
+        dps: Kill Pure Energy orbs instantly — they explode with massive damage.
+        mechanics:
+          - Pure Energy — orb adds that attach to players
+          - Overload — stacking damage debuff
+          - Arcane Shock — AoE
+
+  - name: Priestess Delrissa
+    order: 3
+    aliases: [Delrissa]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Priestess + four random Blood Elf champions (rogue,
+          mage, priest, warlock, hunter, shaman pool). Arena-style.
+        tank: Pick up the melee champions.
+        healer: Dispel CC. Kill the enemy healer first.
+        dps: Kill the enemy healer champion FIRST. Then Delrissa (she's a healer too).
+        mechanics:
+          - Four random champion adds + Delrissa
+          - Healer champion priority kill
+          - Rogue may stealth
+
+  - name: Kael'thas Sunstrider
+    order: 4
+    aliases: [Kaelthas, Kael'thas]
+    phases:
+      - name: Phase 1 (caster)
+        hp_threshold: null
+        description: >
+          Blood elf prince. Uses weapons of the four old TBC
+          council members — Pyroblast, Fireball, Flame Strike.
+        tank: Central.
+        healer: Dispel Phoenix debuff.
+        dps: Interrupt Pyroblast. Move out of Flame Strike circles.
+        mechanics:
+          - Pyroblast — heavy single-target
+          - Flame Strike — ground AoE
+          - Phoenix spawn — kill add
+      - name: Phase 2 (Gravity Lapse)
+        hp_threshold: 50
+        description: >
+          Phase 2 lifts the party into the air periodically.
+          Avoid Nether Vapors while floating.
+        tank: Stay on him when grounded.
+        healer: Instant casts only while floating.
+        dps: Dodge Nether Vapor orbs while floating — they move slowly but hit hard.
+        mechanics:
+          - Gravity Lapse — party lifted into the air
+          - Nether Vapor — orbs chase players during Gravity Lapse
+          - Arcane Sphere — damaging orb

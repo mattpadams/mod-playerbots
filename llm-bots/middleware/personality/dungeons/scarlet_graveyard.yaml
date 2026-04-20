@@ -1,0 +1,71 @@
+key: scarlet_graveyard
+name: "Scarlet Monastery: Graveyard"
+map_id: 189
+sub_zone: "Graveyard"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 26
+max_level: 36
+leader_role: tank
+general_notes: >
+  Quickest SM wing. Outdoor-feeling graveyard leading to Mograine
+  and the ringleader of the Scarlet cultists.
+
+bosses:
+  - name: Interrogator Vishas
+    order: 1
+    aliases: [Vishas]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: First Scarlet boss.
+        tank: Pull to torture chamber open area.
+        healer: Bleed dispel.
+        dps: Burn.
+        mechanics:
+          - Shadow Shock
+          - Uppercut
+
+  - name: Bloodmage Thalnos
+    order: 2
+    aliases: [Thalnos]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Necromancer optional boss.
+        tank: Pick up skeletons + Thalnos.
+        healer: AoE.
+        dps: Kill skeletons. Interrupt Flame Spike.
+        mechanics:
+          - Summons skeleton adds
+          - Flame Spike
+
+  - name: Ironspine
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Skeletal boss (graveyard).
+        tank: Central.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Bone Shield
+
+  - name: Azshir the Sleepless
+    order: 4
+    aliases: [Azshir]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Spectral boss.
+        tank: Central.
+        healer: Dispel.
+        dps: Burn.
+        mechanics:
+          - Call Spirits
+          - Curse of Weakness

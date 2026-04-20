@@ -1,0 +1,19 @@
+key: violet_hold_heroic
+name: The Violet Hold (Heroic)
+difficulty: heroic
+overlay_of: violet_hold
+min_level: 80
+max_level: 80
+general_notes: >
+  Heroic waves hit harder and the crystal depletes faster if
+  adds slip past. Mini-bosses have sharper mechanics.
+
+bosses:
+  - name: Cyanigosa
+    phases:
+      - name: Active
+        healer: >
+          Arcane Vacuum damage is significant on heroic — heal
+          through the channel.
+        mechanics:
+          - Mana Destruction can empty caster mana — drink after

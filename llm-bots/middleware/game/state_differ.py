@@ -15,12 +15,14 @@ from game.events import (
     CombatStartEvent,
     GameEvent,
     HealthCriticalEvent,
+    ManaCriticalEvent,
     StrategyChangedEvent,
     TargetChangedEvent,
     ZoneChangedEvent,
 )
 
 HEALTH_CRITICAL_THRESHOLD = 20
+MANA_CRITICAL_THRESHOLD = 20
 
 
 def diff(
@@ -54,6 +56,16 @@ def diff(
         and old.hp_pct > HEALTH_CRITICAL_THRESHOLD
     ):
         events.append(HealthCriticalEvent(hp_pct=new.hp_pct, **kwargs))
+
+    # Mana critical (only for mana-using classes — mana_pct is None
+    # for warriors / rogues / DKs and the crossing never fires)
+    if (
+        new.mana_pct is not None
+        and old.mana_pct is not None
+        and new.mana_pct <= MANA_CRITICAL_THRESHOLD
+        and old.mana_pct > MANA_CRITICAL_THRESHOLD
+    ):
+        events.append(ManaCriticalEvent(mana_pct=new.mana_pct, **kwargs))
 
     # Zone change
     if old.zone != new.zone and new.zone:

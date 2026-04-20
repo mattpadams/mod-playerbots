@@ -1,0 +1,77 @@
+key: blood_furnace
+name: The Blood Furnace
+map_id: 542
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 61
+max_level: 64
+leader_role: tank
+general_notes: >
+  Hellfire Citadel's second wing. Three bosses: The Maker, Broggok,
+  and Keli'dan the Breaker.
+
+bosses:
+  - name: The Maker
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fel orc boss with Acid Spit and Mind Control.
+        tank: Central. Face away.
+        healer: Dispel Acid Spit if specced. Ready to break Mind Control.
+        dps: Turn on MC'd players and damage them briefly to break the MC. Watch for Knockdown.
+        mechanics:
+          - Mind Control — break with damage or dispel
+          - Acid Spit — magic debuff
+          - Knockdown — tank stun
+
+  - name: Broggok
+    order: 2
+    aliases: []
+    phases:
+      - name: Gauntlet
+        hp_threshold: null
+        description: Four cage waves of fel orcs before Broggok engages.
+        tank: Pick up each cage wave. Keep them away from group.
+        healer: AoE healing between waves.
+        dps: AoE the waves down.
+        mechanics:
+          - Four cage waves open in sequence
+      - name: Broggok active
+        hp_threshold: null
+        description: Toxic caster boss.
+        tank: Pull to an open area — he drops Poison Cloud pools.
+        healer: Cleanse Poison Bolt. Dispel Slime Spray.
+        dps: Move out of Poison Cloud pools. Interrupt Poison Bolt if possible.
+        mechanics:
+          - Poison Cloud — stacking ground pools
+          - Poison Bolt Volley — AoE poison
+
+  - name: Keli'dan the Breaker
+    order: 3
+    aliases: [Kelidan, Keli'dan]
+    phases:
+      - name: Channel Phase
+        hp_threshold: null
+        description: Keli'dan channels with four Shadowmoon Channelers.
+        tank: Break the channel by pulling channelers to the group.
+        healer: Watch for periodic AoE during channel.
+        dps: Kill channelers first. Don't break all four simultaneously — the boss activates on the last kill.
+        mechanics:
+          - Four channelers must die before Keli'dan can be damaged
+          - Channelers cast group debuffs
+      - name: Active
+        hp_threshold: null
+        description: Warlock boss.
+        tank: Standard.
+        healer: Cooldowns for Evocation (his burn phase).
+        dps: Move away before Burning Nova — AoE damage around him.
+        mechanics:
+          - Burning Nova — AoE centered on boss
+          - Fire Nova — random player
+          - Evocation — heals; must interrupt

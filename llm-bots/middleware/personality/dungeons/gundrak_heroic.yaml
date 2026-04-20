@@ -1,0 +1,41 @@
+key: gundrak_heroic
+name: Gundrak (Heroic)
+difficulty: heroic
+overlay_of: gundrak
+min_level: 80
+max_level: 80
+general_notes: >
+  Heroic Gundrak adds the optional Eck the Ferocious boss between
+  Moorabi and the final two.
+
+bosses:
+  - name: Moorabi
+    phases:
+      - name: Active
+        dps: >
+          MUST interrupt Transformation — transformed Moorabi hits
+          vastly harder on heroic. Rotate interrupts.
+
+  - name: Eck the Ferocious
+    order: 3
+    aliases: [Eck]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Heroic-only boss. Giant salamander that leaps at random
+          party members.
+        tank: Central. Expect him to leap off you periodically.
+        healer: Eck Bite is a stacking bleed — dispel or heal through.
+        dps: Move out of Eck Spit (poison pool). He leaps — regroup after each leap.
+        mechanics:
+          - Eck Leap — jumps to a random player
+          - Eck Spit — poison ground pool
+          - Eck Bite — stacking bleed
+
+  - name: Gal'darah
+    phases:
+      - name: Rhino Phase
+        dps: >
+          Rhino charge paths are longer on heroic — watch for him
+          from both sides.

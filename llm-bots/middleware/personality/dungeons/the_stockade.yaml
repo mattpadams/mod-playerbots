@@ -1,0 +1,70 @@
+key: the_stockade
+name: The Stockade
+map_id: 34
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 22
+max_level: 30
+leader_role: tank
+general_notes: >
+  Stormwind prison. Short and linear. Three bosses.
+
+bosses:
+  - name: Targorr the Dread
+    order: 1
+    aliases: [Targorr]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Orc rogue prisoner.
+        tank: Central.
+        healer: Bleed debuff.
+        dps: Burn.
+        mechanics:
+          - Enrage at low hp
+          - Thrash
+
+  - name: Kam Deepfury
+    order: 2
+    aliases: [Deepfury]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Dwarf prisoner.
+        tank: Pull away from adds.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Shield Slam — stun
+          - Revenge
+
+  - name: Hamhock
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Ogre prisoner.
+        tank: Central.
+        healer: Low damage.
+        dps: Interrupt Frost Shock.
+        mechanics:
+          - Frost Shock
+
+  - name: Bazil Thredd
+    order: 4
+    aliases: [Thredd]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Defias ringleader, final boss.
+        tank: Pull to cellblock center.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Smoke Bomb
+          - Summons Defias Prisoners as adds

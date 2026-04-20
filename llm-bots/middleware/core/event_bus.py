@@ -19,6 +19,7 @@ class EventBus:
         self._queues: dict[int, asyncio.Queue[GameEvent]] = defaultdict(
             lambda: asyncio.Queue(maxsize=max_queue_size)
         )
+        self._wake: asyncio.Event = asyncio.Event()
 
     async def publish(self, event: GameEvent) -> None:
         """Publish an event to the bot's queue.  Drops oldest if full."""
@@ -29,6 +30,20 @@ class EventBus:
             except asyncio.QueueEmpty:
                 pass
         await q.put(event)
+        self._wake.set()
+
+    @property
+    def wake_event(self) -> asyncio.Event:
+        """Event that is set whenever a push event arrives.
+
+        The supervisor waits on this to wake up immediately instead
+        of sleeping the full tick interval.
+        """
+        return self._wake
+
+    def clear_wake(self) -> None:
+        """Reset the wake flag after the supervisor has processed events."""
+        self._wake.clear()
 
     async def consume(self, bot_guid: int, timeout: float = 30.0) -> GameEvent | None:
         """Wait for the next event for a bot, or return None on timeout."""

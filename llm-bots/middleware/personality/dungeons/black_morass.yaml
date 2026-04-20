@@ -1,0 +1,60 @@
+key: black_morass
+name: The Black Morass
+map_id: 269
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 66
+max_level: 68
+leader_role: tank
+general_notes: >
+  Caverns of Time. Opening of the Dark Portal. Defend Medivh
+  through 18 waves of Infinite Dragonflight adds that open rifts.
+  Three boss spawns at waves 6, 12, and 18.
+
+bosses:
+  - name: Chrono-Lord Deja
+    order: 1
+    aliases: [Deja]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Infinite dragonkin at wave 6.
+        tank: Pull him off the rift.
+        healer: Time Lapse is a damage delay.
+        dps: Burn. Keep watching rifts — more open during the fight.
+        mechanics:
+          - Time Lapse — delayed damage
+          - Arcane Blast — interruptible
+
+  - name: Temporus
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Infinite dragonkin at wave 12. Mortal Wound + Wing Buffet.
+        tank: Central. Face him away.
+        healer: Heavy tank damage ramp.
+        dps: Move out of Wing Buffet knockback.
+        mechanics:
+          - Mortal Wound — stacking healing reduction
+          - Wing Buffet — AoE knockback
+
+  - name: Aeonus
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Infinite dragonflight leader, wave 18. The final boss.
+        tank: Central in the chamber.
+        healer: Enrage phase will one-shot without cooldowns.
+        dps: Behind him. Frenzy = burst heals needed.
+        mechanics:
+          - Sand Breath — frontal cone
+          - Time Stop — AoE stun
+          - Enrage at low hp

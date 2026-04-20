@@ -1,0 +1,86 @@
+key: ahnkahet
+name: "Ahn'kahet: The Old Kingdom"
+map_id: 619
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-ok
+cpp_coverage: full
+min_level: 73
+max_level: 75
+leader_role: tank
+general_notes: >
+  Old God dungeon below Azjol-Nerub. Four bosses. Home of the
+  infamous Herald Volazj mental image encounter.
+
+bosses:
+  - name: Elder Nadox
+    order: 1
+    aliases: [Nadox]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Nerubian seer. Periodically summons a Guardian add with
+          an aura buffing Nadox — kill the Guardian to strip it.
+        tank: Pick up Guardian adds plus boss. AoE threat.
+        healer: Swarm Guards stack a damage buff on boss — cooldowns late.
+        dps: Always kill Guardian adds first when they spawn. Ignore the small Swarmers.
+        mechanics:
+          - Guardian add — buffs boss, must die first
+          - Swarmers — small adds, AoE them
+          - Plague — poison debuff
+
+  - name: Prince Taldaram
+    order: 2
+    aliases: [Taldaram]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Vampire. Periodically becomes invulnerable and pursues
+          a random player with Embrace of the Vampyr.
+        tank: Central. Face away.
+        healer: Dispel Vanish / Embrace. Heavy damage on the Embrace target.
+        dps: Focus. Burn off Embrace by killing Vanishing Orbs on the floor. Move out of Flame Spheres.
+        mechanics:
+          - Flame Spheres — two orbs bounce across the floor, avoid
+          - Embrace of the Vampyr — single-target drain, channeled
+          - Vanish — untargetable briefly
+
+  - name: Jedoga Shadowseeker
+    order: 3
+    aliases: [Jedoga]
+    phases:
+      - name: Phase 1 (levitating)
+        hp_threshold: null
+        description: >
+          Jedoga floats above. Adds ring the room — when she
+          descends, ONE adds chants and approaches her. Kill that
+          chosen one before contact.
+        tank: Minimal role — she's floating. Be ready for descend.
+        healer: Watch for Gift of the Herald damage amp.
+        dps: When she descends, identify the Chosen Initiate (the one running in) and kill it instantly. If it reaches her she gains a massive buff.
+        mechanics:
+          - Chosen Initiate — kill before it reaches Jedoga
+          - Gift of the Herald — stackable damage amp
+
+  - name: Herald Volazj
+    order: 4
+    aliases: [Volazj]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Faceless old god servant. At regular intervals he casts
+          Insanity — sends each player into a solo mental-image
+          fight where they must kill their own illusory party
+          copies.
+        tank: Keep aggro between Insanities. Face him away.
+        healer: You become solo during Insanity — don't panic. Kill illusions of your teammates in order.
+        dps: During Insanity — focus one illusion at a time. Kill all 4 to exit. You cannot see teammates during this phase.
+        mechanics:
+          - Insanity — each player fights their own illusions solo
+          - Shadow Bolt Volley — AoE between Insanities
+          - Shivan Slash — tank frontal

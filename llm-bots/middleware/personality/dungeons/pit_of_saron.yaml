@@ -1,0 +1,91 @@
+key: pit_of_saron
+name: Pit of Saron
+map_id: 658
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-pos
+cpp_coverage: full
+min_level: 80
+max_level: 80
+leader_role: tank
+general_notes: >
+  Second ICC 5-man. Long outdoor path with three bosses and a
+  gauntlet escort at the end. Tyrannus is mounted on Rimefang.
+
+bosses:
+  - name: Forgemaster Garfrost
+    order: 1
+    aliases: [Garfrost]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Frost giant. Periodically throws Saronite Boulders around
+          the arena — take cover behind boulders from Permafrost.
+        tank: Drag him behind a boulder as Permafrost stacks rise.
+        healer: Permafrost on tank stacks heavily — cooldowns.
+        dps: Hide behind a boulder when Deep Freeze casts. Boulder position resets stacks.
+        mechanics:
+          - Permafrost — stacking tank debuff
+          - Saronite Boulder — throws boulders as line-of-sight cover
+          - Deep Freeze — AoE, LoS to break
+
+  - name: Ick and Krick
+    order: 2
+    aliases: [Ick, Krick]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Abomination ridden by a gnome. Krick casts while Ick
+          fights. Only Ick is tankable.
+        tank: Ick only. Face him away.
+        healer: Poison Nova AoE, Pursuit chase — heal on the run.
+        dps: Pursuit targets a random player and chases them — RUN until it ends. Don't stop.
+        mechanics:
+          - Pursuit — run from boss or die
+          - Poison Nova — AoE poison
+          - Toxic Waste — ground pools
+          - Mighty Kick — interrupts caster
+      - name: Phase 2
+        hp_threshold: 30
+        description: >
+          Krick jumps off and casts independently from range.
+          Scourge Infection plagues players.
+        tank: Keep Ick close to Krick for cleave.
+        healer: Heavy group damage.
+        dps: Burn. Watch for Explosive Barrage warning — move.
+        mechanics:
+          - Explosive Barrage — ground AoE pattern
+          - Shadow Bolt Volley
+
+  - name: Scourgelord Tyrannus
+    order: 3
+    aliases: [Tyrannus]
+    phases:
+      - name: Rimefang Phase (initial)
+        hp_threshold: null
+        description: >
+          Tyrannus is mounted on Rimefang, a frost dragon. Rimefang
+          strafes the area with Hoarfrost and Icy Blast.
+        tank: Focus on positioning — don't stand in Hoarfrost.
+        healer: AoE the group during strafe passes.
+        dps: Kill the frozen ice blocks (trapped players) with priority. Move out of Hoarfrost.
+        mechanics:
+          - Hoarfrost — ground AoE
+          - Icy Blast — targets and freezes a player in ice
+          - Rimefang strafes periodically
+      - name: Dismounted Phase
+        hp_threshold: null
+        description: >
+          Tyrannus dismounts and fights on foot; Rimefang stays
+          airborne doing strafe passes.
+        tank: Central. Face away.
+        healer: Overlord's Brand reflects damage — keep tank alive.
+        dps: Behind him. Continue dodging Hoarfrost/Icy Blast from Rimefang.
+        mechanics:
+          - Overlord's Brand — tank reflects damage when hit
+          - Mark of Rimefang — frost debuff
+          - Rimefang strafes continue

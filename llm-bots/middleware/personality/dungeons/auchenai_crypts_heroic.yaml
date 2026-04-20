@@ -1,0 +1,14 @@
+key: auchenai_crypts_heroic
+name: Auchenai Crypts (Heroic)
+difficulty: heroic
+overlay_of: auchenai_crypts
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Exarch Maladaar
+    phases:
+      - name: Phase 1
+        dps: >
+          Avatar copies use full player abilities — a copy of the
+          tank is brutal; kill on sight.

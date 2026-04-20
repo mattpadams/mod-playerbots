@@ -1,0 +1,20 @@
+key: mechanar_heroic
+name: The Mechanar (Heroic)
+difficulty: heroic
+overlay_of: mechanar
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Mechano-Lord Capacitus
+    phases:
+      - name: Active
+        dps: >
+          Polarity Shift damage is lethal — positive/negative
+          splits are not optional on heroic.
+
+  - name: Pathaleon the Calculator
+    phases:
+      - name: Mind Control
+        mechanics:
+          - More Nether Wraiths spawn; AoE required

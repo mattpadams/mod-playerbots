@@ -1,0 +1,88 @@
+key: arcatraz
+name: The Arcatraz
+map_id: 552
+sub_zone: null
+expansion: tbc
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 69
+max_level: 72
+leader_role: tank
+general_notes: >
+  Tempest Keep prison. Four bosses. Warden Mellichar's prisoner
+  wave event is a memorable encounter.
+
+bosses:
+  - name: Zereketh the Unbound
+    order: 1
+    aliases: [Zereketh]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Void caster. Summons void zones.
+        tank: Keep him away from void zones.
+        healer: Dispel Shadow Nova curse.
+        dps: Move out of Void Zones.
+        mechanics:
+          - Void Zone — ground pool
+          - Shadow Nova — AoE cast
+          - Seed of Corruption — explodes after DoT ticks
+
+  - name: Dalliah the Doomsayer
+    order: 2
+    aliases: [Dalliah]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Blood elf witch. Whirlwinds periodically.
+        tank: Face away.
+        healer: Dispel Shadow Wave. Heal through Whirlwind.
+        dps: Step out of Whirlwind. If she casts Heal, interrupt.
+        mechanics:
+          - Whirlwind — AoE melee
+          - Heal — interruptible self-heal
+          - Shadow Wave — AoE curse
+
+  - name: Wrath-Scryer Soccothrates
+    order: 3
+    aliases: [Soccothrates]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Fel paladin. Knockback + fire pools.
+        tank: Corner tanking — reduces knockback distance.
+        healer: Dispel Knockback on casters.
+        dps: Avoid Fel Immolation pools. Interrupt Charge.
+        mechanics:
+          - Felfire Shock — knockback
+          - Fel Immolation — ground pool
+          - Charge — long-distance targeting
+
+  - name: Harbinger Skyriss
+    order: 4
+    aliases: [Skyriss]
+    phases:
+      - name: Prisoner Waves (pre-fight)
+        hp_threshold: null
+        description: >
+          Warden Mellichar opens five prisoner cells. Kill each
+          wave before the next opens.
+        tank: Wave-by-wave — pick up whatever emerges.
+        healer: Varies per wave.
+        dps: Kill waves. Each wave is progressively more dangerous.
+        mechanics:
+          - Five waves of random prisoners
+      - name: Skyriss Active
+        hp_threshold: null
+        description: >
+          Ethereal boss. Summons TWO duplicates of himself at 66%
+          and 33% — a total of three bosses on the floor.
+        tank: Pick up duplicates as they spawn.
+        healer: Heavy AoE at 33% with three copies up.
+        dps: Kill duplicates first. Fear-break on Fear Aura.
+        mechanics:
+          - Splits at 66% and 33% into duplicate copies
+          - Fear Aura — short fear
+          - Mind Rend — damage amp

@@ -1,0 +1,87 @@
+key: dire_maul_east
+name: "Dire Maul: East"
+map_id: 429
+sub_zone: "The Shrine of Eldretharr"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 55
+max_level: 60
+leader_role: tank
+general_notes: >
+  East wing of Dire Maul. Mostly ogre mage trash plus plants.
+  Four bosses. Known for the library/tribute rewards.
+
+bosses:
+  - name: Pusillin
+    order: 1
+    aliases: []
+    phases:
+      - name: Chase Phase
+        hp_threshold: null
+        description: Imp boss runs and drops imps periodically.
+        tank: Keep chasing.
+        healer: Heals on the move.
+        dps: Kite and damage. Kill the Imp Minion adds he summons.
+        mechanics:
+          - Chases the boss around the library
+          - Summons Imp Minions
+
+  - name: Zevrim Thornhoof
+    order: 2
+    aliases: [Zevrim]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Satyr boss.
+        tank: Central.
+        healer: Dispel curses.
+        dps: Interrupt.
+        mechanics:
+          - Intense Pain — damage amp
+          - Hellfire
+
+  - name: Hydrospawn
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Water elemental by the waterfall.
+        tank: Pull from water.
+        healer: Frost damage.
+        dps: Burn.
+        mechanics:
+          - Submerge — periodic immunity
+          - Water Bolt
+
+  - name: Lethtendris
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Naga witch + pet Pimgib imp.
+        tank: Pick up both.
+        healer: Dispel.
+        dps: Kill Pimgib first.
+        mechanics:
+          - Pimgib adds — imp pet
+          - Shadow Bolt
+
+  - name: Alzzin the Wildshaper
+    order: 5
+    aliases: [Alzzin]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Final boss. Druid satyr + adds.
+        tank: Pick up Alzzin + wolves.
+        healer: AoE.
+        dps: Kill wolf adds first.
+        mechanics:
+          - Wolf adds (Vilebranch Pup)
+          - Shadow Bolt
+          - Druid forms

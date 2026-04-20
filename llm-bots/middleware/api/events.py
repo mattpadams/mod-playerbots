@@ -12,15 +12,18 @@ from pydantic import BaseModel
 
 from core.event_bus import EventBus
 from game.events import ChatReceivedEvent
+from party.coordinator import PartyCoordinator
 
 router = APIRouter(prefix="/events", tags=["events"])
 
 _bus: EventBus | None = None
+_party: PartyCoordinator | None = None
 
 
-def init(event_bus: EventBus) -> None:
-    global _bus
+def init(event_bus: EventBus, party: PartyCoordinator | None = None) -> None:
+    global _bus, _party
     _bus = event_bus
+    _party = party
 
 
 class ChatEventPayload(BaseModel):
@@ -48,4 +51,39 @@ async def receive_chat_event(payload: ChatEventPayload):
         message=payload.message,
     )
     await _bus.publish(event)
+    return {"status": "accepted"}
+
+
+class LootRollEventPayload(BaseModel):
+    roll_id: str
+    item_id: int
+    item_link: str = ""
+    item_name: str = ""
+    candidate_guids: list[int] = []
+    # Optional map guid -> score delta from mod-playerbots
+    # StatsWeightCalculator. Absent means neutral 1.0 for everyone.
+    item_scores: dict[int, float] | None = None
+
+
+@router.post("/loot_roll")
+async def receive_loot_roll_event(payload: LootRollEventPayload):
+    """Receive a loot-roll-started event from the C++ LlmBridgeHook.
+
+    The coordinator runs synchronous arbitration, sends ``roll pass``
+    to the losers, and queues a ``LootRollStartedEvent`` for the
+    winner so the next supervisor tick wakes the bot's agent.
+    """
+    if _party is None:
+        return {"status": "disabled"}
+    await _party.on_loot_roll_started(
+        roll_id=payload.roll_id,
+        item_id=payload.item_id,
+        item_link=payload.item_link,
+        item_name=payload.item_name,
+        candidate_guids=payload.candidate_guids,
+        item_scores=payload.item_scores,
+    )
+    # Wake the supervisor loop so the winner event is drained this tick.
+    if _bus is not None:
+        _bus.wake_event.set()
     return {"status": "accepted"}

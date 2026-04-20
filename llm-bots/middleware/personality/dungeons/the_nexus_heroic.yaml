@@ -1,0 +1,24 @@
+key: the_nexus_heroic
+name: The Nexus (Heroic)
+difficulty: heroic
+overlay_of: the_nexus
+min_level: 80
+max_level: 80
+
+bosses:
+  - name: Grand Magus Telestra
+    phases:
+      - name: Split
+        dps: >
+          Heroic split demands coordinated burn — each clone has
+          higher hp. Lose DPS on one and she respawns at ~30%.
+        mechanics:
+          - Clone abilities hit harder; CC arcane clone's teleport if possible
+
+  - name: Keristrasza
+    phases:
+      - name: Active
+        healer: >
+          Intense Cold now applies faster — no standing still at all.
+        mechanics:
+          - Intense Cold caps at lethal stacks if stationary 3+ seconds

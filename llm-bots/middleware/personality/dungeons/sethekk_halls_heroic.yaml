@@ -1,0 +1,17 @@
+key: sethekk_halls_heroic
+name: Sethekk Halls (Heroic)
+difficulty: heroic
+overlay_of: sethekk_halls
+min_level: 70
+max_level: 70
+general_notes: >
+  Heroic grants the Druid quest chain to summon Anzu — optional
+  raven god boss.
+
+bosses:
+  - name: Talon King Ikiss
+    phases:
+      - name: Active
+        healer: >
+          Arcane Explosion is lethal without LoS break — mandatory
+          on heroic.

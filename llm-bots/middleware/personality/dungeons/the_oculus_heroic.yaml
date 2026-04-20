@@ -1,0 +1,27 @@
+key: the_oculus_heroic
+name: The Oculus (Heroic)
+difficulty: heroic
+overlay_of: the_oculus
+min_level: 80
+max_level: 80
+general_notes: >
+  Drake fight is significantly harder on heroic. Ruby must
+  manage Martyr stacks more carefully; Amber must break shield
+  reliably or the group wipes.
+
+bosses:
+  - name: Ley-Guardian Eregos
+    phases:
+      - name: Drake Fight
+        tank: >
+          Amber Shock Lance timing is tight — do not miss a shield
+          phase.
+        healer: >
+          Emerald cooldown usage is strict — Touch the Nightmare
+          on self to heal big.
+        dps: >
+          Higher stack count on Martyr is safe but risky — dump
+          Searing Wrath at 5 stacks on heroic.
+        mechanics:
+          - Arcane Barrage orbs move faster
+          - Boss has more hp — efficiency matters

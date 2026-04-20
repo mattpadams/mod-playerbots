@@ -1,0 +1,125 @@
+key: wailing_caverns
+name: Wailing Caverns
+map_id: 43
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 17
+max_level: 24
+leader_role: tank
+general_notes: >
+  Barrens naga cave. Druid-themed. Notoriously long and maze-like.
+  Multiple bosses and Muyoc/Serpentis named rares.
+
+bosses:
+  - name: Lady Anacondra
+    order: 1
+    aliases: [Anacondra]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Nature druid.
+        tank: Pull to open.
+        healer: Dispel Sleep.
+        dps: Interrupt Healing Touch.
+        mechanics:
+          - Sleep — CC
+          - Healing Touch — interruptible
+
+  - name: Lord Cobrahn
+    order: 2
+    aliases: [Cobrahn]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Shadow druid. Transforms into snake at low hp.
+        tank: Central.
+        healer: Dispel poison debuffs.
+        dps: Burn. Snake form hits hard.
+        mechanics:
+          - Snake Form transformation
+          - Poison — DoT
+
+  - name: Kresh
+    order: 3
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Optional turtle boss.
+        tank: Pull from water.
+        healer: Light damage.
+        dps: Burn.
+        mechanics:
+          - Shell defense
+
+  - name: Lord Pythas
+    order: 4
+    aliases: [Pythas]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Caster druid.
+        tank: Central.
+        healer: Dispel Thunderclap.
+        dps: Interrupt Lightning Bolt.
+        mechanics:
+          - Thunderclap — AoE
+          - Lightning Bolt
+
+  - name: Skum
+    order: 5
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Optional snake boss.
+        tank: Single-target tanking.
+        healer: Straightforward.
+        dps: Burn.
+        mechanics:
+          - Chained Bolt
+
+  - name: Lord Serpentis
+    order: 6
+    aliases: [Serpentis]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Caster druid, last of the Fanglord bosses.
+        tank: Central.
+        healer: Dispel.
+        dps: Interrupt.
+        mechanics:
+          - Poison — DoT
+          - Hex of Weakness
+
+  - name: Verdan the Everliving
+    order: 7
+    aliases: [Verdan]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Tree boss.
+        tank: Open area.
+        healer: Slow — heal through.
+        dps: Burn.
+        mechanics:
+          - Grasping Vines — root
+
+  - name: Mutanus the Devourer
+    order: 8
+    aliases: [Mutanus]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Murloc boss. Final encounter.
+        tank: Pull from the water.
+        healer: Thundercrack stun.
+        dps: Terrify — move after fear.
+        mechanics:
+          - Terrify — AoE fear
+          - Thundercrack — AoE damage + stun

@@ -1,0 +1,91 @@
+key: the_nexus
+name: The Nexus
+map_id: 576
+sub_zone: null
+expansion: wotlk
+difficulty: normal
+overlay_of: null
+strategy_key: wotlk-nex
+cpp_coverage: full
+min_level: 68
+max_level: 73
+leader_role: tank
+general_notes: >
+  Coldarra dungeon. Four bosses around a central ring: Grand Magus
+  Telestra, Anomalus, Ormorok the Tree-Shaper, then Keristrasza at
+  the top of the ring.
+
+bosses:
+  - name: Grand Magus Telestra
+    order: 1
+    aliases: [Telestra]
+    phases:
+      - name: Phase 1 (single)
+        hp_threshold: null
+        description: Telestra is a single caster. At 50% she splits.
+        tank: Pull in an open area — she'll split later and you need room.
+        healer: Interrupt Ice Nova if possible — it hits hard.
+        dps: Interrupt Ice Nova and Polymorph casts on cooldown.
+        mechanics:
+          - Ice Nova — interruptible AoE
+          - Polymorph — CC on a random player
+      - name: Split
+        hp_threshold: 50
+        description: >
+          Telestra splits into fire, frost, and arcane clones. Kill
+          all three within ~5 seconds or she reunites at full hp.
+        tank: Grab the Fire clone (the one that charges).
+        healer: Heavy AoE healing — three bosses now.
+        dps: Coordinate focus — kill all three clones near-simultaneously. Fire → Frost → Arcane ordering is common.
+        mechanics:
+          - Clones respawn Telestra at full hp if not killed close together
+          - Each clone has a signature ability matching its element
+
+  - name: Anomalus
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Arcane anomaly that periodically opens Chaotic Rifts —
+          stationary portals that spawn Crazed Mana-Wraiths.
+        tank: Keep Anomalus central. Don't move unless a rift spawns on you.
+        healer: Watch for rift AoE damage. The boss himself is light healing.
+        dps: Kill each Chaotic Rift as it spawns (short window). Ignore the mana-wraith adds — they despawn with their rift.
+        mechanics:
+          - Chaotic Rifts open on random players — kill the rift, not the adds
+          - Boss is invulnerable during Shield phase
+
+  - name: Ormorok the Tree-Shaper
+    order: 3
+    aliases: [Ormorok]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Melee boss. Summons Crystal Spikes that erupt from the ground.
+        tank: Pull to center. Face him away.
+        healer: Watch for Trample — he charges a random player. Keep the tank up during Frenzy.
+        dps: Watch the ground — Crystal Spikes have a short telegraph. Don't stand still near the boss.
+        mechanics:
+          - Crystal Spikes erupt along lines from the boss
+          - Trample charges a random player
+          - Frenzy increases attack speed at low hp
+
+  - name: Keristrasza
+    order: 4
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: >
+          Red dragonflight dragon, frost-nova caster. Stacks Intense
+          Cold on anyone standing still — everyone must keep moving.
+        tank: Tank her in place but side-strafe constantly.
+        healer: Cast on the move. Shield before Crystallize.
+        dps: Keep moving — never stand still or Intense Cold stacks lethally. Break Crystallize debuff on any trapped party member.
+        mechanics:
+          - Intense Cold — stacks on stationary players, lethal past 5 stacks
+          - Crystallize — AoE freeze, break out via movement
+          - Crystal Chains — root + damage

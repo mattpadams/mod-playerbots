@@ -1,0 +1,16 @@
+key: arcatraz_heroic
+name: The Arcatraz (Heroic)
+difficulty: heroic
+overlay_of: arcatraz
+min_level: 70
+max_level: 70
+
+bosses:
+  - name: Harbinger Skyriss
+    phases:
+      - name: Skyriss Active
+        dps: >
+          Three-copy phase at 33% is the hp check — conserve
+          cooldowns for this.
+        mechanics:
+          - Duplicate copies deal full damage on heroic

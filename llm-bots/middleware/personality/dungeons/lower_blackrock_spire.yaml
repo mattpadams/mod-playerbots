@@ -1,0 +1,148 @@
+key: lower_blackrock_spire
+name: Lower Blackrock Spire
+map_id: 229
+sub_zone: "Lower Blackrock Spire"
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 55
+max_level: 60
+leader_role: tank
+general_notes: >
+  Orc-held lower spire. Seven bosses. Heavy patrol pulls.
+
+bosses:
+  - name: Highlord Omokk
+    order: 1
+    aliases: [Omokk]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Ogre boss.
+        tank: Central.
+        healer: Stun damage.
+        dps: Burn.
+        mechanics:
+          - Slam — stun
+          - Rend
+
+  - name: Shadow Hunter Vosh'gajin
+    order: 2
+    aliases: [Voshgajin, Vosh'gajin]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Troll shaman.
+        tank: Central.
+        healer: Dispel curses.
+        dps: Interrupt heals. Kill the Spirit add.
+        mechanics:
+          - Curse of Blood
+          - Hex
+          - Spirit adds
+
+  - name: War Master Voone
+    order: 3
+    aliases: [Voone]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Orc warlord with spider adds.
+        tank: Pick up adds.
+        healer: AoE.
+        dps: AoE adds first.
+        mechanics:
+          - Summons spider adds
+          - Snap Kick
+
+  - name: Mother Smolderweb
+    order: 4
+    aliases: [Smolderweb]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Spider boss. At death, spawns many small spiderlings.
+        tank: Central.
+        healer: Poison dispel.
+        dps: Burn. Prepare AoE for the spawnlings at death.
+        mechanics:
+          - Spiderling spawns on death
+          - Crystalize — poison
+
+  - name: Urok Doomhowl
+    order: 5
+    aliases: [Urok]
+    phases:
+      - name: Summon Event
+        hp_threshold: null
+        description: >
+          Summoned via an altar. Spawns three waves of Ogre
+          Mercenaries before Urok engages.
+        tank: AoE tank the waves.
+        healer: Heavy AoE.
+        dps: AoE waves first.
+        mechanics:
+          - Three waves of Urok's Ogre Mercenaries
+          - Urok engages after waves
+      - name: Urok Active
+        hp_threshold: null
+        description: Ogre boss.
+        tank: Central.
+        healer: Physical.
+        dps: Burn.
+        mechanics:
+          - Intimidating Shout — fear
+          - Rend
+
+  - name: Quartermaster Zigris
+    order: 6
+    aliases: [Zigris]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Hunter boss.
+        tank: Close range.
+        healer: Dispel.
+        dps: Interrupt Multi-Shot targeting.
+        mechanics:
+          - Multi-Shot
+          - Shoot
+
+  - name: Halycon + Gizrul the Slavener
+    order: 7
+    aliases: [Halycon, Gizrul]
+    phases:
+      - name: Halycon
+        hp_threshold: null
+        description: Worg boss. Dies and summons Gizrul.
+        tank: Central.
+        healer: Bleed.
+        dps: Burn.
+        mechanics:
+          - Summons Gizrul on death
+      - name: Gizrul
+        hp_threshold: 0
+        description: Giant worg.
+        tank: Re-pick.
+        healer: Heavy damage.
+        dps: Burn.
+        mechanics:
+          - Fatal Bite
+          - Poisoned Volley
+
+  - name: Overlord Wyrmthalak
+    order: 8
+    aliases: [Wyrmthalak]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Final boss. Two Spirestone Warlord adds.
+        tank: Pick up all three.
+        healer: AoE.
+        dps: Kill adds first.
+        mechanics:
+          - Two Spirestone Warlord adds
+          - Cleave
+          - Sunder Armor

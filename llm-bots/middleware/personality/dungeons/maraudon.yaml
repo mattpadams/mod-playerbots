@@ -1,0 +1,130 @@
+key: maraudon
+name: Maraudon
+map_id: 349
+sub_zone: null
+expansion: vanilla
+difficulty: normal
+overlay_of: null
+strategy_key: null
+cpp_coverage: none
+min_level: 40
+max_level: 49
+leader_role: tank
+general_notes: >
+  Desolace plant-spirit dungeon. Three entrance paths (Foulspore
+  Cavern / Rotgrip Chamber / Earth Song Falls). Final boss is
+  Princess Theradras.
+
+bosses:
+  - name: Noxxion
+    order: 1
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Poison elemental. Summons Noxxion's Spawn slimes at low hp.
+        tank: Pull to open area.
+        healer: Poison dispel.
+        dps: AoE the spawns at 25%.
+        mechanics:
+          - Noxxion's Spawn — slime adds at low hp
+          - Poison Cloud — AoE
+
+  - name: Razorlash
+    order: 2
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Plant boss.
+        tank: Central.
+        healer: Physical damage.
+        dps: Burn.
+        mechanics:
+          - Dispel Magic — cleanses party buffs
+          - Sweeping Strike
+
+  - name: Lord Vyletongue
+    order: 3
+    aliases: [Vyletongue]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Satyr boss.
+        tank: Central.
+        healer: Dispel curses.
+        dps: Interrupt casts.
+        mechanics:
+          - Shadow Bolt Volley
+          - Curse of Weakness
+
+  - name: Meshlok the Harvester
+    order: 4
+    aliases: [Meshlok]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Optional plant boss behind waterfall.
+        tank: Central.
+        healer: Standard.
+        dps: Burn.
+        mechanics:
+          - Uppercut
+          - Enrage
+
+  - name: Celebras the Cursed
+    order: 5
+    aliases: [Celebras]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Centaur shade.
+        tank: Central.
+        healer: Dispel curses.
+        dps: Interrupt.
+        mechanics:
+          - Wrath — nature DoT
+          - Entangling Roots — root
+
+  - name: Landslide
+    order: 6
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Earth elemental. Spawns during escort.
+        tank: Pull to open area.
+        healer: Heavy tank damage.
+        dps: Burn.
+        mechanics:
+          - Landslide — AoE
+          - Thunderclap
+
+  - name: Rotgrip
+    order: 7
+    aliases: []
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Crocodile boss in the water.
+        tank: Tank in water.
+        healer: Burst damage.
+        dps: Stay out of his bite cone.
+        mechanics:
+          - Tail Sweep
+          - Bloodbath
+
+  - name: Princess Theradras
+    order: 8
+    aliases: [Theradras, Princess]
+    phases:
+      - name: Active
+        hp_threshold: null
+        description: Elemental princess. Final boss.
+        tank: Central in arena.
+        healer: Earth element damage.
+        dps: Move out of Boulder impacts. Interrupt Repulse.
+        mechanics:
+          - Boulder — targets random player
+          - Repulse — AoE knockback + stun
+          - Dust Field — AoE
