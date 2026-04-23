@@ -145,12 +145,30 @@ POLICY_REGISTRY: dict[EventType, EventPolicy] = {
         cooldown_seconds=5.0,
     ),
     EventType.BOSS_DEFEATED: EventPolicy(priority=91, invoke_llm=False),
+    # A single member death mid-encounter — leader-only, cheaper than a
+    # full wipe call. Cooldown prevents a spam if two members go down
+    # back-to-back on the same tick.
+    EventType.PARTY_MEMBER_DIED: EventPolicy(
+        priority=3,
+        model_tier="important",
+        needs_party_context=True,
+        cooldown_seconds=10.0,
+    ),
     # Wipes only fire for the leader — important-tier call to get a
     # character-consistent "my fault, let's try this" response.
     EventType.PARTY_WIPE: EventPolicy(
         priority=2,
         model_tier="important",
         needs_party_context=True,
+    ),
+    # Adds arriving mid-fight — short cooldown so repeated waves don't
+    # each trigger a separate call, but urgent enough to use the
+    # important tier when it does fire.
+    EventType.ADDS_SPAWNED: EventPolicy(
+        priority=3,
+        model_tier="important",
+        needs_combat_context=True,
+        cooldown_seconds=15.0,
     ),
 }
 

@@ -57,7 +57,9 @@ class EventType(str, Enum):
     BOSS_ENGAGED = "boss_engaged"
     BOSS_DEFEATED = "boss_defeated"
     BOSS_PHASE_CHANGED = "boss_phase_changed"
+    PARTY_MEMBER_DIED = "party_member_died"
     PARTY_WIPE = "party_wipe"
+    ADDS_SPAWNED = "adds_spawned"
 
 
 class GameEvent(BaseModel):
@@ -309,6 +311,22 @@ class BossPhaseChangedEvent(GameEvent):
     role: str = "dps"
 
 
+class PartyMemberDiedEvent(GameEvent):
+    """A single member of the dungeon party died (pre-wipe).
+
+    Emitted to the instance leader once per death — re-arms only after
+    the member revives. Separate from BOT_DIED (self-death) so the
+    leader gets a cross-party signal without each bot firing its own.
+    """
+
+    event_type: Literal[EventType.PARTY_MEMBER_DIED] = EventType.PARTY_MEMBER_DIED
+    dungeon_key: str = ""
+    dungeon_name: str = ""
+    dead_bot_guid: int = 0
+    dead_bot_name: str = ""
+    dead_bot_role: str = "dps"
+
+
 class PartyWipeEvent(GameEvent):
     """All elevated bots inside the same dungeon instance are dead.
 
@@ -321,3 +339,20 @@ class PartyWipeEvent(GameEvent):
     dungeon_key: str = ""
     dungeon_name: str = ""
     dead_bot_names: list[str] = Field(default_factory=list)
+
+
+class AddsSpawnedEvent(GameEvent):
+    """New enemies entered combat — the attacker count jumped.
+
+    Emitted opportunistically by ``CombatContextBuilder`` when it sees
+    at least ``ADDS_MIN_DELTA`` new attackers compared to its last
+    build for the same bot. Not a proactive scan — only fires during a
+    tick that already needed combat context (HEALTH_CRITICAL,
+    COMBAT_START, BOSS_ENGAGED, etc.), which is the moment the LLM
+    most wants the signal anyway.
+    """
+
+    event_type: Literal[EventType.ADDS_SPAWNED] = EventType.ADDS_SPAWNED
+    new_attacker_count: int = 0
+    previous_attacker_count: int = 0
+    delta: int = 0

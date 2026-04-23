@@ -23,6 +23,7 @@ from core.game_client import BotSnapshot
 from dungeons.coordinator import DungeonContext
 from game.event_policy import EventPolicy, get_policy
 from game.events import (
+    AddsSpawnedEvent,
     AdminForceSayEvent,
     BossEngagedEvent,
     BossPhaseChangedEvent,
@@ -32,6 +33,7 @@ from game.events import (
     GameEvent,
     IdleTickEvent,
     LootRollStartedEvent,
+    PartyMemberDiedEvent,
     PartyQuestProgressEvent,
     PartyWipeEvent,
     CraftRequestedEvent,
@@ -450,6 +452,14 @@ def _event_summary(event: GameEvent) -> str:
                     "Adjust tactics for the new phase."
                 )
             return "Boss phase changed."
+        case EventType.PARTY_MEMBER_DIED:
+            e = event
+            if isinstance(e, PartyMemberDiedEvent):
+                return (
+                    f"{e.dead_bot_name} ({e.dead_bot_role}) went down in "
+                    f"{e.dungeon_name}. Call it out and coordinate a rescue or res."
+                )
+            return "A party member died."
         case EventType.PARTY_WIPE:
             e = event
             if isinstance(e, PartyWipeEvent):
@@ -459,6 +469,15 @@ def _event_summary(event: GameEvent) -> str:
                     "As leader, acknowledge the wipe and suggest a different approach."
                 )
             return "Party wiped."
+        case EventType.ADDS_SPAWNED:
+            e = event
+            if isinstance(e, AddsSpawnedEvent):
+                return (
+                    f"Adds spawned: {e.delta} new enemies "
+                    f"({e.previous_attacker_count} -> {e.new_attacker_count}). "
+                    "Reassess target priority — who takes the adds?"
+                )
+            return "Adds spawned."
         case EventType.CRAFT_REQUESTED:
             e = event
             if isinstance(e, CraftRequestedEvent):

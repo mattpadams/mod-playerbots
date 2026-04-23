@@ -40,6 +40,7 @@ from game.events import (
     DungeonEnteredEvent,
     DungeonExitedEvent,
     GameEvent,
+    PartyMemberDiedEvent,
     PartyWipeEvent,
 )
 from personality.loader import load_profile
@@ -72,6 +73,11 @@ class _BotDungeonState:
 @dataclass
 class _DungeonGroupState:
     wipe_announced: bool = False
+    # Per-bot death announcement state. A guid in this set means we've
+    # already fired PARTY_MEMBER_DIED for that bot's current death; we
+    # re-arm (drop the guid) once the bot is alive again. This keeps
+    # the leader from getting the same death repeated every tick.
+    announced_deaths: set[int] = field(default_factory=set)
 
 
 def _difficulty_for(level: int, expansion: str) -> Difficulty:
@@ -330,6 +336,7 @@ class DungeonCoordinator:
             # for must be dead. Members whose snapshots are missing
             # this tick abstain (don't count as alive or dead).
             deads: list[str] = []
+            dead_guids: list[int] = []
             living = 0
             for g in guids:
                 snap = snapshots.get(g)
@@ -337,12 +344,40 @@ class DungeonCoordinator:
                     continue
                 if snap.state == "dead":
                     deads.append(self._bot_name(g))
+                    dead_guids.append(g)
                 else:
                     living += 1
 
             group = self._group_state.setdefault(
                 dungeon_key, _DungeonGroupState()
             )
+
+            # Single-member death signal (pre-wipe). Fires once per
+            # death per revive cycle, to the leader only. Drop stale
+            # revived bots from the announced set so a future death
+            # re-fires.
+            leader = self._current_leader.get(dungeon_key)
+            dead_guid_set = set(dead_guids)
+            group.announced_deaths &= dead_guid_set
+            if leader is not None and living > 0:
+                for g in dead_guids:
+                    if g in group.announced_deaths or g == leader:
+                        continue
+                    self._pending_events.append(
+                        PartyMemberDiedEvent(
+                            bot_guid=leader,
+                            bot_name=self._bot_name(leader),
+                            dungeon_key=dungeon.key,
+                            dungeon_name=dungeon.name,
+                            dead_bot_guid=g,
+                            dead_bot_name=self._bot_name(g),
+                            dead_bot_role=self._states[g].role.value
+                            if g in self._states
+                            else "dps",
+                        )
+                    )
+                    group.announced_deaths.add(g)
+
             all_dead = living == 0 and len(deads) >= 1
             if all_dead and not group.wipe_announced:
                 leader = self._current_leader.get(dungeon_key)

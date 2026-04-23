@@ -19,8 +19,14 @@ import structlog
 from combat.models import PartyMember
 from combat.snapshot_queries import parse_party, parse_values_attackers
 from core.game_client import BotSnapshot, GameClient
+from game.events import AddsSpawnedEvent, GameEvent
 
 logger = structlog.get_logger()
+
+# Minimum jump in attackers to count as an "adds wave". Below this the
+# change is noise (a new target flick or a party member entering
+# combat first) rather than a distinct add spawn.
+ADDS_MIN_DELTA = 2
 
 
 @dataclass
@@ -74,6 +80,16 @@ class CombatContextBuilder:
 
     def __init__(self, game_client: GameClient) -> None:
         self._game = game_client
+        # Per-bot last-known attacker count. Populated by build() and
+        # used to detect adds-spawn jumps between consecutive builds.
+        self._last_attacker_count: dict[int, int] = {}
+        # Events detected during build() (one entry per guid that saw a
+        # big enough attacker jump). Drained by the supervisor.
+        self._pending_events: dict[int, list[GameEvent]] = {}
+
+    def pop_events(self, guid: int) -> list[GameEvent]:
+        """Drain and return events detected for ``guid`` since last call."""
+        return self._pending_events.pop(guid, [])
 
     async def build(self, guid: int, snapshot: BotSnapshot) -> CombatContext:
         # Fire both queries concurrently, tolerate failure of either.
@@ -101,6 +117,24 @@ class CombatContextBuilder:
                 ctx.attacker_count = attackers
                 ctx.my_attacker_count = my_attackers
                 ctx.balance_pct = balance
+                # Adds detection — only meaningful when we have a prior
+                # sample from this bot's combat context. A fresh entry
+                # (first build after combat starts) seeds the counter
+                # without firing; subsequent jumps of >=ADDS_MIN_DELTA
+                # queue an event for the supervisor to route.
+                prev = self._last_attacker_count.get(guid)
+                self._last_attacker_count[guid] = attackers
+                if prev is not None and attackers - prev >= ADDS_MIN_DELTA:
+                    # bot_name is populated by the supervisor when it
+                    # drains pending events — it has the profile handle.
+                    self._pending_events.setdefault(guid, []).append(
+                        AddsSpawnedEvent(
+                            bot_guid=guid,
+                            new_attacker_count=attackers,
+                            previous_attacker_count=prev,
+                            delta=attackers - prev,
+                        )
+                    )
             except Exception as exc:
                 logger.warning(
                     "combat_context.values_parse_failed",

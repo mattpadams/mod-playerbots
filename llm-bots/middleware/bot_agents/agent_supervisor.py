@@ -260,6 +260,13 @@ class AgentSupervisor:
             # Dungeon enter/exit events for this bot.
             events.extend(dungeon_events_by_guid.get(guid, []))
 
+            # Adds-spawn events detected by the CombatContextBuilder on
+            # its most recent build for this bot. The builder doesn't
+            # know the bot's name, so we stamp it here before routing.
+            for evt in self._combat_ctx_builder.pop_events(guid):
+                evt.bot_name = agent.name
+                events.append(evt)
+
             # Apply per-bot debounce: drops events whose policy cooldown
             # has not yet elapsed (e.g. HEALTH_CRITICAL within 30s).
             events = self._debounce_filters[guid].filter(

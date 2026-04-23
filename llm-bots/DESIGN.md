@@ -12,10 +12,11 @@
 | 1 | Chat MVP | ✅ Complete | Committed `b930cb7bd` |
 | 2 | Reactive Events (C++ Hook) | ✅ Complete | C++ rebuilt & deployed 2026-04-14; Python wake-on-push live |
 | 3 | Combat Integration | ✅ Complete | EventPolicy registry, DebounceFilter, CombatContext, 5 raid tools, C++ `party,guid` TCP command — deployed 2026-04-14 |
-| 4 | Questing, Trading, Full RPG | ⏳ Not started | Includes deferred `MANA_CRITICAL` event from M3 |
-| 5 | Dungeon & Raid Coordination | ⏳ Not started | Includes deferred `PARTY_MEMBER_DIED`, `ADDS_SPAWNED`, `BOSS_PHASE_CHANGED` events from M3 |
+| 4 | Questing, Trading, Full RPG | 🧪 Implemented, pending in-game test | PartyCoordinator (roster/quest/loot/arbitration/gear), 4 tool modules (party/quest/rpg/trade), `MANA_CRITICAL` event landed |
+| 5 | Dungeon & Raid Coordination | 🧪 Implemented, pending in-game test | DungeonCoordinator, 80+ dungeon YAML profiles, `BOSS_PHASE_CHANGED` + `PARTY_MEMBER_DIED` + `ADDS_SPAWNED` events landed |
 | 6 | Observability Dashboard | 🧪 Implemented, pending in-game test | Dashboard at `:8080`, SSE live feed, SQLite trace log, per-bot cost, Prometheus wired |
-| 7 | Scale to 50+ Active Agents | ⏳ Not started | |
+| 7 | Scale to 50+ Active Agents | 🧪 Implemented, pending in-game test | ProximityScanner, AutoElevator, DbClient pool, tick batching, rate-limit degradation |
+| + | Admin Management | 🧪 Implemented, pending in-game test | `/admin` HTMX page, 7 v2 API routers, acore_llmbots DB, kill switch + per-player gating, PartyLogoffChecker |
 
 **To fully activate M2 push flow**, set in `worldserver.conf`:
 `AiPlayerbot.LlmBridgeEndpoint = "http://ac-bot-middleware:8180/events/chat"`
