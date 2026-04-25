@@ -122,6 +122,7 @@ ChatCommandHandlerStrategy::ChatCommandHandlerStrategy(PlayerbotAI* botAI) : Pas
     supported.push_back("los");
     supported.push_back("rpg status");
     supported.push_back("rpg do quest");
+    supported.push_back("rpg mode");
     supported.push_back("aura");
     supported.push_back("drop");
     supported.push_back("share");

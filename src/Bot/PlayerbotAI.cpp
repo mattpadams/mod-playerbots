@@ -5161,6 +5161,39 @@ std::string const PlayerbotAI::HandleRemoteCommand(std::string const command)
         out << " / " << pct << "%";
         return out.str();
     }
+    else if (command == "level")
+    {
+        std::ostringstream out;
+        out << static_cast<uint32>(bot->GetLevel());
+        return out.str();
+    }
+    else if (command == "area")
+    {
+        // Sub-area name for multi-wing instances (Dire Maul wings,
+        // Scarlet Monastery wings, Stratholme halves, BRS halves).
+        // Returns empty when no area entry — consumers then fall back
+        // to zone-level matching.
+        if (AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(bot->GetAreaId()))
+            return std::string(areaEntry->area_name[0] ? areaEntry->area_name[0] : "");
+        return "";
+    }
+    else if (command == "mana")
+    {
+        // Returns "NN%" for bots with a mana power type, "n/a" otherwise.
+        // Consumed by the LLM middleware to detect MANA_CRITICAL events.
+        if (bot->getPowerType() != POWER_MANA)
+            return "n/a";
+
+        uint32 maxMana = bot->GetMaxPower(POWER_MANA);
+        if (!maxMana)
+            return "n/a";
+
+        uint32 pct = static_cast<uint32>(
+            (static_cast<uint64>(bot->GetPower(POWER_MANA)) * 100) / maxMana);
+        std::ostringstream out;
+        out << pct << "%";
+        return out.str();
+    }
     else if (command == "strategy")
     {
         return currentEngine->ListStrategies();
@@ -5172,6 +5205,50 @@ std::string const PlayerbotAI::HandleRemoteCommand(std::string const command)
     else if (command == "values")
     {
         return GetAiObjectContext()->FormatValues();
+    }
+    else if (command == "party")
+    {
+        // Pipe-delimited party roster: "Name:Class:HpPct|Name:Class:HpPct"
+        // Empty string when not in a group. Used by the LLM middleware
+        // (Milestone 3) to enrich combat context.
+        Group* group = bot->GetGroup();
+        if (!group)
+            return "";
+
+        auto classToName = [](uint8 cls) -> char const* {
+            switch (cls)
+            {
+                case CLASS_WARRIOR:      return "Warrior";
+                case CLASS_PALADIN:      return "Paladin";
+                case CLASS_HUNTER:       return "Hunter";
+                case CLASS_ROGUE:        return "Rogue";
+                case CLASS_PRIEST:       return "Priest";
+                case CLASS_DEATH_KNIGHT: return "DeathKnight";
+                case CLASS_SHAMAN:       return "Shaman";
+                case CLASS_MAGE:         return "Mage";
+                case CLASS_WARLOCK:      return "Warlock";
+                case CLASS_DRUID:        return "Druid";
+                default:                 return "";
+            }
+        };
+
+        std::ostringstream out;
+        bool first = true;
+        for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+        {
+            Player* member = ref->GetSource();
+            if (!member)
+                continue;
+
+            if (!first)
+                out << "|";
+            first = false;
+
+            out << member->GetName() << ":"
+                << classToName(member->getClass()) << ":"
+                << static_cast<uint32>(member->GetHealthPct());
+        }
+        return out.str();
     }
     else if (command == "travel")
     {
@@ -5264,6 +5341,89 @@ std::string const PlayerbotAI::HandleRemoteCommand(std::string const command)
                 << ChatHelper::formatMoney(AI_VALUE2(uint32, "money needed for", i)) << "\n";
         }
 
+        return out.str();
+    }
+    else if (command == "quests")
+    {
+        // M4: Semicolon-separated list of collection-style quest
+        // objectives. One record per (quest, required-item):
+        //     questId:questName:itemName:current:required
+        // Required is per-character (WoW quest-item objectives are
+        // per-player). Empty string when no such objectives exist.
+        std::ostringstream out;
+        bool first = true;
+        for (uint8 slot = 0; slot < MAX_QUEST_LOG_SIZE; ++slot)
+        {
+            uint32 questId = bot->GetQuestSlotQuestId(slot);
+            if (!questId)
+                continue;
+            Quest const* quest = sObjectMgr->GetQuestTemplate(questId);
+            if (!quest)
+                continue;
+            QuestStatusData const* status = nullptr;
+            auto sit = bot->getQuestStatusMap().find(questId);
+            if (sit != bot->getQuestStatusMap().end())
+                status = &sit->second;
+            if (!status)
+                continue;
+            for (uint8 i = 0; i < QUEST_ITEM_OBJECTIVES_COUNT; ++i)
+            {
+                uint32 reqItemId = quest->RequiredItemId[i];
+                uint32 reqCount  = quest->RequiredItemCount[i];
+                if (!reqItemId || !reqCount)
+                    continue;
+                uint32 cur = status->ItemCount[i];
+                ItemTemplate const* itemTmpl = sObjectMgr->GetItemTemplate(reqItemId);
+                std::string itemName = itemTmpl ? itemTmpl->Name1 : "";
+                if (!first)
+                    out << ";";
+                first = false;
+                out << questId << ":" << quest->GetTitle() << ":"
+                    << itemName << ":" << cur << ":" << reqCount;
+            }
+        }
+        return out.str();
+    }
+    else if (command == "inventory")
+    {
+        // M4: Bag occupancy for proximity-triggered auto-vendor.
+        // Response format: "usedSlots/totalSlots pct% gray=N"
+        //   gray=N is the number of grey-quality items the bot is
+        //   carrying (proxy for "has junk to sell").
+        uint32 used = 0;
+        uint32 total = 0;
+        uint32 grayCount = 0;
+        for (uint8 bagId = INVENTORY_SLOT_BAG_START; bagId < INVENTORY_SLOT_BAG_END; ++bagId)
+        {
+            if (Bag* bag = bot->GetBagByPos(bagId))
+                total += bag->GetBagSize();
+        }
+        total += INVENTORY_SLOT_ITEM_END - INVENTORY_SLOT_ITEM_START;
+
+        for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
+            if (Item* item = bot->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
+            {
+                ++used;
+                if (item->GetTemplate() && item->GetTemplate()->Quality == ITEM_QUALITY_POOR)
+                    ++grayCount;
+            }
+        for (uint8 bagId = INVENTORY_SLOT_BAG_START; bagId < INVENTORY_SLOT_BAG_END; ++bagId)
+        {
+            if (Bag* bag = bot->GetBagByPos(bagId))
+            {
+                for (uint32 i = 0; i < bag->GetBagSize(); ++i)
+                    if (Item* item = bot->GetItemByPos(bagId, i))
+                    {
+                        ++used;
+                        if (item->GetTemplate() && item->GetTemplate()->Quality == ITEM_QUALITY_POOR)
+                            ++grayCount;
+                    }
+            }
+        }
+
+        uint32 pct = total ? (used * 100 / total) : 0;
+        std::ostringstream out;
+        out << used << "/" << total << " " << pct << "% gray=" << grayCount;
         return out.str();
     }
 

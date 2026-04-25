@@ -414,6 +414,7 @@ bool PlayerbotAIConfig::Initialize()
 
     commandServerPort = sConfigMgr->GetOption<int32>("AiPlayerbot.CommandServerPort", 8888);
     llmBridgeEndpoint = sConfigMgr->GetOption<std::string>("AiPlayerbot.LlmBridgeEndpoint", "");
+    llmDeferRolls = sConfigMgr->GetOption<bool>("AiPlayerbot.LlmDeferRolls", false);
     perfMonEnabled = sConfigMgr->GetOption<bool>("AiPlayerbot.PerfMonEnabled", false);
 
     useGroundMountAtMinLevel = sConfigMgr->GetOption<int32>("AiPlayerbot.UseGroundMountAtMinLevel", 20);

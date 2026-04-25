@@ -8,10 +8,49 @@
 #include "Event.h"
 #include "Group.h"
 #include "ItemUsageValue.h"
+#include "LlmBridgeHook.h"
 #include "LootAction.h"
 #include "ObjectMgr.h"
 #include "PlayerbotAIConfig.h"
 #include "Playerbots.h"
+
+#include <chrono>
+#include <mutex>
+#include <sstream>
+#include <unordered_map>
+
+namespace
+{
+    // Deduplicate LLM-bridge posts when multiple elevated bots in a
+    // group reach LootRollAction::Execute for the same roll in the
+    // same tick. Without this we'd POST once per bot per tick; with
+    // it we POST exactly once per unique roll for the duration of
+    // the TTL window.
+    constexpr auto LLM_ROLL_DEDUP_TTL = std::chrono::seconds(45);
+
+    std::mutex g_llmRollMu;
+    std::unordered_map<std::string, std::chrono::steady_clock::time_point> g_llmPosted;
+
+    bool ShouldPostLlmRoll(std::string const& rollId)
+    {
+        auto const now = std::chrono::steady_clock::now();
+        std::lock_guard<std::mutex> lock(g_llmRollMu);
+
+        // Garbage-collect expired entries opportunistically.
+        for (auto it = g_llmPosted.begin(); it != g_llmPosted.end();)
+        {
+            if (it->second < now)
+                it = g_llmPosted.erase(it);
+            else
+                ++it;
+        }
+
+        if (g_llmPosted.count(rollId))
+            return false;
+        g_llmPosted.emplace(rollId, now + LLM_ROLL_DEDUP_TTL);
+        return true;
+    }
+}
 
 bool LootRollAction::Execute(Event /*event*/)
 {
@@ -28,6 +67,49 @@ bool LootRollAction::Execute(Event /*event*/)
 
         ObjectGuid guid = roll->itemGUID;
         uint32 itemId = roll->itemid;
+
+        // M4: If LLM defer-rolls is enabled and the bridge is active,
+        // hand the arbitration off to the middleware. We POST once
+        // per unique rollId (deduped across all bots that reach this
+        // branch within the TTL window) and skip the local vote; the
+        // middleware will dispatch explicit ``roll pass`` / ``roll
+        // need`` / ``roll greed`` back via chat commands.
+        //
+        // Fall back to rule-engine voting whenever we CAN'T defer:
+        // bridge disabled, config off, or this rollId already posted
+        // (the latter means the LLM owns this roll — this bot just
+        // leaves its vote unset and waits for the middleware's
+        // pass/need/greed command).
+        if (sPlayerbotAIConfig.llmDeferRolls && LlmBridgeHook::IsEnabled())
+        {
+            std::ostringstream rollIdStream;
+            rollIdStream << guid.GetRawValue() << ":" << itemId;
+            std::string const rollId = rollIdStream.str();
+
+            if (ShouldPostLlmRoll(rollId))
+            {
+                std::vector<uint32_t> candidates;
+                candidates.reserve(roll->playerVote.size());
+                for (auto const& kv : roll->playerVote)
+                    if (kv.second == NOT_EMITED_YET)
+                        candidates.push_back(kv.first.GetCounter());
+
+                std::string itemName;
+                if (ItemTemplate const* tmpl = sObjectMgr->GetItemTemplate(itemId))
+                    itemName = tmpl->Name1;
+
+                std::ostringstream itemLink;
+                itemLink << "item:" << itemId;
+
+                LlmBridgeHook::PostLootRollEvent(
+                    rollId, itemId, itemLink.str(), itemName, candidates);
+            }
+
+            // Either we just posted, or the roll was already posted
+            // by another bot. Either way, wait for the middleware's
+            // explicit vote rather than rolling locally.
+            return true;
+        }
         int32 randomProperty = 0;
         if (roll->itemRandomPropId)
             randomProperty = roll->itemRandomPropId;

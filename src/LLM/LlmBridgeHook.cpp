@@ -23,7 +23,8 @@ using boost::asio::ip::tcp;
 // -----------------------------------------------------------------------
 std::string LlmBridgeHook::s_host;
 std::string LlmBridgeHook::s_port;
-std::string LlmBridgeHook::s_path;
+std::string LlmBridgeHook::s_chatPath;
+std::string LlmBridgeHook::s_lootRollPath;
 bool        LlmBridgeHook::s_enabled = false;
 
 // -----------------------------------------------------------------------
@@ -32,6 +33,7 @@ bool        LlmBridgeHook::s_enabled = false;
 struct HttpPostRequest
 {
     std::string body;
+    std::string path;   // empty → s_chatPath (back-compat)
 };
 
 static ProducerConsumerQueue<HttpPostRequest> s_queue;
@@ -119,7 +121,7 @@ static bool ParseEndpoint(std::string const& url,
 void LlmBridgeWorkerLoop()
 {
     LOG_INFO("playerbots", "LLM Bridge worker started ({}:{}{}).",
-             LlmBridgeHook::s_host, LlmBridgeHook::s_port, LlmBridgeHook::s_path);
+             LlmBridgeHook::s_host, LlmBridgeHook::s_port, LlmBridgeHook::s_chatPath);
 
     for (;;)
     {
@@ -129,6 +131,10 @@ void LlmBridgeWorkerLoop()
         // Empty body means the queue was shut down or cancelled
         if (req.body.empty())
             break;
+
+        std::string const& path = req.path.empty()
+            ? LlmBridgeHook::s_chatPath
+            : req.path;
 
         try
         {
@@ -142,7 +148,7 @@ void LlmBridgeWorkerLoop()
                 continue;
             }
 
-            stream << "POST " << LlmBridgeHook::s_path << " HTTP/1.1\r\n";
+            stream << "POST " << path << " HTTP/1.1\r\n";
             stream << "Host: " << LlmBridgeHook::s_host << ":" << LlmBridgeHook::s_port << "\r\n";
             stream << "Content-Type: application/json\r\n";
             stream << "Content-Length: " << req.body.size() << "\r\n";
@@ -186,13 +192,23 @@ void LlmBridgeHook::Init()
         return;
     }
 
-    if (!ParseEndpoint(endpoint, s_host, s_port, s_path))
+    if (!ParseEndpoint(endpoint, s_host, s_port, s_chatPath))
     {
         LOG_ERROR("playerbots", "LLM Bridge: invalid endpoint URL '{}'. "
                   "Expected http://host:port/path", endpoint);
         s_enabled = false;
         return;
     }
+
+    // Derive the loot-roll path by replacing the last segment of the
+    // chat path (``/events/chat`` → ``/events/loot_roll``). If the path
+    // doesn't match the expected shape, fall back to a sibling under
+    // /events/.
+    auto lastSlash = s_chatPath.find_last_of('/');
+    if (lastSlash != std::string::npos)
+        s_lootRollPath = s_chatPath.substr(0, lastSlash + 1) + "loot_roll";
+    else
+        s_lootRollPath = "/events/loot_roll";
 
     s_enabled = true;
     LOG_INFO("playerbots", "LLM Bridge enabled: {}", endpoint);
@@ -242,5 +258,44 @@ void LlmBridgeHook::PostChatEvent(
          << ",\"channel\":\"" << JsonEscape(channel) << "\""
          << "}";
 
-    s_queue.Push({json.str()});
+    s_queue.Push({json.str(), ""});
+}
+
+void LlmBridgeHook::PostLootRollEvent(
+    std::string const& rollId,
+    uint32_t itemId,
+    std::string const& itemLink,
+    std::string const& itemName,
+    std::vector<uint32_t> const& candidateGuids)
+{
+    if (!s_enabled)
+        return;
+
+    if (s_queue.Size() >= MAX_QUEUE_SIZE)
+    {
+        LOG_WARN("playerbots", "LLM Bridge: queue full ({} events), dropping loot roll event",
+                 MAX_QUEUE_SIZE);
+        return;
+    }
+
+    std::ostringstream arr;
+    arr << "[";
+    for (size_t i = 0; i < candidateGuids.size(); ++i)
+    {
+        if (i)
+            arr << ",";
+        arr << candidateGuids[i];
+    }
+    arr << "]";
+
+    std::ostringstream json;
+    json << "{"
+         << "\"roll_id\":\"" << JsonEscape(rollId) << "\""
+         << ",\"item_id\":" << itemId
+         << ",\"item_link\":\"" << JsonEscape(itemLink) << "\""
+         << ",\"item_name\":\"" << JsonEscape(itemName) << "\""
+         << ",\"candidate_guids\":" << arr.str()
+         << "}";
+
+    s_queue.Push({json.str(), s_lootRollPath});
 }

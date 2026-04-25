@@ -1,5 +1,7 @@
 #include "NewRpgAction.h"
 
+#include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <cstdlib>
 
@@ -52,6 +54,43 @@ bool StartRpgDoQuestAction::Execute(Event event)
     }
     bot->Whisper("Invalid quest " + text, LANG_UNIVERSAL, owner);
     return false;
+}
+
+bool SetRpgModeAction::Execute(Event event)
+{
+    Player* owner = event.getOwner();
+    std::string mode = event.getParam();
+    std::transform(mode.begin(), mode.end(), mode.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+
+    // Only modes with a deterministic, target-less transition are
+    // supported today. "grind", "quest", and "travel" require picking
+    // a WorldPosition / quest / flight path respectively; until those
+    // selection paths are exposed here, the LLM must use dedicated
+    // chat commands (``grind``, ``rpg do quest <link>``, ``taxi``).
+    NewRpgInfo& info = botAI->rpgInfo;
+    bool changed = true;
+    if (mode == "idle")
+        info.ChangeToIdle();
+    else if (mode == "rest")
+        info.ChangeToRest();
+    else if (mode == "explore" || mode == "wander" || mode == "wander random")
+        info.ChangeToWanderRandom();
+    else
+        changed = false;
+
+    if (owner)
+    {
+        if (changed)
+            bot->Whisper("Switching to RPG mode '" + mode + "'.",
+                         LANG_UNIVERSAL, owner);
+        else
+            bot->Whisper(
+                "RPG mode '" + mode + "' is not directly settable. "
+                "Use 'grind', 'rpg do quest <link>', or 'taxi' instead.",
+                LANG_UNIVERSAL, owner);
+    }
+    return changed;
 }
 
 bool NewRpgStatusUpdateAction::Execute(Event /*event*/)

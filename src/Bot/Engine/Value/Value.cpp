@@ -29,7 +29,11 @@ std::string const UnitManualSetValue::Format()
 std::string const Uint8CalculatedValue::Format()
 {
     std::ostringstream out;
-    out << Calculate();
+    // Cast to uint32 so the stream formats it as a decimal integer.
+    // Without the cast, uint8 (= unsigned char) would be emitted as a
+    // raw byte, so a count of 3 would appear as the ETX control char
+    // rather than the string "3".
+    out << static_cast<uint32>(Calculate());
     return out.str();
 }
 

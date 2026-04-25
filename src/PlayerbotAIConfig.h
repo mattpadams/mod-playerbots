@@ -323,6 +323,10 @@ public:
 
     uint32 commandServerPort;
     std::string llmBridgeEndpoint;
+    // When true, LLM-bridge-enabled bots defer loot-roll voting to the
+    // middleware (POST /events/loot_roll). Required for M4 gear
+    // arbitration; safe to leave false to preserve rule-engine rolls.
+    bool llmDeferRolls;
     bool perfMonEnabled;
     bool summonWhenGroup;
     bool randomBotShowHelmet;

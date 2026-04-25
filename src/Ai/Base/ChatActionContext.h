@@ -104,6 +104,7 @@ public:
         creators["los"] = &ChatActionContext::los;
         creators["rpg status"] = &ChatActionContext::rpg_status;
         creators["rpg do quest"] = &ChatActionContext::rpg_do_quest;
+        creators["rpg mode"] = &ChatActionContext::rpg_mode;
         creators["aura"] = &ChatActionContext::aura;
         creators["drop"] = &ChatActionContext::drop;
         creators["clean quest log"] = &ChatActionContext::clean_quest_log;
@@ -287,6 +288,7 @@ private:
     static Action* los(PlayerbotAI* botAI) { return new TellLosAction(botAI); }
     static Action* rpg_status(PlayerbotAI* botAI) { return new TellRpgStatusAction(botAI); }
     static Action* rpg_do_quest(PlayerbotAI* botAI) { return new StartRpgDoQuestAction(botAI); }
+    static Action* rpg_mode(PlayerbotAI* botAI) { return new SetRpgModeAction(botAI); }
     static Action* aura(PlayerbotAI* ai) { return new TellAuraAction(ai); }
     static Action* ll(PlayerbotAI* botAI) { return new LootStrategyAction(botAI); }
     static Action* ss(PlayerbotAI* botAI) { return new SkipSpellsListAction(botAI); }

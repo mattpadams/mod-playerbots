@@ -373,7 +373,8 @@ class PlayerbotsWorldScript : public WorldScript
 public:
     PlayerbotsWorldScript() : WorldScript("PlayerbotsWorldScript", {
         WORLDHOOK_ON_BEFORE_WORLD_INITIALIZED,
-        WORLDHOOK_ON_UPDATE
+        WORLDHOOK_ON_UPDATE,
+        WORLDHOOK_ON_SHUTDOWN
     }) {}
 
     void OnBeforeWorldInitialized() override
@@ -406,6 +407,11 @@ public:
         PlayerbotSpellRepository::Instance().Initialize();
 
         LOG_INFO("server.loading", "Playerbots World Thread Processor initialized");
+    }
+
+    void OnShutdown() override
+    {
+        LlmBridgeHook::Shutdown();
     }
 
     void OnUpdate(uint32 diff) override

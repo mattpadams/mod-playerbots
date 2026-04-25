@@ -29,6 +29,18 @@ public:
     bool Execute(Event event) override;
 };
 
+// Force-sets the bot's NewRpgInfo status from a whispered chat command,
+// e.g. "rpg mode rest" → RPG_REST. Used by the LLM middleware so idle
+// bots can proactively switch behavior without waiting for the random
+// transition matrix in NewRpgStatusUpdateAction.
+class SetRpgModeAction : public Action
+{
+public:
+    SetRpgModeAction(PlayerbotAI* botAI) : Action(botAI, "rpg mode") {}
+
+    bool Execute(Event event) override;
+};
+
 class NewRpgStatusUpdateAction : public NewRpgBaseAction
 {
 public:

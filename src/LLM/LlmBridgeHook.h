@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 /// Fire-and-forget HTTP POST bridge to the Python LLM middleware.
 ///
@@ -37,10 +38,23 @@ public:
         std::string const& message,
         std::string const& channel);
 
+    /// Enqueue a loot-roll-started event for middleware arbitration.
+    /// Non-blocking; posts to ``/events/loot_roll``.
+    /// ``candidateGuids`` is the list of party-member guids eligible
+    /// for this roll. The middleware picks the best recipient and
+    /// dispatches ``pass`` commands to the rest.
+    static void PostLootRollEvent(
+        std::string const& rollId,
+        uint32_t itemId,
+        std::string const& itemLink,
+        std::string const& itemName,
+        std::vector<uint32_t> const& candidateGuids);
+
 private:
     static std::string s_host;
     static std::string s_port;
-    static std::string s_path;
+    static std::string s_chatPath;
+    static std::string s_lootRollPath;
     static bool s_enabled;
 
     friend void LlmBridgeWorkerLoop();
