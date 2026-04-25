@@ -111,3 +111,8 @@ local.properties
 # ==================
 .cache
 compile_commands.json
+
+# Local dev artifacts (Playwright MCP logs, ad-hoc screenshots)
+.playwright-mcp/
+/m*_mobile.png
+/dashboard_screenshot*.png
