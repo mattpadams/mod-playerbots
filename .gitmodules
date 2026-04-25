@@ -1,0 +1,4 @@
+[submodule "modules/mod-playerbots"]
+	path = modules/mod-playerbots
+	url = https://github.com/mattpadams/mod-playerbots.git
+	branch = llm-integration
